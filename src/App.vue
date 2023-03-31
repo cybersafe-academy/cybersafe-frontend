@@ -3,30 +3,32 @@
     <div class="section left-section">Vazia</div>
 
     <div class="section right-section">
-      <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
+      <div class="greeting-container">
+        <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
 
-      <span class="greeting-subtext">
-        Protect your company with the power of personalized knowledge in digital security
-      </span>
+        <span class="greeting-subtext">
+          Protect your company with the power of personalized in digital security
+        </span>
+      </div>
 
       <div class="input-container">
         <v-text-field
-          class="login-input"
           clearable
+          class="login-input"
           label="Login"
-          prepend-icon="mdi-account"
-          variant="outlined"
+          prepend-inner-icon="mdi-account"
+          variant="solo"
         ></v-text-field>
 
         <v-text-field
-          class="password-input"
           clearable
+          class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           label="Password"
-          prepend-icon="mdi-lock"
+          prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
-          variant="outlined"
+          variant="solo"
         ></v-text-field>
       </div>
 
@@ -34,7 +36,7 @@
         Forgot password?
       </span>
 
-      <v-btn @click="login" class="login-button" variant="tonal"> Login </v-btn>
+      <v-btn @click="login" class="login-button" variant="tonal" height="65"> Login </v-btn>
 
       <div class="signup-container">
         <span> Don't have an account? </span>
@@ -91,9 +93,6 @@ export default defineComponent({
 * {
   margin: 0;
   padding: 0;
-}
-
-body {
   font-family: 'Inter', sans-serif;
   overflow: hidden;
 }
@@ -118,42 +117,54 @@ body {
 }
 
 .right-section {
-  background-color: #fa2121;
+  padding: 0 5%;
+}
+
+.greeting-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 40px;
 }
 
 .greeting-text {
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 34px;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
 .greeting-subtext {
-  font-size: 14px;
-  font-weight: 400;
-  margin-bottom: 20px;
+  font-size: 17px;
+  margin-bottom: 25px;
 }
 
 .input-container {
-  width: 70%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .login-input {
+  width: 100%;
 }
 
 .password-input {
+  margin-bottom: -15px;
 }
 
 .forgot-password-text {
+  align-self: flex-end;
+  margin-bottom: 20px;
 }
 
 .login-button {
+  width: 100%;
 }
 
 .signup-text-container {
 }
 
 .link {
-  font-size: 14px;
   color: #2600ff;
   font-weight: 700;
 }
