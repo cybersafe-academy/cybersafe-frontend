@@ -1,35 +1,43 @@
 <template>
-  <div class="body">
-    <div class="section left-section d-flex flex-column">Vazia</div>
+  <div class="content">
+    <div class="section left-section">Vazia</div>
 
-    <div class="section right-section d-flex flex-column">
-      <span class="text-h3"> Welcome to Cybersafe Academy! </span>
+    <div class="section right-section">
+      <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
 
-      <span class="text-h4"> Slogan here! </span>
+      <span class="greeting-subtext">
+        Protect your company with the power of personalized knowledge in digital security
+      </span>
 
-      <v-text-field
-        clearable
-        label="Login"
-        prepend-icon="mdi-account"
-        variant="outlined"
-      ></v-text-field>
+      <div class="input-container">
+        <v-text-field
+          class="login-input"
+          clearable
+          label="Login"
+          prepend-icon="mdi-account"
+          variant="outlined"
+        ></v-text-field>
 
-      <v-text-field
-        clearable
-        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show1 ? 'text' : 'password'"
-        label="Password"
-        prepend-icon="mdi-lock"
-        @click:append="show1 = !show1"
-        variant="outlined"
-      ></v-text-field>
+        <v-text-field
+          class="password-input"
+          clearable
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          label="Password"
+          prepend-icon="mdi-lock"
+          @click:append="showPassword = !showPassword"
+          variant="outlined"
+        ></v-text-field>
+      </div>
 
-      <span @click="switchForgotPassword" class="link text-right"> Forgot password? </span>
+      <span @click="switchForgotPassword" class="link forgot-password-text">
+        Forgot password?
+      </span>
 
-      <v-btn @click="login" variant="tonal"> Login </v-btn>
+      <v-btn @click="login" class="login-button" variant="tonal"> Login </v-btn>
 
-      <div>
-        <span class="signup-text"> Don't have an account? </span>
+      <div class="signup-container">
+        <span> Don't have an account? </span>
 
         <span @click="switchSignup" class="link"> Sign up </span>
       </div>
@@ -51,7 +59,7 @@ declare module '@vue/runtime-core' {
 export default defineComponent({
   data() {
     return {
-      show1: false,
+      showPassword: false,
       password: '',
       rules: {
         required: (v: any) => !!v || 'Required.',
@@ -83,27 +91,65 @@ export default defineComponent({
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-.body {
+body {
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.content {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   height: 100vh;
   width: 100vw;
   padding: 0 10%;
 }
 
 .section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 50%;
 }
 
-.signup-text {
+.left-section {
+  background-color: #2600ff;
+}
+
+.right-section {
+  background-color: #fa2121;
+}
+
+.greeting-text {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.greeting-subtext {
   font-size: 14px;
-  color: #000000;
   font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.input-container {
+  width: 70%;
+}
+
+.login-input {
+}
+
+.password-input {
+}
+
+.forgot-password-text {
+}
+
+.login-button {
+}
+
+.signup-text-container {
 }
 
 .link {
@@ -115,5 +161,12 @@ export default defineComponent({
 .link:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../public/fonts/Inter-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 </style>
