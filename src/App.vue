@@ -18,6 +18,8 @@
           label="Login"
           prepend-inner-icon="mdi-account"
           variant="solo"
+          bg-color="#f5f7f9"
+          :rules="[required]"
         ></v-text-field>
 
         <v-text-field
@@ -29,6 +31,8 @@
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
+          bg-color="#f5f7f9"
+          :rules="[required]"
         ></v-text-field>
       </div>
 
@@ -36,7 +40,9 @@
         Forgot password?
       </span>
 
-      <v-btn @click="login" class="login-button" variant="tonal" height="65"> Login </v-btn>
+      <v-btn @click="login" class="login-button" height="65" color="#3e78fc" rounded="lg">
+        Login
+      </v-btn>
 
       <div class="signup-container">
         <span> Don't have an account? </span>
@@ -73,6 +79,10 @@ export default defineComponent({
   computed: {},
 
   methods: {
+    required(v: any) {
+      return !!v || 'Field is required'
+    },
+
     switchSignup(): void {
       console.log('Switching to signup')
     },
@@ -113,7 +123,8 @@ export default defineComponent({
 }
 
 .left-section {
-  background-color: #2600ff;
+  background-color: #eeeeee;
+  border-radius: 30px 0 0 30px;
 }
 
 .right-section {
@@ -154,11 +165,14 @@ export default defineComponent({
 
 .forgot-password-text {
   align-self: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .login-button {
   width: 100%;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .signup-text-container {
