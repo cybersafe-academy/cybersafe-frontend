@@ -1,6 +1,8 @@
 <template>
   <div class="content">
-    <div class="section left-section">Vazia</div>
+    <div class="section left-section">
+      <img class="logo-image" src="src/assets/test.svg" />
+    </div>
 
     <div class="section right-section">
       <div class="greeting-container">
@@ -40,7 +42,13 @@
         Forgot password?
       </span>
 
-      <v-btn @click="login" class="login-button" height="65" color="#3e78fc" rounded="lg">
+      <v-btn
+        @click="login"
+        class="login-button text-white"
+        height="65"
+        color="#3e78fc"
+        rounded="lg"
+      >
         Login
       </v-btn>
 
@@ -111,7 +119,6 @@ export default defineComponent({
   display: flex;
   height: 100vh;
   width: 100vw;
-  padding: 0 10%;
 }
 
 .section {
@@ -123,12 +130,19 @@ export default defineComponent({
 }
 
 .left-section {
-  background-color: #eeeeee;
-  border-radius: 30px 0 0 30px;
+  width: 40%;
+  background-color: rgb(241, 241, 241);
+  border-radius: 25px 0 0 25px;
+}
+
+.logo-image {
+  height: 400px;
+  border-radius: 30px;
 }
 
 .right-section {
-  padding: 0 5%;
+  width: 60%;
+  padding: 0 10%;
 }
 
 .greeting-container {
@@ -175,9 +189,6 @@ export default defineComponent({
   font-weight: 700;
 }
 
-.signup-text-container {
-}
-
 .link {
   color: #2600ff;
   font-weight: 700;
@@ -186,6 +197,43 @@ export default defineComponent({
 .link:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .section {
+    width: 100%;
+  }
+
+  .left-section {
+    width: 100%;
+    border-radius: 0;
+    background-color: white;
+  }
+
+  .right-section {
+    width: 100%;
+    padding: 0 5%;
+  }
+
+  .logo-image {
+    height: 300px;
+  }
+
+  .greeting-text {
+    font-size: 24px;
+  }
+
+  .greeting-subtext {
+    font-size: 14px;
+  }
+
+  .login-button {
+    font-size: 14px;
+  }
 }
 
 @font-face {
