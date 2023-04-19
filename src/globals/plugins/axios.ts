@@ -11,7 +11,8 @@ export default {
     app.config.globalProperties.$axios = axios.create({
       baseURL: options.baseUrl,
       headers: {
-        Authorization: options.token ? `Bearer ${options.token}` : ''
+        // Authorization: options.token ? `Bearer ${options.token}` : '',
+        'Access-Control-Allow-Origin': '*'
       }
     })
   }

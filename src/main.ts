@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import App from './App.vue'
 import router from '@/utils/routes'
+import App from './App.vue'
 
 // Vuetify
 import 'vuetify/styles'
@@ -32,7 +32,7 @@ app.use(router)
 app.use(createPinia())
 app.use(vuetify)
 app.use(axios, {
-  baseUrl: 'https://jsonplaceholder.typicode.com'
+  baseUrl: 'http://localhost:8080/'
 })
 
 app.mount('#app')

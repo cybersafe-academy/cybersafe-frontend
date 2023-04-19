@@ -60,9 +60,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
 import type { AxiosInstance } from 'axios'
-import router from '@/utils/routes'
 import LogoSection from '@/components/LogoSection.vue'
 
 declare module '@vue/runtime-core' {
@@ -72,7 +70,9 @@ declare module '@vue/runtime-core' {
   }
 }
 
-export default defineComponent({
+export default {
+  name: 'Login',
+
   components: {
     LogoSection
   },
@@ -96,7 +96,7 @@ export default defineComponent({
     },
 
     switchSignup(): void {
-      router.push('/signup')
+      this.$router.push('/signup')
     },
 
     switchForgotPassword(): void {
@@ -108,7 +108,7 @@ export default defineComponent({
       console.log(await this.$axios.get('https://www.google.com.br'))
     }
   }
-})
+}
 </script>
 
 <style scoped>

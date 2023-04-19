@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <logo-section />
+    <logo-section class="section" />
 
     <div class="section right-section">
       <div class="greeting-container">
@@ -11,11 +11,13 @@
         </span>
       </div>
 
+      <!-- name, age, cpf, password -->
+
       <div class="input-container">
         <v-text-field
           clearable
-          class="login-input"
-          label="Login"
+          class="default-input"
+          label="CPF"
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
@@ -60,9 +62,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
 import type { AxiosInstance } from 'axios'
-import router from '@/utils/routes'
 import LogoSection from '@/components/LogoSection.vue'
 
 declare module '@vue/runtime-core' {
@@ -72,7 +72,9 @@ declare module '@vue/runtime-core' {
   }
 }
 
-export default defineComponent({
+export default {
+  name: 'Signup',
+
   components: {
     LogoSection
   },
@@ -96,7 +98,7 @@ export default defineComponent({
     },
 
     switchSignup(): void {
-      router.push('/signup')
+      this.$router.push('/signup')
     },
 
     switchForgotPassword(): void {
@@ -105,10 +107,10 @@ export default defineComponent({
 
     async login() {
       console.log('Logging in')
-      console.log(await this.$axios.get('https://www.google.com.br'))
+      console.log(await this.$axios.get('/api/courses'))
     }
   }
-})
+}
 </script>
 
 <style scoped>
@@ -167,7 +169,7 @@ export default defineComponent({
   width: 100%;
 }
 
-.login-input {
+.default-input {
   width: 100%;
 }
 
