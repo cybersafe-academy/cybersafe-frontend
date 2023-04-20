@@ -4,11 +4,9 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
+        <span class="greeting-text"> Glad to see you here! </span>
 
-        <span class="greeting-subtext">
-          Protect your company with the power of personalized in digital security
-        </span>
+        <span class="greeting-subtext"> Fill in the form below to create your account </span>
       </div>
 
       <!-- name, age, cpf, password -->
@@ -24,9 +22,10 @@
           :rules="[required]"
         ></v-text-field>
 
+        
+
         <v-text-field
           clearable
-          class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           label="Password"
@@ -36,26 +35,34 @@
           bg-color="#f5f7f9"
           :rules="[required]"
         ></v-text-field>
+
+        <v-text-field
+          clearable
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          label="Confirm password"
+          prepend-inner-icon="mdi-lock"
+          @click:append="showPassword = !showPassword"
+          variant="solo"
+          bg-color="#f5f7f9"
+          :rules="[required]"
+        ></v-text-field>
       </div>
 
-      <span @click="switchForgotPassword" class="link forgot-password-text">
-        Forgot password?
-      </span>
-
       <v-btn
-        @click="login"
-        class="login-button text-white"
+        @click="signup"
+        class="signup-button text-white"
         height="65"
         color="#3e78fc"
         rounded="lg"
       >
-        Login
+        Sign up
       </v-btn>
 
-      <div class="signup-container">
-        <span> Don't have an account? </span>
+      <div>
+        <span> Already have an account? </span>
 
-        <span @click="switchSignup" class="link"> Sign up </span>
+        <span @click="switchLogin" class="link"> Login </span>
       </div>
     </div>
   </div>
@@ -97,18 +104,15 @@ export default {
       return !!v || 'Field is required'
     },
 
-    switchSignup(): void {
-      this.$router.push('/signup')
+    switchLogin(): void {
+      this.$router.push('/login')
     },
 
     switchForgotPassword(): void {
       console.log('Switching to forgot password')
     },
 
-    async login() {
-      console.log('Logging in')
-      console.log(await this.$axios.get('/api/courses'))
-    }
+    async signup() {}
   }
 }
 </script>
@@ -160,7 +164,6 @@ export default {
 
 .greeting-subtext {
   font-size: 17px;
-  margin-bottom: 25px;
 }
 
 .input-container {
@@ -173,16 +176,12 @@ export default {
   width: 100%;
 }
 
-.password-input {
-  margin-bottom: -15px;
-}
-
 .forgot-password-text {
   align-self: flex-end;
   margin-bottom: 40px;
 }
 
-.login-button {
+.signup-button {
   width: 100%;
   margin-bottom: 20px;
   font-size: 18px;
@@ -238,7 +237,7 @@ export default {
 
 @font-face {
   font-family: 'Inter';
-  src: url('../public/fonts/Inter-Regular.ttf') format('truetype');
+  src: url('@/assets/fonts/Inter-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
