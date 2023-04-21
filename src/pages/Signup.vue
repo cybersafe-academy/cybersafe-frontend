@@ -4,15 +4,14 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Glad to see you here! </span>
+        <span class="greeting-text"> Join our community! </span>
 
         <span class="greeting-subtext"> Fill in the form below to create your account </span>
       </div>
 
-      <!-- name, age, cpf, password -->
-
       <div class="input-container">
         <v-text-field
+          v-model="cpf"
           clearable
           class="default-input"
           label="CPF"
@@ -22,9 +21,31 @@
           :rules="[required]"
         ></v-text-field>
 
-        
+        <v-text-field
+          v-model="email"
+          clearable
+          class="default-input"
+          label="Email"
+          prepend-inner-icon="mdi-email"
+          variant="solo"
+          bg-color="#f5f7f9"
+          :rules="[required]"
+        ></v-text-field>
 
         <v-text-field
+          v-model="age"
+          clearable
+          class="default-input"
+          label="Age"
+          prepend-inner-icon="mdi-cake-variant"
+          variant="solo"
+          bg-color="#f5f7f9"
+          type="number"
+          :rules="[required]"
+        ></v-text-field>
+
+        <v-text-field
+          v-model="password"
           clearable
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
@@ -37,6 +58,7 @@
         ></v-text-field>
 
         <v-text-field
+          v-model="confirmPassword"
           clearable
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
@@ -69,15 +91,7 @@
 </template>
 
 <script lang="ts">
-import type { AxiosInstance } from 'axios'
 import LogoSection from '@/components/LogoSection.vue'
-
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $axios: AxiosInstance
-    catTags: string[]
-  }
-}
 
 export default {
   name: 'Signup',
@@ -88,8 +102,12 @@ export default {
 
   data() {
     return {
-      showPassword: false,
+      cpf: '',
+      age: '',
+      email: '',
       password: '',
+      confirmPassword: '',
+      showPassword: false,
       rules: {
         required: (v: any) => !!v || 'Required.',
         min: (v: any) => v.length >= 8 || 'Min 8 characters'
@@ -108,11 +126,22 @@ export default {
       this.$router.push('/login')
     },
 
-    switchForgotPassword(): void {
-      console.log('Switching to forgot password')
-    },
+    async signup() {
+      try {
+        const { data } = await this.$axios.post('/users', {
+          cpf: this.cpf,
+          age: this.age,
+          email: this.email,
+          password: this.password,
+          confirmPassword: this.confirmPassword
+        })
 
-    async signup() {}
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+        // this.$toasted.show('Error')
+      }
+    }
   }
 }
 </script>

@@ -5,9 +5,9 @@ import Signup from '@/pages/Signup.vue'
 import LandingPage from '@/pages/LandingPage.vue'
 
 const routes: any = [
-  { path: '/', component: LandingPage },
-  { path: '/login', component: Login },
-  { path: '/signup', component: Signup }
+  { path: '/', name: 'home', component: LandingPage },
+  { path: '/login', name: 'login', component: Login },
+  { path: '/signup', name: 'signup', component: Signup }
 ]
 
 const router = VueRouter.createRouter({
