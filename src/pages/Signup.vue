@@ -130,16 +130,16 @@ export default {
       try {
         const { data } = await this.$axios.post('/users', {
           cpf: this.cpf,
-          age: this.age,
+          age: +this.age,
           email: this.email,
           password: this.password,
           confirmPassword: this.confirmPassword
         })
 
-        console.log(data)
-      } catch (error) {
-        console.log(error)
-        // this.$toasted.show('Error')
+        this.$toast.success('Account created successfully!')
+      } catch (error: any) {
+        console.error(error)
+        this.$toast.error(error.response.data.message)
       }
     }
   }

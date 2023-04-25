@@ -60,8 +60,13 @@
 </template>
 
 <script lang="ts">
-import type { AxiosInstance } from 'axios'
 import LogoSection from '@/components/LogoSection.vue'
+
+import type { AxiosInstance } from 'axios'
+// import { useToast } from 'vue-toast-notification'
+// import 'vue-toast-notification/dist/theme-sugar.css'
+
+// const $toast = useToast()
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -100,7 +105,7 @@ export default {
     },
 
     switchForgotPassword(): void {
-      console.log('Switching to forgot password')
+      this.$router.push('/forgot-password')
     },
 
     async login() {
