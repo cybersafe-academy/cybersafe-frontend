@@ -1,13 +1,16 @@
 import * as VueRouter from 'vue-router'
 
-import Login from '@/pages/Login.vue'
-import Signup from '@/pages/Signup.vue'
 import LandingPage from '@/pages/LandingPage.vue'
+import LoginComponent from '@/pages/Login.vue'
+import SignupComponent from '@/pages/Signup.vue'
+import HomeComponent from '@/pages/Home.vue'
 
 const routes: any = [
-  { path: '/', name: 'home', component: LandingPage, meta: { requiresAuth: true } },
-  { path: '/login', name: 'login', component: Login },
-  { path: '/signup', name: 'signup', component: Signup }
+  { path: '/', name: 'lading', component: LandingPage },
+  { path: '/login', name: 'login', component: LoginComponent },
+  { path: '/signup', name: 'signup', component: SignupComponent },
+  { path: '/home', name: 'home', component: HomeComponent, meta: { requiresAuth: true } },
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
 
 const router = VueRouter.createRouter({
@@ -17,6 +20,7 @@ const router = VueRouter.createRouter({
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem('token')
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated) {
       next({ name: 'login' })

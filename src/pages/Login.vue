@@ -20,6 +20,7 @@
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="login"
           :rules="[required]"
         ></v-text-field>
 
@@ -34,6 +35,7 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="login"
           :rules="[required]"
         ></v-text-field>
       </div>
@@ -105,6 +107,10 @@ export default {
       this.$router.push('/forgot-password')
     },
 
+    switchHome(): void {
+      this.$router.push('/home')
+    },
+
     async login() {
       try {
         if (this.verifyEmptyFields()) return
@@ -120,17 +126,11 @@ export default {
 
         this.$toast.success('Logged in successfully')
 
-        this.$router.push('/')
+        this.switchHome()
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
-        console.log(error)
-
-        if (error.code === 401) {
-          this.$toast.error('Invalid credentials')
-        } else {
-          this.$toast.error('Something went wrong')
-        }
+        this.$toast.error(error.description)
       }
     }
   }

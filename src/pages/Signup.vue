@@ -18,6 +18,7 @@
           prepend-inner-icon="mdi-text"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="signup"
           :rules="[required]"
         ></v-text-field>
 
@@ -29,6 +30,7 @@
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="signup"
           :rules="[required, validateCPF]"
         ></v-text-field>
 
@@ -40,6 +42,7 @@
           prepend-inner-icon="mdi-email"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="signup"
           :rules="[required, validateEmail]"
         ></v-text-field>
 
@@ -52,6 +55,7 @@
           variant="solo"
           bg-color="#f5f7f9"
           type="number"
+          @keyup.enter="signup"
           :rules="[required]"
         ></v-text-field>
 
@@ -65,6 +69,7 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="signup"
           :rules="[required, passwordMin]"
           :error="passwordsDoNotMatch"
         ></v-text-field>
@@ -79,6 +84,7 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
+          @keyup.enter="signup"
           :rules="[required, passwordMin]"
           :error="passwordsDoNotMatch"
         ></v-text-field>
