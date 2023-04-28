@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import router from '@/utils/routes'
 import App from '@/App.vue'
 
 // Vuetify
@@ -17,6 +16,9 @@ import axios from './globals/plugins/axios'
 // Vue - toast
 import ToastPlugin from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-bootstrap.css'
+
+// Router
+import router from '@/utils/routes'
 
 const vuetify = createVuetify({
   components,
@@ -39,5 +41,6 @@ app.use(ToastPlugin)
 app.use(axios, {
   baseUrl: 'http://localhost:8080/api/'
 })
+app.directive
 
 app.mount('#app')

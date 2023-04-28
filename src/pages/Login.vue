@@ -13,9 +13,10 @@
 
       <div class="input-container">
         <v-text-field
+          v-model="cpf"
           clearable
           class="login-input"
-          label="Login"
+          label="CPF"
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
@@ -23,6 +24,7 @@
         ></v-text-field>
 
         <v-text-field
+          v-model="password"
           clearable
           class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -62,21 +64,11 @@
 <script lang="ts">
 import LogoSection from '@/components/LogoSection.vue'
 
-import type { AxiosInstance } from 'axios'
-// import { useToast } from 'vue-toast-notification'
-// import 'vue-toast-notification/dist/theme-sugar.css'
-
-// const $toast = useToast()
-
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $axios: AxiosInstance
-    catTags: string[]
-  }
-}
+import type { ILogin, ILoginResponse } from '@/types/login'
+import type { IErrorResponse } from '@/types/errors'
 
 export default {
-  name: 'Login',
+  name: 'LoginComponent',
 
   components: {
     LogoSection
@@ -84,20 +76,25 @@ export default {
 
   data() {
     return {
-      showPassword: false,
+      cpf: '',
       password: '',
-      rules: {
-        required: (v: any) => !!v || 'Required.',
-        min: (v: any) => v.length >= 8 || 'Min 8 characters'
-      }
+      showPassword: false
     }
   },
-
-  computed: {},
 
   methods: {
     required(v: any) {
       return !!v || 'Field is required'
+    },
+
+    verifyEmptyFields(): boolean {
+      if (!this.cpf || !this.password) {
+        this.$toast.error('Please fill all fields')
+
+        return true
+      }
+
+      return false
     },
 
     switchSignup(): void {
@@ -109,8 +106,32 @@ export default {
     },
 
     async login() {
-      console.log('Logging in')
-      console.log(await this.$axios.get('https://www.google.com.br'))
+      try {
+        if (this.verifyEmptyFields()) return
+
+        const signinData: ILogin = {
+          cpf: this.cpf,
+          password: this.password
+        }
+
+        const { data } = await this.$axios.post<ILoginResponse>('/auth/login', signinData)
+
+        localStorage.setItem('token', data.accessToken)
+
+        this.$toast.success('Logged in successfully')
+
+        this.$router.push('/')
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+
+        console.log(error)
+
+        if (error.code === 401) {
+          this.$toast.error('Invalid credentials')
+        } else {
+          this.$toast.error('Something went wrong')
+        }
+      }
     }
   }
 }

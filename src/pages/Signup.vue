@@ -11,6 +11,17 @@
 
       <div class="input-container">
         <v-text-field
+          v-model="name"
+          clearable
+          class="default-input"
+          label="Name"
+          prepend-inner-icon="mdi-text"
+          variant="solo"
+          bg-color="#f5f7f9"
+          :rules="[required]"
+        ></v-text-field>
+
+        <v-text-field
           v-model="cpf"
           clearable
           class="default-input"
@@ -18,7 +29,7 @@
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
-          :rules="[required]"
+          :rules="[required, validateCPF]"
         ></v-text-field>
 
         <v-text-field
@@ -29,7 +40,7 @@
           prepend-inner-icon="mdi-email"
           variant="solo"
           bg-color="#f5f7f9"
-          :rules="[required]"
+          :rules="[required, validateEmail]"
         ></v-text-field>
 
         <v-text-field
@@ -54,11 +65,12 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
-          :rules="[required]"
+          :rules="[required, passwordMin]"
+          :error="passwordsDoNotMatch"
         ></v-text-field>
 
         <v-text-field
-          v-model="confirmPassword"
+          v-model="passwordConfirmation"
           clearable
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
@@ -67,7 +79,8 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
-          :rules="[required]"
+          :rules="[required, passwordMin]"
+          :error="passwordsDoNotMatch"
         ></v-text-field>
       </div>
 
@@ -92,9 +105,11 @@
 
 <script lang="ts">
 import LogoSection from '@/components/LogoSection.vue'
+import type { ISignup, ISignupResponse } from '@/types/signup'
+import type { IErrorResponse } from '@/types/errors'
 
 export default {
-  name: 'Signup',
+  name: 'SignupComponent',
 
   components: {
     LogoSection
@@ -102,24 +117,73 @@ export default {
 
   data() {
     return {
+      name: '',
       cpf: '',
       age: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      passwordConfirmation: '',
       showPassword: false,
-      rules: {
-        required: (v: any) => !!v || 'Required.',
-        min: (v: any) => v.length >= 8 || 'Min 8 characters'
-      }
+      passwordsDoNotMatch: false
     }
   },
-
-  computed: {},
 
   methods: {
     required(v: any) {
       return !!v || 'Field is required'
+    },
+
+    passwordMin(v: any) {
+      return v.length >= 8 || 'Min 8 characters'
+    },
+
+    validateEmail(v: any) {
+      const regex = /\S+@\S+\.\S+/
+
+      return regex.test(v) || 'Invalid email'
+    },
+
+    validateCPF(v: any) {
+      const cpf = v.replace(/\D/g, '')
+
+      return cpf.length === 11 || 'Invalid CPF'
+    },
+
+    verifyEmptyFields(): boolean {
+      if (
+        !this.name ||
+        !this.cpf ||
+        !this.age ||
+        !this.email ||
+        !this.password ||
+        !this.passwordConfirmation
+      ) {
+        this.$toast.error('Please fill in all fields')
+
+        return false
+      }
+
+      return true
+    },
+
+    verifyPassword(): boolean {
+      if (this.password !== this.passwordConfirmation) {
+        this.passwordsDoNotMatch = true
+        this.$toast.error('Passwords do not match')
+
+        return false
+      }
+
+      return true
+    },
+
+    verifyFields(): boolean {
+      if (!this.verifyEmptyFields()) return false
+      if (!this.verifyPassword()) return false
+      if (!this.validateEmail(this.email)) return false
+      if (!this.validateCPF(this.cpf)) return false
+
+      return true
     },
 
     switchLogin(): void {
@@ -128,18 +192,28 @@ export default {
 
     async signup() {
       try {
-        const { data } = await this.$axios.post('/users', {
+        if (!this.verifyFields()) return
+
+        const signupData: ISignup = {
+          name: this.name,
           cpf: this.cpf,
           age: +this.age,
           email: this.email,
           password: this.password,
-          confirmPassword: this.confirmPassword
+          passwordConfirmation: this.passwordConfirmation
+        }
+
+        await this.$axios.post<ISignupResponse>('/users', {
+          ...signupData
         })
 
         this.$toast.success('Account created successfully!')
-      } catch (error: any) {
-        console.error(error)
-        this.$toast.error(error.response.data.message)
+
+        this.switchLogin()
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+
+        this.$toast.error(error.description)
       }
     }
   }
