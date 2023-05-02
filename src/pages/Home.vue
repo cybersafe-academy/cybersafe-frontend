@@ -34,7 +34,6 @@ export default {
   width: 100vw;
 }
 
-/* Align right section to the right */
 .right-section {
   display: flex;
   flex-direction: column;
