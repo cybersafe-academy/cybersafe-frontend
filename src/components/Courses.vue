@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tableContent">
     <v-toolbar flat>
       <v-toolbar-title>Courses</v-toolbar-title>
       <v-spacer />
@@ -8,22 +8,16 @@
     <v-table theme="dark">
       <thead>
         <tr>
-          <th class="text-left">ID</th>
           <th class="text-left">Title</th>
-          <th class="text-left">Description</th>
           <th class="text-left">Level</th>
-          <th class="text-left">Thumbnail URL</th>
           <th class="text-left">Content in hours</th>
           <th class="text-left">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in courses" :key="item.id">
-          <td>{{ item.id }}</td>
           <td>{{ item.title }}</td>
-          <td>{{ item.description }}</td>
           <td>{{ item.level }}</td>
-          <td>{{ item.thumbnailURL }}</td>
           <td>{{ item.contentInHours }}</td>
           <td>
             <v-btn color="primary" text @click="editCourse(item.id)">
@@ -42,7 +36,7 @@
 
 <script lang="ts">
 import CreateCourse from '@/components/CreateCourse.vue'
-import type { ICourse } from '@/types/course'
+import type { ICourse, IContent, ICourseResponse } from '@/types/course'
 
 export default {
   name: 'CoursesComponent',
@@ -53,15 +47,15 @@ export default {
 
   data() {
     return {
-      courses: [] as ICourse[]
+      courses: [] as ICourseResponse[]
     }
   },
 
   methods: {
-    openCreateDialog() {
+    openCreateDialog(): void {
       this.$refs.createCourse.openDialog()
     },
-    addCourse(courseData: ICourse) {
+    async addCourse(courseData: ICourseResponse) {
       this.courses.push(courseData)
     },
     editCourse(id: string) {
@@ -73,3 +67,18 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  overflow-y: auto;
+}
+
+.tableContent {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+}
+</style>

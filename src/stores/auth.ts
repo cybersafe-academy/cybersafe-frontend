@@ -10,16 +10,16 @@ export const useAuthStore = defineStore('auth', {
     email: useLocalStorage('email', ''),
     cpf: '',
     age: 0,
-    token: useLocalStorage('token', '')
+    accessToken: useLocalStorage('accessToken', '')
   }),
 
   getters: {
-    isLogged: (state) => !!state.token
+    isLogged: (state) => !!state.accessToken
   },
 
   actions: {
-    async updateToken(token: string) {
-      this.token = token
+    async updateToken(accessToken: string) {
+      this.accessToken = accessToken
     },
     async updateUserData(data: IUserData) {
       this.id = data.id
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
       this.age = data.age
     },
     async logout() {
-      this.token = ''
+      this.accessToken = ''
       this.name = ''
       this.email = ''
       this.cpf = ''

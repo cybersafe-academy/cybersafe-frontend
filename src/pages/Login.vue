@@ -7,7 +7,8 @@
         <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
 
         <span class="greeting-subtext">
-          Protect your company with the power of personalized in digital security
+          Protect your company with the power of personalized in digital
+          security
         </span>
       </div>
 
@@ -115,6 +116,8 @@ export default {
     },
 
     async login() {
+      const authStore = useAuthStore()
+
       try {
         if (this.verifyEmptyFields()) return
 
@@ -128,9 +131,7 @@ export default {
           signinData
         )
 
-        const authStore = useAuthStore()
-        const fmtToken = loginData.tokenType + ' ' + loginData.accessToken
-        authStore.updateToken(fmtToken)
+        authStore.updateToken(loginData.accessToken)
 
         const { data: userData } = await this.$axios.get<IUserData>('/users/me')
         authStore.updateUserData(userData)

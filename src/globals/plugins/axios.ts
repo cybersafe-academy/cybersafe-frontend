@@ -14,13 +14,27 @@ declare module '@vue/runtime-core' {
   }
 }
 
+const api = axios.create({
+  baseURL: 'http://localhost:8080/api/'
+})
+
+api.interceptors.request.use((config: any) => {
+  const token = localStorage.getItem('accessToken')
+  if (token) {
+    config.headers.Authorization = `${token}`
+  }
+  return config
+})
+
 export default {
   install: (app: App, options: AxiosOptions) => {
-    app.config.globalProperties.$axios = axios.create({
-      baseURL: options.baseUrl,
-      headers: {
-        Authorization: options.token ? `Bearer ${options.token}` : ''
-      }
-    })
+    if (options.baseUrl) {
+      api.defaults.baseURL = options.baseUrl
+    }
+    if (options.token) {
+      api.defaults.headers.common.Authorization = options.token
+    }
+
+    app.config.globalProperties.$axios = api
   }
 }

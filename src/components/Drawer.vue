@@ -49,7 +49,7 @@ export default {
     }
   },
 
-  created() {
+  async created() {
     const authStore = useAuthStore()
 
     this.userName = authStore.name || ''
