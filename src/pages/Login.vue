@@ -67,7 +67,10 @@
 import LogoSection from '@/components/LogoSection.vue'
 
 import type { ILogin, ILoginResponse } from '@/types/login'
+import type { IUserData } from '@/types/user'
 import type { IErrorResponse } from '@/types/errors'
+
+import { useAuthStore } from '@/stores/auth'
 
 export default {
   name: 'LoginComponent',
@@ -120,9 +123,17 @@ export default {
           password: this.password
         }
 
-        const { data } = await this.$axios.post<ILoginResponse>('/auth/login', signinData)
+        const { data: loginData } = await this.$axios.post<ILoginResponse>(
+          '/auth/login',
+          signinData
+        )
 
-        localStorage.setItem('token', data.accessToken)
+        const authStore = useAuthStore()
+        const fmtToken = loginData.tokenType + ' ' + loginData.accessToken
+        authStore.updateToken(fmtToken)
+
+        const { data: userData } = await this.$axios.get<IUserData>('/users/me')
+        authStore.updateUserData(userData)
 
         this.$toast.success('Logged in successfully')
 
