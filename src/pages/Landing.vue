@@ -1,7 +1,8 @@
 <template>
-  <div>Landing Page!</div>
-
-  <v-btn @click="switchLogin">Login</v-btn>
+  <div class="landingContent">
+    Landing Page!
+    <v-btn @click="switchLogin">Login</v-btn>
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,3 +16,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.landingContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+</style>

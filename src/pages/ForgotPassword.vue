@@ -4,61 +4,40 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
-
         <span class="greeting-subtext">
-          Protect your company with the power of personalized in digital
-          security
+          Fill your password to receive an recovery email
         </span>
       </div>
 
       <div class="input-container">
         <v-text-field
-          v-model="cpf"
+          v-model="email"
           clearable
           class="login-input"
-          label="CPF"
-          prepend-inner-icon="mdi-account"
+          label="Email"
+          prepend-inner-icon="mdi-email"
           variant="solo"
           bg-color="#f5f7f9"
-          @keyup.enter="login"
-          :rules="[required]"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="password"
-          clearable
-          class="password-input"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPassword ? 'text' : 'password'"
-          label="Password"
-          prepend-inner-icon="mdi-lock"
-          @click:append="showPassword = !showPassword"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="login"
+          @keyup.enter="forgotPassword"
           :rules="[required]"
         ></v-text-field>
       </div>
 
-      <span @click="switchForgotPassword" class="link forgot-password-text">
-        Forgot password?
-      </span>
-
       <v-btn
-        @click="login"
+        @click="forgotPassword"
         class="login-button text-white"
         height="65"
         color="#3e78fc"
         rounded="lg"
+        :loading="isLoading"
       >
-        Login
+        Send email
       </v-btn>
 
       <div class="signup-container">
-        <span> Don't have an account? </span>
+        <span> Already have an account? </span>
 
-        <span @click="switchSignup" class="link"> Sign up </span>
+        <span @click="switchLogin" class="link"> Login </span>
       </div>
     </div>
   </div>
@@ -67,14 +46,10 @@
 <script lang="ts">
 import LogoSection from '@/components/LogoSection.vue'
 
-import type { ILogin, ILoginResponse } from '@/types/login'
-import type { IUserData } from '@/types/user'
 import type { IErrorResponse } from '@/types/errors'
 
-import { useAuthStore } from '@/stores/auth'
-
 export default {
-  name: 'LoginComponent',
+  name: 'ForgotPasswordComponent',
 
   components: {
     LogoSection
@@ -82,9 +57,8 @@ export default {
 
   data() {
     return {
-      cpf: '',
-      password: '',
-      showPassword: false
+      email: '',
+      isLoading: false
     }
   },
 
@@ -94,7 +68,7 @@ export default {
     },
 
     verifyEmptyFields(): boolean {
-      if (!this.cpf || !this.password) {
+      if (!this.email) {
         this.$toast.error('Please fill all fields')
 
         return true
@@ -103,45 +77,30 @@ export default {
       return false
     },
 
-    switchSignup(): void {
-      this.$router.push('/signup')
+    switchLogin(): void {
+      this.$router.push('/login')
     },
 
     switchForgotPassword(): void {
       this.$router.push('/forgot-password')
     },
 
-    switchHome(): void {
-      this.$router.push('/home')
-    },
-
-    async login() {
-      const authStore = useAuthStore()
-
+    async forgotPassword() {
       try {
         if (this.verifyEmptyFields()) return
 
-        const signinData: ILogin = {
-          cpf: this.cpf,
-          password: this.password
-        }
+        this.isLoading = true
+        await this.$axios.post('/auth/forgot-password', {
+          email: this.email
+        })
 
-        const { data: loginData } = await this.$axios.post<ILoginResponse>(
-          '/auth/login',
-          signinData
-        )
-
-        authStore.updateToken(loginData.accessToken, loginData.expiresIn)
-
-        const { data: userData } = await this.$axios.get<IUserData>('/users/me')
-        authStore.updateUserData(userData)
-
-        this.$toast.success('Logged in successfully')
-
-        this.switchHome()
+        this.$toast.success('Email sent successfully')
+        this.isLoading = false
+        this.$router.push('/login')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
+        this.isLoading = false
         this.$toast.error(error.description)
       }
     }
@@ -172,11 +131,6 @@ export default {
   width: 50%;
 }
 
-.logo-image {
-  height: 400px;
-  border-radius: 30px;
-}
-
 .right-section {
   width: 60%;
   padding: 0 10%;
@@ -189,15 +143,8 @@ export default {
   margin-bottom: 40px;
 }
 
-.greeting-text {
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
 .greeting-subtext {
-  font-size: 17px;
-  margin-bottom: 25px;
+  font-size: 22px;
 }
 
 .input-container {
@@ -208,15 +155,6 @@ export default {
 
 .login-input {
   width: 100%;
-}
-
-.password-input {
-  margin-bottom: -15px;
-}
-
-.forgot-password-text {
-  align-self: flex-end;
-  margin-bottom: 40px;
 }
 
 .login-button {
@@ -245,9 +183,19 @@ export default {
     width: 100%;
   }
 
+  .left-section {
+    width: 100%;
+    border-radius: 0;
+    background-color: white;
+  }
+
   .right-section {
     width: 100%;
     padding: 0 5%;
+  }
+
+  .logo-image {
+    height: 300px;
   }
 
   .greeting-text {

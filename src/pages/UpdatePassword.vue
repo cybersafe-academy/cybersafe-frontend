@@ -4,27 +4,10 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
-
-        <span class="greeting-subtext">
-          Protect your company with the power of personalized in digital
-          security
-        </span>
+        <span class="greeting-subtext"> Fill your password to update it </span>
       </div>
 
       <div class="input-container">
-        <v-text-field
-          v-model="cpf"
-          clearable
-          class="login-input"
-          label="CPF"
-          prepend-inner-icon="mdi-account"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="login"
-          :rules="[required]"
-        ></v-text-field>
-
         <v-text-field
           v-model="password"
           clearable
@@ -36,30 +19,36 @@
           @click:append="showPassword = !showPassword"
           variant="solo"
           bg-color="#f5f7f9"
-          @keyup.enter="login"
-          :rules="[required]"
-        ></v-text-field>
+          @keyup.enter="updatePassword"
+          :rules="[required, passwordMin]"
+        />
+
+        <v-text-field
+          v-model="passwordConfirmation"
+          clearable
+          class="password-input"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :type="showPassword ? 'text' : 'password'"
+          label="Password confirmation"
+          prepend-inner-icon="mdi-lock"
+          @click:append="showPassword = !showPassword"
+          variant="solo"
+          bg-color="#f5f7f9"
+          @keyup.enter="updatePassword"
+          :rules="[required, passwordMin]"
+        />
       </div>
 
-      <span @click="switchForgotPassword" class="link forgot-password-text">
-        Forgot password?
-      </span>
-
       <v-btn
-        @click="login"
+        @click="updatePassword"
         class="login-button text-white"
         height="65"
         color="#3e78fc"
         rounded="lg"
+        :loading="isLoading"
       >
-        Login
+        Update password
       </v-btn>
-
-      <div class="signup-container">
-        <span> Don't have an account? </span>
-
-        <span @click="switchSignup" class="link"> Sign up </span>
-      </div>
     </div>
   </div>
 </template>
@@ -67,14 +56,10 @@
 <script lang="ts">
 import LogoSection from '@/components/LogoSection.vue'
 
-import type { ILogin, ILoginResponse } from '@/types/login'
-import type { IUserData } from '@/types/user'
 import type { IErrorResponse } from '@/types/errors'
 
-import { useAuthStore } from '@/stores/auth'
-
 export default {
-  name: 'LoginComponent',
+  name: 'UpdatePasswordComponent',
 
   components: {
     LogoSection
@@ -82,8 +67,10 @@ export default {
 
   data() {
     return {
-      cpf: '',
       password: '',
+      passwordConfirmation: '',
+      token: '',
+      isLoading: false,
       showPassword: false
     }
   },
@@ -93,9 +80,29 @@ export default {
       return !!v || 'Field is required'
     },
 
+    passwordMin(v: any) {
+      return v.length >= 8 || 'Min 8 characters'
+    },
+
     verifyEmptyFields(): boolean {
-      if (!this.cpf || !this.password) {
+      if (!this.password || !this.passwordConfirmation) {
         this.$toast.error('Please fill all fields')
+
+        return true
+      }
+
+      if (this.password !== this.passwordConfirmation) {
+        this.$toast.error('Passwords do not match')
+
+        return true
+      }
+
+      const { t } = this.$route.query
+
+      this.token = t as string
+
+      if (!t) {
+        this.$toast.error('Invalid token')
 
         return true
       }
@@ -103,45 +110,29 @@ export default {
       return false
     },
 
-    switchSignup(): void {
-      this.$router.push('/signup')
+    switchLogin(): void {
+      this.$router.push('/login')
     },
 
-    switchForgotPassword(): void {
-      this.$router.push('/forgot-password')
-    },
-
-    switchHome(): void {
-      this.$router.push('/home')
-    },
-
-    async login() {
-      const authStore = useAuthStore()
-
+    async updatePassword() {
       try {
         if (this.verifyEmptyFields()) return
 
-        const signinData: ILogin = {
-          cpf: this.cpf,
+        this.isLoading = true
+
+        await this.$axios.post('/auth/update-password?t=' + this.token, {
           password: this.password
-        }
+        })
 
-        const { data: loginData } = await this.$axios.post<ILoginResponse>(
-          '/auth/login',
-          signinData
-        )
+        this.isLoading = false
 
-        authStore.updateToken(loginData.accessToken, loginData.expiresIn)
+        this.$toast.success('Password updated successfully')
 
-        const { data: userData } = await this.$axios.get<IUserData>('/users/me')
-        authStore.updateUserData(userData)
-
-        this.$toast.success('Logged in successfully')
-
-        this.switchHome()
+        this.$router.push('/login')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
+        this.isLoading = false
         this.$toast.error(error.description)
       }
     }
@@ -172,11 +163,6 @@ export default {
   width: 50%;
 }
 
-.logo-image {
-  height: 400px;
-  border-radius: 30px;
-}
-
 .right-section {
   width: 60%;
   padding: 0 10%;
@@ -189,15 +175,8 @@ export default {
   margin-bottom: 40px;
 }
 
-.greeting-text {
-  font-size: 34px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
 .greeting-subtext {
-  font-size: 17px;
-  margin-bottom: 25px;
+  font-size: 22px;
 }
 
 .input-container {
@@ -208,15 +187,6 @@ export default {
 
 .login-input {
   width: 100%;
-}
-
-.password-input {
-  margin-bottom: -15px;
-}
-
-.forgot-password-text {
-  align-self: flex-end;
-  margin-bottom: 40px;
 }
 
 .login-button {
@@ -245,9 +215,19 @@ export default {
     width: 100%;
   }
 
+  .left-section {
+    width: 100%;
+    border-radius: 0;
+    background-color: white;
+  }
+
   .right-section {
     width: 100%;
     padding: 0 5%;
+  }
+
+  .logo-image {
+    height: 300px;
   }
 
   .greeting-text {

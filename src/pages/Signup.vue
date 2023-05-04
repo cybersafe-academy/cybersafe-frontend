@@ -6,7 +6,9 @@
       <div class="greeting-container">
         <span class="greeting-text"> Join our community! </span>
 
-        <span class="greeting-subtext"> Fill in the form below to create your account </span>
+        <span class="greeting-subtext">
+          Fill in the form below to create your account
+        </span>
       </div>
 
       <div class="input-container">
@@ -27,7 +29,7 @@
           clearable
           class="default-input"
           label="CPF"
-          prepend-inner-icon="mdi-account"
+          prepend-inner-icon="mdi-card-account-details"
           variant="solo"
           bg-color="#f5f7f9"
           @keyup.enter="signup"

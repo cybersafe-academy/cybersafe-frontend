@@ -4,20 +4,21 @@
       style="position: relative !important"
       expand-on-hover
       rail
+      width="400"
     >
       <v-list>
         <v-list-item
-          prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
+          prepend-icon="mdi-account-circle"
           :title="userName"
           :subtitle="userEmail"
           class="pointer"
           @click="openProfile"
         />
-      </v-list>
 
-      <v-list density="compact" nav>
+        <v-divider />
+
         <v-list-item
-          prepend-icon="mdi-book-open-variant"
+          prepend-icon="mdi-list-box"
           title="Courses"
           value="courses"
           link
@@ -25,11 +26,20 @@
         />
 
         <v-list-item
-          prepend-icon="mdi-book-open-variant"
+          prepend-icon="mdi-alert-box"
           title="Spans"
           value="spans"
           link
           @click="emitPage('spans')"
+        />
+
+        <v-divider />
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Logout"
+          color="red"
+          link
+          @click="logout"
         />
       </v-list>
     </v-navigation-drawer>
@@ -52,6 +62,10 @@ export default {
   async created() {
     const authStore = useAuthStore()
 
+    if (!authStore.isLogged) {
+      this.$router.push('/login')
+    }
+
     this.userName = authStore.name || ''
     this.userEmail = authStore.email || ''
   },
@@ -62,6 +76,17 @@ export default {
     },
     emitPage(page: string) {
       this.$emit('changePage', page)
+    },
+    async logout() {
+      const authStore = useAuthStore()
+
+      if (authStore.accessToken) {
+        await this.$axios.post('/auth/logoff')
+
+        authStore.logout()
+      }
+
+      this.$router.push('/login')
     }
   }
 }

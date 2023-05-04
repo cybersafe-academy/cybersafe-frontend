@@ -22,4 +22,7 @@ export default {
 .fade-leave-active {
   transition: opacity 0.3s ease-out;
 }
+.v-toast {
+  z-index: 9999 !important;
+}
 </style>

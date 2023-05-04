@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
+import dayjs from 'dayjs'
 
 import type { IUserData } from '@/types/user'
 
@@ -10,7 +11,8 @@ export const useAuthStore = defineStore('auth', {
     email: useLocalStorage('email', ''),
     cpf: '',
     age: 0,
-    accessToken: useLocalStorage('accessToken', '')
+    accessToken: useLocalStorage('accessToken', ''),
+    tokenExpiration: useLocalStorage('tokenExpiration', '')
   }),
 
   getters: {
@@ -18,8 +20,9 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async updateToken(accessToken: string) {
+    async updateToken(accessToken: string, expiresIn: number) {
       this.accessToken = accessToken
+      this.tokenExpiration = dayjs().add(expiresIn, 'second').toISOString()
     },
     async updateUserData(data: IUserData) {
       this.id = data.id
@@ -30,6 +33,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async logout() {
       this.accessToken = ''
+      this.tokenExpiration = ''
       this.name = ''
       this.email = ''
       this.cpf = ''

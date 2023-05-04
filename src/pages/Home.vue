@@ -5,7 +5,7 @@
       <CoursesComponent />
     </div>
     <div v-if="selectedPage === 'spans'" class="right-section">
-      <span class="greeting-text"> Spans! </span>
+      <span class="greeting-text"> Work in progress! 🧑‍🏭 </span>
     </div>
   </div>
 </template>

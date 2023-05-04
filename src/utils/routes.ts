@@ -4,6 +4,8 @@ import LandingComponent from '@/pages/Landing.vue'
 import LoginComponent from '@/pages/Login.vue'
 import SignupComponent from '@/pages/Signup.vue'
 import HomeComponent from '@/pages/Home.vue'
+import ForgotPasswordComponent from '@/pages/ForgotPassword.vue'
+import UpdatePasswordComponent from '@/pages/UpdatePassword.vue'
 
 const routes: any = [
   { path: '/', name: 'landing', component: LandingComponent },
@@ -14,6 +16,16 @@ const routes: any = [
     name: 'home',
     component: HomeComponent,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: ForgotPasswordComponent
+  },
+  {
+    path: '/update-password',
+    name: 'update-password',
+    component: UpdatePasswordComponent
   },
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ]
