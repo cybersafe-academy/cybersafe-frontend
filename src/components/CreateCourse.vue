@@ -12,7 +12,7 @@
                 <v-col cols="12">
                   <v-text-field
                     v-model="title"
-                    label="Title"
+                    label="Course title"
                     required
                   ></v-text-field>
                 </v-col>
@@ -24,24 +24,53 @@
                   ></v-textarea>
                 </v-col>
                 <v-col cols="12">
-                  <v-file-input
-                    label="Thumbnail"
-                    accept="image/*"
-                  ></v-file-input>
+                  <v-text-field
+                    v-model="thumbnail"
+                    label="Thumbnail URL"
+                    type="string"
+                  ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
                   <v-text-field
                     v-model="content"
                     label="Content in hours"
                     type="number"
+                    :rules="[
+                      (v) => v >= 0 || 'Content must be a positive number'
+                    ]"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
-                  <v-autocomplete
+                  <v-select
                     v-model="level"
                     label="Level"
-                    :items="['Iniciante', 'Intermediário', 'Avançado']"
-                  ></v-autocomplete>
+                    :items="['beginner', 'intermediate', 'advanced']"
+                  ></v-select>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="contentTitle"
+                    label="Content Title"
+                    type="string"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12" sm="6">
+                  <v-select
+                    v-model="contentType"
+                    label="Content Type"
+                    :items="['youtube', 'pdf', 'image']"
+                  ></v-select>
+                </v-col>
+                <v-col cols="12" sm="6">
+                  <v-text-field
+                    v-model="contentURL"
+                    label="Content URL"
+                    type="string"
+                  ></v-text-field>
                 </v-col>
               </v-row>
             </v-container>
@@ -62,36 +91,90 @@
 </template>
 
 <script lang="ts">
-import type { ICourse } from '@/types/course'
+import type { IErrorResponse } from '@/types/errors'
 
 export default {
+  props: {
+    course: {
+      type: Object,
+      default: () => null
+    }
+  },
+
   data: () => ({
     dialog: false,
+    id: '',
     title: '',
     description: '',
     thumbnail: '',
     content: 0,
-    level: ''
+    level: '',
+    contentTitle: '',
+    contentType: '',
+    contentURL: ''
   }),
 
   methods: {
-    openDialog() {
+    openDialog(course: any) {
       this.dialog = true
+
+      if (course) {
+        this.id = course.id
+        this.title = course.title
+        this.description = course.description
+        this.thumbnail = course.thumbnailURL
+        this.content = course.contentInHours
+        this.level = course.level
+        this.contentTitle = course.contents[0].title
+        this.contentType = course.contents[0].contentType
+        this.contentURL = course.contents[0].imageURL
+      }
     },
     closeDialog() {
       this.dialog = false
+
+      this.id = ''
+      this.title = ''
+      this.description = ''
+      this.thumbnail = ''
+      this.content = 0
+      this.level = ''
+      this.contentTitle = ''
+      this.contentType = ''
+      this.contentURL = ''
     },
     async saveCourse() {
-      const course: ICourse = {
-        id: '0',
+      const course: any = {
+        id: this.id,
         title: this.title,
         description: this.description,
         thumbnailURL: this.thumbnail,
-        contentInHours: this.content,
-        level: this.level
+        contentInHours: +this.content,
+        level: this.level,
+        contents: [
+          {
+            title: this.contentTitle,
+            contentType: this.contentType,
+            imageURL: this.contentURL
+          }
+        ]
       }
 
-      this.$emit('savedCourse', course)
+      try {
+        if (this.id) {
+          const { data } = await this.$axios.put(`/courses/${this.id}`, course)
+
+          this.$emit('editedCourse', data)
+        } else {
+          const { data } = await this.$axios.post('/courses', course)
+
+          this.$emit('savedCourse', data)
+        }
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data
+
+        this.$toast.error(error.description)
+      }
     }
   }
 }

@@ -5,7 +5,7 @@
       <v-spacer />
       <v-btn color="primary" @click="openCreateDialog">Add Course</v-btn>
     </v-toolbar>
-    <v-table theme="dark">
+    <v-table v-if="!isLoading">
       <thead>
         <tr>
           <th class="text-left">Title</th>
@@ -20,7 +20,7 @@
           <td>{{ item.level }}</td>
           <td>{{ item.contentInHours }}</td>
           <td>
-            <v-btn color="primary" text @click="editCourse(item.id)">
+            <v-btn color="primary" text @click="openEditDialog(item.id)">
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
             <v-btn color="error" text @click="deleteCourse(item.id)">
@@ -30,13 +30,16 @@
         </tr>
       </tbody>
     </v-table>
-    <CreateCourse ref="createCourse" @savedCourse="addCourse" />
+    <CreateCourse
+      ref="createCourse"
+      @savedCourse="addCourse"
+      @editedCourse="editCourse"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import CreateCourse from '@/components/CreateCourse.vue'
-import type { ICourse, IContent, ICourseResponse } from '@/types/course'
 
 export default {
   name: 'CoursesComponent',
@@ -45,9 +48,14 @@ export default {
     CreateCourse
   },
 
+  async created() {
+    this.fetchCourses()
+  },
+
   data() {
     return {
-      courses: [] as ICourseResponse[]
+      courses: Array<any>(),
+      isLoading: false
     }
   },
 
@@ -55,14 +63,37 @@ export default {
     openCreateDialog(): void {
       this.$refs.createCourse.openDialog()
     },
-    async addCourse(courseData: ICourseResponse) {
+    openEditDialog(id: string): void {
+      const course = this.courses.find((course) => course.id === id)
+
+      this.$refs.createCourse.openDialog(course)
+    },
+    async addCourse(courseData: any) {
       this.courses.push(courseData)
     },
-    editCourse(id: string) {
-      console.log('edit course', id)
+    async editCourse(data: any) {
+      console.log(data)
+      const courseIndex = this.courses.findIndex(
+        (course) => course.id === data.id
+      )
+
+      console.log(courseIndex)
+      console.log(this.courses[courseIndex])
+
+      this.courses[courseIndex] = data
+
+      this.isLoading = true
+      await this.$nextTick(() => {
+        this.isLoading = false
+      })
     },
     deleteCourse(id: string) {
       this.courses = this.courses.filter((course) => course.id !== id)
+    },
+    async fetchCourses() {
+      const { data: courses } = await this.$axios.get('/courses')
+
+      this.courses = courses.data
     }
   }
 }
