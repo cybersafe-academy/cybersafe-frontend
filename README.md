@@ -15,13 +15,13 @@ Siga as etapas abaixo para instalar as dependências do projeto:
 1. Faça o clone deste repositório para o seu diretório local:
 
    ```bash
-   git clone https://github.com/seu-usuario/cybersafe-academy.git
+   git clone https://github.com/cybersafe-academy/cybersafe-frontend.git
    ```
 
 2. Navegue até o diretório do projeto:
 
    ```bash
-   cd cybersafe-academy
+   cd cybersafe-frontend
    ```
 
 3. Execute o comando `npm install` para instalar as dependências do projeto:
