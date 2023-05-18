@@ -49,16 +49,13 @@
         ></v-text-field>
 
         <v-text-field
-          v-model="age"
           clearable
-          class="default-input"
-          label="Age"
-          prepend-inner-icon="mdi-cake-variant"
+          label="Birth Date"
+          prepend-inner-icon="mdi-calendar"
+          placeholder="YYYY-MM-DD"
           variant="solo"
           bg-color="#f5f7f9"
-          type="number"
-          @keyup.enter="signup"
-          :rules="[required]"
+          type="date"
         ></v-text-field>
 
         <v-text-field
@@ -127,12 +124,13 @@ export default {
     return {
       name: '',
       cpf: '',
-      age: '',
+      birthdayDate: new Date(),
       email: '',
       password: '',
       passwordConfirmation: '',
       showPassword: false,
-      passwordsDoNotMatch: false
+      passwordsDoNotMatch: false,
+      menu1: false
     }
   },
 
@@ -161,7 +159,7 @@ export default {
       if (
         !this.name ||
         !this.cpf ||
-        !this.age ||
+        !this.birthdayDate ||
         !this.email ||
         !this.password ||
         !this.passwordConfirmation
@@ -186,6 +184,9 @@ export default {
     },
 
     verifyFields(): boolean {
+      console.log(this.birthdayDate)
+      console.log(this.$refs.qqcoisa)
+
       if (!this.verifyEmptyFields()) return false
       if (!this.verifyPassword()) return false
       if (!this.validateEmail(this.email)) return false
@@ -205,7 +206,7 @@ export default {
         const signupData: ISignup = {
           name: this.name,
           cpf: this.cpf,
-          age: +this.age,
+          age: this.birthdayDate.toISOString(),
           email: this.email,
           password: this.password,
           passwordConfirmation: this.passwordConfirmation
@@ -223,6 +224,10 @@ export default {
 
         this.$toast.error(error.description)
       }
+    },
+
+    test() {
+      console.log(this.$refs.qqcoisa)
     }
   }
 }
@@ -307,6 +312,10 @@ export default {
 .link:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+.vuejs3-datepicker {
+  position: static !important;
 }
 
 @media (max-width: 1100px) {

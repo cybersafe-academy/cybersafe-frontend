@@ -17,6 +17,12 @@ import axios from './globals/plugins/axios'
 import ToastPlugin from 'vue-toast-notification'
 import 'vue-toast-notification/dist/theme-bootstrap.css'
 
+// Vue Date Picker
+// import VueDatePicker from '@vuepic/vue-datepicker'
+// import '@vuepic/vue-datepicker/dist/main.css'
+
+import Datepicker from 'vuejs3-datepicker'
+
 // Router
 import router from '@/utils/routes'
 
@@ -33,6 +39,8 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
+
+app.component('datepicker', Datepicker)
 
 app.use(router)
 app.use(createPinia())

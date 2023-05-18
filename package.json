@@ -13,11 +13,13 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^5.1.1",
     "@vueuse/core": "^10.1.2",
     "dayjs": "^1.11.7",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6",
+    "vuejs3-datepicker": "^1.0.16",
     "vuetify": "^3.1.11"
   },
   "devDependencies": {
