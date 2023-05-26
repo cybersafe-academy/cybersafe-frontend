@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <logo-section class="section" />
+    <LogoSection class="section" />
 
     <div class="section right-section">
       <div class="greeting-container">
@@ -56,9 +56,9 @@
       </v-btn>
 
       <div class="signup-container">
-        <span> Don't have an account? </span>
+        <span> First acess? </span>
 
-        <span @click="switchSignup" class="link"> Sign up </span>
+        <span @click="switchFirstAccess" class="link"> Click here! </span>
       </div>
     </div>
   </div>
@@ -103,8 +103,8 @@ export default {
       return false
     },
 
-    switchSignup(): void {
-      this.$router.push('/signup')
+    switchFirstAccess(): void {
+      this.$router.push('/first-access')
     },
 
     switchForgotPassword(): void {

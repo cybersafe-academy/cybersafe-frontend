@@ -27,7 +27,7 @@
 
         <v-list-item
           prepend-icon="mdi-alert-box"
-          title="Spans"
+          title="Users"
           value="spans"
           link
           @click="emitPage('spans')"
