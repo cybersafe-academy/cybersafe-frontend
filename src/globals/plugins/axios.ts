@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type InternalAxiosRequestConfig } from 'axios'
 import dayjs from 'dayjs'
 import type { AxiosInstance } from 'axios'
 import type { App } from 'vue'
@@ -23,25 +23,27 @@ const api = axios.create({
 })
 
 // Token interceptor
-api.interceptors.request.use(async (config: any) => {
+api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   const accessToken = localStorage.getItem('accessToken')
   if (accessToken) {
     const tokenExpiration = localStorage.getItem('tokenExpiration')
 
     // Refresh ten minutes before expiration
-    if (dayjs().isAfter(dayjs(tokenExpiration).subtract(10, 'minute'))) {
-      try {
-        const { data } = await api.post<ILoginResponse>('auth/refresh-token')
+    if (config.url != 'auth/refresh') {
+      if (dayjs().isAfter(dayjs(tokenExpiration).subtract(10, 'minute'))) {
+        try {
+          const { data } = await api.post<ILoginResponse>('auth/refresh')
 
-        localStorage.setItem('accessToken', data.accessToken)
+          localStorage.setItem('accessToken', data.accessToken)
 
-        const newTokenExpiration = dayjs()
-          .add(data.expiresIn, 'second')
-          .toISOString()
-        localStorage.setItem('tokenExpiration', newTokenExpiration)
-      } catch (e: any) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('tokenExpiration')
+          const newTokenExpiration = dayjs()
+            .add(data.expiresIn, 'second')
+            .toISOString()
+          localStorage.setItem('tokenExpiration', newTokenExpiration)
+        } catch (e: any) {
+          localStorage.removeItem('accessToken')
+          localStorage.removeItem('tokenExpiration')
+        }
       }
     }
 
