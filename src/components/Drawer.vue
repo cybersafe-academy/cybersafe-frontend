@@ -1,55 +1,27 @@
 <template>
   <v-layout>
-    <v-navigation-drawer
-      rail
-      expand-on-hover
-      width="400"
-      class="navigation-drawer"
-    >
-      <v-list>
-        <v-list-item
-          prepend-icon="mdi-account-circle"
-          :title="userName"
-          :subtitle="userEmail"
-          class="pointer"
-          @click="openProfile"
-        />
+    <<<<<<< Updated upstream <v-navigation-drawer rail expand-on-hover width="400" class="navigation-drawer">
+      =======
+      <v-navigation-drawer style="position: relative !important" expand-on-hover rail width="400">
+        >>>>>>> Stashed changes
+        <v-list>
+          <v-list-item prepend-icon="mdi-account-circle" :title="userName" :subtitle="userEmail" class="pointer"
+            @click="openProfile" />
 
-        <v-divider />
+          <v-divider />
 
-        <v-list-item
-          prepend-icon="mdi-list-box"
-          title="Courses"
-          value="courses"
-          link
-          @click="emitPage('courses')"
-        />
+          <v-list-item prepend-icon="mdi-list-box" title="Courses" value="courses" link @click="emitPage('courses')" />
 
-        <v-list-item
-          prepend-icon="mdi-badge-account-horizontal"
-          title="Users"
-          value="users"
-          link
-          @click="emitPage('users')"
-        />
+          <v-list-item prepend-icon="mdi-badge-account-horizontal" title="Users" value="users" link
+            @click="emitPage('users')" />
 
-        <v-list-item
-          prepend-icon="mdi-briefcase"
-          title="Companies"
-          value="companies"
-          link
-          @click="emitPage('companies')"
-        />
-      </v-list>
-      <template v-slot:append>
-        <v-list-item
-          prepend-icon="mdi-logout"
-          title="Logout"
-          link
-          @click="logout"
-        />
-      </template>
-    </v-navigation-drawer>
+          <v-list-item prepend-icon="mdi-briefcase" title="Companies" value="companies" link
+            @click="emitPage('companies')" />
+        </v-list>
+        <template v-slot:append>
+          <v-list-item prepend-icon="mdi-logout" title="Logout" link @click="logout" />
+        </template>
+      </v-navigation-drawer>
   </v-layout>
 </template>
 

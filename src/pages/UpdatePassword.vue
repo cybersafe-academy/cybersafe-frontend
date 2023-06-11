@@ -8,47 +8,21 @@
       </div>
 
       <v-form class="input-container" ref="form">
-        <v-text-field
-          v-model="password"
-          clearable
-          class="password-input"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPassword ? 'text' : 'password'"
-          label="Password"
-          prepend-inner-icon="mdi-lock"
-          @click:append="showPassword = !showPassword"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="updatePassword"
-          :rules="[required, passwordMin]"
-          :error-messages="passwordErrors"
-        />
+        <v-text-field v-model="password" clearable class="password-input"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'"
+          label="Password" prepend-inner-icon="mdi-lock" @click:append="showPassword = !showPassword" variant="solo"
+          bg-color="#f5f7f9" @keyup.enter="updatePassword" :rules="[required, passwordMin]"
+          :error-messages="passwordErrors" />
 
-        <v-text-field
-          v-model="passwordConfirmation"
-          clearable
-          class="password-input"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPassword ? 'text' : 'password'"
-          label="Password confirmation"
-          prepend-inner-icon="mdi-lock"
-          @click:append="showPassword = !showPassword"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="updatePassword"
-          :rules="[required, passwordMin]"
-          :error-messages="passwordErrors"
-        />
+        <v-text-field v-model="passwordConfirmation" clearable class="password-input"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'"
+          label="Password confirmation" prepend-inner-icon="mdi-lock" @click:append="showPassword = !showPassword"
+          variant="solo" bg-color="#f5f7f9" @keyup.enter="updatePassword" :rules="[required, passwordMin]"
+          :error-messages="passwordErrors" />
       </v-form>
 
-      <v-btn
-        @click="updatePassword"
-        class="login-button text-white"
-        height="65"
-        color="#3e78fc"
-        rounded="lg"
-        :loading="isLoading"
-      >
+      <v-btn @click="updatePassword" class="login-button text-white" height="65" color="#3e78fc" rounded="lg"
+        :loading="isLoading">
         Update password
       </v-btn>
     </div>
