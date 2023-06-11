@@ -10,29 +10,51 @@
       </v-btn>
     </v-toolbar>
     <v-table fixed-header hover class="courseTable">
-      <thead>
-        <tr>
-          <th class="text-left">Title</th>
-          <th class="text-left">Level</th>
-          <th class="text-center">Content in hours</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in courses" :key="item.id">
-          <td>{{ item.title }}</td>
-          <td>{{ item.level }}</td>
-          <td class="text-center">{{ item.contentInHours }}</td>
-          <td class="actionsButtons">
-            <v-btn text @click="openEditDialog(item.id)" class="editBtn">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn text @click="deleteCourse(item.id)" class="deleteBtn">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
+      <template v-if="courses">
+        <thead>
+          <tr>
+            <th class="text-left">Title</th>
+            <th class="text-left">Level</th>
+            <th class="text-center">Content in hours</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in courses" :key="item.id">
+            <td>{{ item.title }}</td>
+            <td>{{ item.level }}</td>
+            <td class="text-center">{{ item.contentInHours }}</td>
+            <td class="actionsButtons">
+              <v-btn text @click="openEditDialog(item.id)" class="editBtn">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn text @click="deleteCourse(item.id)" class="deleteBtn">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-else>
+        <tbody>
+          <tr>
+            <th class="text-left">Title</th>
+            <th class="text-left">Level</th>
+            <th class="text-center">Content in hours</th>
+            <th class="text-center">Actions</th>
+          </tr>
+          <tr>
+            <td :colspan="4" style="text-align: center; padding: 20px">
+              <h2>No courses registered yet</h2>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-slot:bottom>
+        <v-pagination
+          :length="5"
+        ></v-pagination>
+      </template>
     </v-table>
     <CreateCourse
       ref="createCourse"
@@ -54,8 +76,13 @@ export default {
     CreateCourse
   },
 
+  setup() {
+
+  },
+
   async created() {
     this.fetchCourses()
+    console.log(this.courses)
   },
 
   data() {
@@ -103,6 +130,7 @@ export default {
       try {
         const { data: courses } = await this.$axios.get('/courses')
         this.courses = courses.data
+        console.log(courses)
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
@@ -128,9 +156,8 @@ export default {
 }
 
 .courseTable {
-  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  height: 90%;
 }
 
 .tableToolbar {
@@ -138,7 +165,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  background-color: white;
+  background-color: transparent;
 }
 
 .addCourseBtn {
@@ -146,6 +173,7 @@ export default {
   height: 3rem;
   width: 10rem;
   background-color: rgb(62, 120, 252);
+  margin: 0 !important;
 }
 
 .actionsButtons {

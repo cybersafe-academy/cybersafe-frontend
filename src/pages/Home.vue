@@ -49,6 +49,7 @@ export default {
   flex-direction: row;
   height: 100vh;
   width: 100vw;
+  background-color: #f8f8f8;
 }
 
 .right-section {
@@ -57,5 +58,6 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  background-color: #f8f8f8;
 }
 </style>

@@ -51,6 +51,7 @@
         height="65"
         color="#3e78fc"
         rounded="lg"
+        :loading="isLoading"
       >
         Login
       </v-btn>
@@ -84,7 +85,8 @@ export default {
     return {
       cpf: '',
       password: '',
-      showPassword: false
+      showPassword: false,
+      isLoading: false
     }
   },
 
@@ -125,6 +127,8 @@ export default {
           cpf: this.cpf,
           password: this.password
         }
+        
+        this.isLoading = true
 
         const { data: loginData } = await this.$axios.post<ILoginResponse>(
           '/auth/login',
@@ -136,12 +140,14 @@ export default {
         const { data: userData } = await this.$axios.get<IUserData>('/users/me')
         authStore.updateUserData(userData)
 
+        this.isLoading = false
         this.$toast.success('Logged in successfully')
 
         this.switchHome()
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
+        this.isLoading = false
         this.$toast.error(error.description)
       }
     }

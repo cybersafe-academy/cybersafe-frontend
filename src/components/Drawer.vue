@@ -1,10 +1,10 @@
 <template>
   <v-layout>
     <v-navigation-drawer
-      style="position: relative !important"
-      expand-on-hover
       rail
+      expand-on-hover
       width="400"
+      class="navigation-drawer"
     >
       <v-list>
         <v-list-item
@@ -26,22 +26,29 @@
         />
 
         <v-list-item
-          prepend-icon="mdi-alert-box"
+          prepend-icon="mdi-badge-account-horizontal"
           title="Users"
-          value="spans"
+          value="users"
           link
-          @click="emitPage('spans')"
+          @click="emitPage('users')"
         />
 
-        <v-divider />
+        <v-list-item
+          prepend-icon="mdi-briefcase"
+          title="Companies"
+          value="companies"
+          link
+          @click="emitPage('companies')"
+        />
+      </v-list>
+      <template v-slot:append>
         <v-list-item
           prepend-icon="mdi-logout"
           title="Logout"
-          color="red"
           link
           @click="logout"
         />
-      </v-list>
+      </template>
     </v-navigation-drawer>
   </v-layout>
 </template>
@@ -71,12 +78,14 @@ export default {
   },
 
   methods: {
-    async openProfile() {
-      console.log('open profile')
-    },
     emitPage(page: string) {
       this.$emit('changePage', page)
     },
+
+    async openProfile() {
+      console.log('open profile')
+    },
+
     async logout() {
       const authStore = useAuthStore()
 
@@ -91,3 +100,12 @@ export default {
   }
 }
 </script>
+
+<style>
+.navigation-drawer {
+  position: relative !important;
+  border-radius: 0 16px 16px 0;
+  border: none;
+  padding-bottom: 15px;
+}
+</style>

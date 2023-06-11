@@ -35,7 +35,7 @@
               </v-col>
               <v-col cols="12" sm="6">
                 <v-text-field
-                  v-model="content"
+                  v-model="contentInHours"
                   label="Content in hours"
                   type="number"
                   required
@@ -99,6 +99,7 @@
 </template>
 
 <script lang="ts">
+import type { ICourse } from '@/types/course'
 import type { IErrorResponse } from '@/types/errors'
 
 export default {
@@ -115,7 +116,7 @@ export default {
     title: '',
     description: '',
     thumbnail: '',
-    content: 0,
+    contentInHours: 0,
     level: '',
     contentTitle: '',
     contentType: '',
@@ -131,7 +132,7 @@ export default {
         this.title = course.title
         this.description = course.description
         this.thumbnail = course.thumbnailURL
-        this.content = course.contentInHours
+        this.contentInHours = course.contentInHours
         this.level = course.level
         this.contentTitle = course.contents[0].title
         this.contentType = course.contents[0].contentType
@@ -145,7 +146,7 @@ export default {
       this.title = ''
       this.description = ''
       this.thumbnail = ''
-      this.content = 1
+      this.contentInHours = 1
       this.level = ''
       this.contentTitle = ''
       this.contentType = ''
@@ -156,7 +157,7 @@ export default {
         !this.title ||
         !this.description ||
         !this.thumbnail ||
-        !this.content ||
+        !this.contentInHours ||
         !this.level ||
         !this.contentTitle ||
         !this.contentType ||
@@ -172,18 +173,17 @@ export default {
     async saveCourse() {
       if (!this.verifyFields()) return
 
-      const course: any = {
-        id: this.id,
+      const course: ICourse = {
         title: this.title,
         description: this.description,
         thumbnailURL: this.thumbnail,
-        contentInHours: +this.content,
+        contentInHours: +this.contentInHours,
         level: this.level,
         contents: [
           {
             title: this.contentTitle,
             contentType: this.contentType,
-            imageURL: this.contentURL
+            URL: this.contentURL
           }
         ]
       }
@@ -191,6 +191,8 @@ export default {
       try {
         if (this.id) {
           const { data } = await this.$axios.put(`/courses/${this.id}`, course)
+
+          console.log(data)
 
           this.closeDialog()
 
