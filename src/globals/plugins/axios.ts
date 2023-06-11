@@ -53,6 +53,21 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
   return config
 })
 
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('tokenExpiration')
+      location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
+
 export default {
   install: (app: App, options: AxiosOptions) => {
     if (options.baseUrl) {

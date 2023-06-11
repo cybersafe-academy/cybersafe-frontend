@@ -192,8 +192,6 @@ export default {
         if (this.id) {
           const { data } = await this.$axios.put(`/courses/${this.id}`, course)
 
-          console.log(data)
-
           this.closeDialog()
 
           this.$toast.success('Course updated successfully')

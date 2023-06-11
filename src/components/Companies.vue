@@ -1,34 +1,30 @@
 <template>
   <div class="tableContent">
     <v-toolbar class="tableToolbar">
-      <v-btn
-        class="addCourseBtn text-white"
-        rounded="lg"
-        @click="openCreateDialog"
-      >
-        Add Course
+      <v-btn class="addBtn text-white" rounded="lg" @click="openCreateDialog">
+        Add Company
       </v-btn>
     </v-toolbar>
-    <v-table fixed-header hover class="courseTable">
-      <template v-if="courses">
+    <v-table fixed-header hover class="companyTable">
+      <template v-if="companies">
         <thead>
           <tr>
-            <th class="text-left">Title</th>
-            <th class="text-left">Level</th>
-            <th class="text-center">Content in hours</th>
+            <th class="text-left">Trade Name</th>
+            <th class="text-left">CNPJ</th>
+            <th class="text-left">Email</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in courses" :key="item.id">
-            <td>{{ item.title }}</td>
-            <td>{{ item.level }}</td>
-            <td class="text-center">{{ item.contentInHours }}</td>
+          <tr v-for="item in companies" :key="item.id">
+            <td>{{ item.tradeName }}</td>
+            <td>{{ item.cnpj }}</td>
+            <td class="text-left">{{ item.email }}</td>
             <td class="actionsButtons">
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn text @click="deleteCourse(item.id)" class="deleteBtn">
+              <v-btn text @click="deleteCompany(item.id)" class="deleteBtn">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -38,88 +34,89 @@
       <template v-else>
         <tbody>
           <tr>
-            <th class="text-left">Title</th>
-            <th class="text-left">Level</th>
-            <th class="text-center">Content in hours</th>
+            <th class="text-left">Trade Name</th>
+            <th class="text-left">CNPJ</th>
+            <th class="text-left">Email</th>
             <th class="text-center">Actions</th>
           </tr>
           <tr>
             <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>No courses registered yet</h2>
+              <h2>No companies registered yet</h2>
             </td>
           </tr>
         </tbody>
       </template>
     </v-table>
-    <CreateCourse
-      ref="createCourse"
-      @savedCourse="addCourse"
-      @editedCourse="editCourse"
+    <CreateCompany
+      ref="createCompany"
+      @savedCompany="addCompany"
+      @editedCompany="editCompany"
     />
   </div>
 </template>
 
 <script lang="ts">
-import CreateCourse from '@/components/CreateCourse.vue'
+import CreateCompany from '@/components/CreateCompany.vue'
 
 import type { IErrorResponse } from '@/types/errors'
 
 export default {
-  name: 'CoursesComponent',
+  name: 'CompaniesComponent',
 
   components: {
-    CreateCourse
+    CreateCompany
   },
 
   async created() {
-    this.fetchCourses()
+    this.fetchCompanies()
   },
 
   data() {
     return {
-      courses: Array<any>(),
+      companies: Array<any>(),
       isLoading: false
     }
   },
 
   methods: {
     openCreateDialog(): void {
-      ;(this.$refs.createCourse as any).openDialog()
+      ;(this.$refs.createCompany as any).openDialog()
     },
     openEditDialog(id: string): void {
-      const course = this.courses.find((course) => course.id === id)
+      const company = this.companies.find((company) => company.id === id)
 
-      ;(this.$refs.createCourse as any).openDialog(course)
+      ;(this.$refs.createCompany as any).openDialog(company)
     },
-    async addCourse(courseData: any) {
-      if (!this.courses) {
-        this.courses = []
+    async addCompany(companyData: any) {
+      if (!this.companies) {
+        this.companies = []
       }
-      this.courses.push(courseData)
+
+      this.companies.push(companyData)
     },
-    async editCourse(data: any) {
-      const courseIndex = this.courses.findIndex(
-        (course) => course.id === data.id
+    async editCompany(data: any) {
+      const companyIndex = this.companies.findIndex(
+        (company) => company.id === data.id
       )
 
-      this.courses[courseIndex] = data
+      this.companies[companyIndex] = data
     },
-    async deleteCourse(id: string) {
+    async deleteCompany(id: string) {
       try {
-        await this.$axios.delete(`/courses/${id}`)
-        this.courses = this.courses.filter((course) => course.id !== id)
+        await this.$axios.delete(`/companies/${id}`)
+        this.companies = this.companies.filter((company) => company.id !== id)
 
-        this.$toast.success('Course deleted successfully')
+        this.$toast.success('Company deleted successfully')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)
       }
     },
-    async fetchCourses() {
+    async fetchCompanies() {
       try {
-        const { data: courses } = await this.$axios.get('/courses')
-        this.courses = courses.data
+        const { data: companies } = await this.$axios.get('/companies')
+        this.companies = companies.data
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
@@ -144,7 +141,7 @@ export default {
   padding: 2rem;
 }
 
-.courseTable {
+.companyTable {
   border-radius: 4px;
   height: 90%;
 }
@@ -157,7 +154,7 @@ export default {
   background-color: transparent;
 }
 
-.addCourseBtn {
+.addBtn {
   font-size: 1rem;
   height: 3rem;
   width: 10rem;
