@@ -73,7 +73,7 @@ export default {
         this.hasError = true
       }
 
-      if (this.password.length < 8 || this.passwordConfirmation.length < 81) {
+      if (this.password.length < 8 || this.passwordConfirmation.length < 8) {
         this.passwordErrors.push('Min 8 characters')
 
         this.hasError = true

@@ -9,10 +9,14 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="Name" label="User Name" variant="solo" required></v-text-field>
+                <v-text-field v-model="Email" label="User Email" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="Role" label="User Role" variant="solo" required></v-text-field>
+                <v-select v-model="Role" label="Role" variant="solo" required :items="[
+                  'default',
+                  'admin',
+                  'master',
+                ]"></v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -30,6 +34,7 @@
 <script lang="ts">
 import type { IErrorResponse } from '@/types/errors'
 
+
 export default {
   props: {
     user: {
@@ -41,7 +46,7 @@ export default {
   data: () => ({
     dialog: false,
     id: '',
-    Name: '',
+    Email: '',
     Role: '',
   }),
 
@@ -51,7 +56,7 @@ export default {
 
       if (user) {
         this.id = user.id
-        this.Name = user.Name
+        this.Email = user.Email
         this.Role = user.Role
       }
     },
@@ -59,12 +64,12 @@ export default {
       this.dialog = false
 
       this.id = ''
-      this.Name = ''
+      this.Email = ''
       this.Role = ''
     },
     verifyFields() {
       if (
-        !this.Name ||
+        !this.Email ||
         !this.Role
       ) {
         this.$toast.error('Please fill all the fields')
@@ -79,17 +84,17 @@ export default {
 
       const user: any = {
         id: this.id,
-        Name: this.Name,
+        Email: this.Email,
         Role: this.Role
       }
 
       try {
 
-        const { data } = await this.$axios.post('/users', user)
+        const { data } = await this.$axios.post('/users/pre-signup', user)
 
         this.closeDialog()
 
-        this.$toast.success('Pre SignedUp user successfully')
+        this.$toast.success('Pre signedup user successfully')
 
         this.$emit('preSignedUpUSer', data)
       } catch (e: any) {

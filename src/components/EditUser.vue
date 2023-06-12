@@ -12,13 +12,21 @@
                 <v-text-field v-model="Name" label="User Name" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="Role" label="User Role" variant="solo" required></v-text-field>
+                <v-text-field :disabled="true" v-model="Email" label="User Email" variant="solo" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-select v-model="Role" label="Role" variant="solo" required :items="[
+                  'default',
+                  'admin',
+                  'master',
+                ]"></v-select>
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="CPF" label="User CPF" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="BirthDate" label="User Birth Date" variant="solo" required></v-text-field>
+                <v-text-field type="date" v-model="BirthDate" label="User Birth Date" variant="solo"
+                  required></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -35,6 +43,8 @@
 
 <script lang="ts">
 import type { IErrorResponse } from '@/types/errors'
+import formatCPF from '@/utils/masks'
+import dayjs from 'dayjs';
 
 export default {
   props: {
@@ -48,6 +58,7 @@ export default {
     dialog: false,
     id: '',
     Name: '',
+    Email: '',
     Role: '',
     CPF: '',
     BirthDate: ''
@@ -56,12 +67,18 @@ export default {
   methods: {
     openDialog(user: any) {
       this.dialog = true
+
       if (user) {
+
+        const dateTime = dayjs(user.birthDate)
+        var formattedDate = dateTime.format('YYYY-MM-DD');
+
         this.id = user.id
-        this.Name = user.Name
-        this.Role = user.Role
-        this.CPF = user.CPF
-        this.BirthDate = user.BirthDate
+        this.Name = user.name
+        this.Email = user.email
+        this.Role = user.role
+        this.CPF = formatCPF(user.cpf)
+        this.BirthDate = formattedDate
       }
     },
     closeDialog() {
@@ -69,6 +86,7 @@ export default {
 
       this.id = ''
       this.Name = ''
+      this.Email = ''
       this.Role = ''
       this.CPF = ''
       this.BirthDate = ''
@@ -90,14 +108,18 @@ export default {
     async editUser() {
       if (!this.verifyFields()) return
 
+      const dateTime = dayjs(this.BirthDate);
+      const formattedDate = dateTime.format('YYYY-MM-DD');
+
       const user: any = {
         id: this.id,
         Name: this.Name,
+        Email: this.Email,
         Role: this.Role,
-        CPF: this.CPF,
-        BirthDate: this.BirthDate
+        CPF: this.CPF.replace(/\D/g, ''),
+        BirthDate: formattedDate
       }
-
+      console.log(user)
       try {
         if (this.id) {
           const { data } = await this.$axios.put(`/users/${this.id}`, user)

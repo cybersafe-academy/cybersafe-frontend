@@ -9,81 +9,40 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  v-model="title"
-                  label="Course title"
-                  variant="solo"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="title" label="Course title" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea
-                  v-model="description"
-                  label="Description"
-                  variant="solo"
-                  required
-                ></v-textarea>
+                <v-textarea v-model="description" label="Description" variant="solo" required></v-textarea>
               </v-col>
               <v-col cols="12">
-                <v-text-field
-                  v-model="thumbnail"
-                  label="Thumbnail URL"
-                  type="string"
-                  variant="solo"
-                  required
-                ></v-text-field>
+                <v-text-field v-model="thumbnail" label="Thumbnail URL" type="string" variant="solo"
+                  required></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="contentInHours"
-                  label="Content in hours"
-                  type="number"
-                  required
-                  variant="solo"
+                <v-text-field v-model="contentInHours" label="Content in hours" type="number" required variant="solo"
                   :rules="[
                     (v) => v >= 1 || 'Content must be a positive number'
-                  ]"
-                ></v-text-field>
+                  ]"></v-text-field>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-select
-                  v-model="level"
-                  label="Level"
-                  variant="solo"
-                  required
-                  :items="['beginner', 'intermediate', 'advanced']"
-                ></v-select>
+                <v-select v-model="level" label="Level" variant="solo" required
+                  :items="['beginner', 'intermediate', 'advanced']"></v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  v-model="contentTitle"
-                  label="Content Title"
-                  type="string"
-                  required
-                  variant="solo"
-                ></v-text-field>
+                <v-text-field v-model="contentTitle" label="Content Title" type="string" required
+                  variant="solo"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6">
-                <v-select
-                  v-model="contentType"
-                  label="Content Type"
-                  required
-                  variant="solo"
-                  :items="['youtube', 'pdf', 'image']"
-                ></v-select>
+                <v-select v-model="contentType" label="Content Type" required variant="solo"
+                  :items="['youtube', 'pdf', 'image']"></v-select>
               </v-col>
               <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="contentURL"
-                  label="Content URL"
-                  type="string"
-                  required
-                  variant="solo"
-                ></v-text-field>
+                <v-text-field v-model="contentURL" label="Content URL" type="string" required
+                  variant="solo"></v-text-field>
               </v-col>
             </v-row>
           </v-container>

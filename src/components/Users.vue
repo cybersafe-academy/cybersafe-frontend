@@ -6,36 +6,55 @@
       </v-btn>
     </v-toolbar>
     <v-table fixed-header hover class="userTable">
-      <thead>
-        <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Role</th>
-          <th class="text-center">Email</th>
-          <th class="text-center">CPF</th>
-          <th class="text-center">Birth Date</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in users" :key="item.id">
-          <td>{{ item.name }}</td>
-          <td>{{ item.role }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.cpf }}</td>
-          <td>{{ item.birthDate }}</td>
-          <td class="actionsButtons">
-            <v-btn text @click="openEditDialog(item.id)" class="editBtn">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn text @click="deleteUser(item.id)" class="deleteBtn">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
+      <template v-if="users">
+        <thead>
+          <tr>
+            <th class="text-left">Name</th>
+            <th class="text-left">Role</th>
+            <th class="text-left">Email</th>
+            <th class="text-left">CPF</th>
+            <th class="text-left">Birth Date</th>
+            <th class="text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in users" :key="item.id">
+            <td>{{ item.name }}</td>
+            <td>{{ capitalizeString(item.role) }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ formatCPF(item.cpf) }}</td>
+            <td>{{ dayjs(item.birthDate).isValid() ? parseDateFormatToString(item.birthDate) : '' }}</td>
+            <td class="actionsButtons">
+              <v-btn text @click="openEditDialog(item.id)" class="editBtn">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn text @click="deleteUser(item.id)" class="deleteBtn">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-else>
+        <tbody>
+          <tr>
+            <th class="text-left">Name</th>
+            <th class="text-left">Role</th>
+            <th class="text-center">Email</th>
+            <th class="text-center">CPF</th>
+            <th class="text-center">Birth Date</th>
+            <th class="text-center">Actions</th>
+          </tr>
+          <tr>
+            <td :colspan="6" style="text-align: center; padding: 20px">
+              <h2>No users registered yet</h2>
+            </td>
+          </tr>
+        </tbody>
+      </template>
     </v-table>
+    <EditUser ref="EditUser" @editedUser="editUser" />
     <PreSignUpUser ref="PreSignUpUser" @preSignedUpUSer="addUser" />
-    <EditUser ref="EditUser" @editedUser="addUser" />
   </div>
 </template>
 
@@ -47,6 +66,7 @@ import type { IErrorResponse } from '@/types/errors'
 import parseDateFormatToString from '@/utils/date'
 import formatCPF from '@/utils/masks'
 import capitalizeString from '@/utils/string'
+import dayjs from 'dayjs';
 
 
 export default {
@@ -59,7 +79,6 @@ export default {
 
   async created() {
     await this.fetchUsers()
-    this.parseUserData()
   },
 
   data() {
@@ -114,20 +133,10 @@ export default {
         this.$toast.error(error.description)
       }
     },
-    async parseUserData() {
-      this.users = this.users.map(function (item) {
-
-        const birthDateString = parseDateFormatToString(item.birthDate)
-        const formattedCPF = formatCPF(item.cpf)
-        const fomattedRole = capitalizeString(item.role)
-        return {
-          ...item,
-          birthDate: birthDateString,
-          cpf: formattedCPF,
-          role: fomattedRole,
-        }
-      })
-    }
+    parseDateFormatToString,
+    formatCPF,
+    capitalizeString,
+    dayjs,
   }
 }
 

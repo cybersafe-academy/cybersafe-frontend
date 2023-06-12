@@ -5,7 +5,7 @@
       <CoursesComponent />
     </div>
     <div v-if="selectedPage === 'users'" class="right-section">
-      <span class="greeting-text"> Work in progress! 🧑‍🏭 </span>
+      <UsersComponent />
     </div>
     <div v-if="selectedPage === 'companies'" class="right-section">
       <CompaniesComponent />
@@ -17,6 +17,7 @@
 import DrawerComponent from '@/components/Drawer.vue'
 import CoursesComponent from '@/components/Courses.vue'
 import CompaniesComponent from '@/components/Companies.vue'
+import UsersComponent from '@/components/Users.vue'
 
 export default {
   name: 'HomeComponent',
@@ -24,7 +25,8 @@ export default {
   components: {
     DrawerComponent,
     CoursesComponent,
-    CompaniesComponent
+    CompaniesComponent,
+    UsersComponent
   },
 
   data() {
