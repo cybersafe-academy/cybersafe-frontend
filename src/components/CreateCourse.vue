@@ -7,7 +7,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
+            <v-row class="mb-12">
               <v-col cols="12">
                 <v-text-field v-model="title" label="Course title" variant="solo" required></v-text-field>
               </v-col>
@@ -29,22 +29,7 @@
                   :items="['beginner', 'intermediate', 'advanced']"></v-select>
               </v-col>
             </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field v-model="contentTitle" label="Content Title" type="string" required
-                  variant="solo"></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" sm="6">
-                <v-select v-model="contentType" label="Content Type" required variant="solo"
-                  :items="['youtube', 'pdf', 'image']"></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field v-model="contentURL" label="Content URL" type="string" required
-                  variant="solo"></v-text-field>
-              </v-col>
-            </v-row>
+            <course-content-form :contents="contents"></course-content-form>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -60,8 +45,13 @@
 <script lang="ts">
 import type { ICourse } from '@/types/course'
 import type { IErrorResponse } from '@/types/errors'
+import CourseContentForm from '@/components/CourseContentForm.vue'
 
 export default {
+  components: {
+    CourseContentForm
+  },
+
   props: {
     course: {
       type: Object,
@@ -77,9 +67,7 @@ export default {
     thumbnail: '',
     contentInHours: 0,
     level: '',
-    contentTitle: '',
-    contentType: '',
-    contentURL: ''
+    contents: [],
   }),
 
   methods: {
@@ -93,9 +81,7 @@ export default {
         this.thumbnail = course.thumbnailURL
         this.contentInHours = course.contentInHours
         this.level = course.level
-        this.contentTitle = course.contents[0].title
-        this.contentType = course.contents[0].contentType
-        this.contentURL = course.contents[0].imageURL
+        this.contents = course.contents || []
       }
     },
     closeDialog() {
@@ -107,9 +93,7 @@ export default {
       this.thumbnail = ''
       this.contentInHours = 1
       this.level = ''
-      this.contentTitle = ''
-      this.contentType = ''
-      this.contentURL = ''
+      this.contents = []
     },
     verifyFields() {
       if (
@@ -117,10 +101,7 @@ export default {
         !this.description ||
         !this.thumbnail ||
         !this.contentInHours ||
-        !this.level ||
-        !this.contentTitle ||
-        !this.contentType ||
-        !this.contentURL
+        !this.level
       ) {
         this.$toast.error('Please fill all the fields')
 
@@ -138,13 +119,7 @@ export default {
         thumbnailURL: this.thumbnail,
         contentInHours: +this.contentInHours,
         level: this.level,
-        contents: [
-          {
-            title: this.contentTitle,
-            contentType: this.contentType,
-            URL: this.contentURL
-          }
-        ]
+        contents: this.contents
       }
 
       try {
@@ -176,6 +151,10 @@ export default {
 </script>
 
 <style scoped>
+
+.createCourseDialog {
+  overflow-y: auto;
+}
 .closeDialogBtn {
   background-color: #f44336 !important;
   color: #fff !important;
