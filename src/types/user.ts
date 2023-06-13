@@ -4,6 +4,7 @@ interface IUserData {
   email: string
   cpf: string
   age: number
+  role: string
 }
 
 export type { IUserData }

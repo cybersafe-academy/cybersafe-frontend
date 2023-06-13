@@ -9,10 +9,10 @@
 
         <v-list-item prepend-icon="mdi-list-box" title="Courses" value="courses" link @click="emitPage('courses')" />
 
-        <v-list-item prepend-icon="mdi-badge-account-horizontal" title="Users" value="users" link
+        <v-list-item v-if="role === 'master'" prepend-icon="mdi-badge-account-horizontal" title="Users" value="users" link
           @click="emitPage('users')" />
 
-        <v-list-item prepend-icon="mdi-briefcase" title="Companies" value="companies" link
+        <v-list-item v-if="role === 'master'" prepend-icon="mdi-briefcase" title="Companies" value="companies" link
           @click="emitPage('companies')" />
       </v-list>
       <template v-slot:append>
@@ -28,10 +28,19 @@ import { useAuthStore } from '@/stores/auth'
 export default {
   name: 'DrawerComponent',
 
+  
   data() {
     return {
       userName: '',
-      userEmail: ''
+      userEmail: '',
+    }
+  },
+  
+  computed: {
+    role() {
+      const authStore = useAuthStore()
+
+      return authStore.role || ''
     }
   },
 

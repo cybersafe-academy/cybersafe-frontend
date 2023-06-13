@@ -1,4 +1,8 @@
 function formatCPF(cpfString: string): string {
+    if (cpfString === undefined) {
+      return ''
+    }
+    
     const digits = cpfString.replace(/\D/g, '');
 
     if (digits.length === 11) {
