@@ -26,3 +26,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# *.Identifier (Inter-Regular.ttf:Zone.Identifier)
+*.Identifier

@@ -88,6 +88,8 @@ export default {
 
         this.$router.push('/login')
       }
+
+      this.token = t as string
     },
 
     verifyEmptyFields(): boolean {
