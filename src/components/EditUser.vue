@@ -70,15 +70,12 @@ export default {
 
       if (user) {
 
-        const dateTime = dayjs(user.birthDate)
-        var formattedDate = dateTime.format('YYYY-MM-DD');
-
         this.id = user.id
         this.Name = user.name
         this.Email = user.email
         this.Role = user.role
         this.CPF = formatCPF(user.cpf)
-        this.BirthDate = formattedDate
+        this.BirthDate = user.birthDate
       }
     },
     closeDialog() {
@@ -108,18 +105,14 @@ export default {
     async editUser() {
       if (!this.verifyFields()) return
 
-      const dateTime = dayjs(this.BirthDate);
-      const formattedDate = dateTime.format('YYYY-MM-DD');
-
       const user: any = {
         id: this.id,
         Name: this.Name,
         Email: this.Email,
         Role: this.Role,
         CPF: this.CPF.replace(/\D/g, ''),
-        BirthDate: formattedDate
+        BirthDate: this.BirthDate
       }
-      console.log(user)
       try {
         if (this.id) {
           const { data } = await this.$axios.put(`/users/${this.id}`, user)

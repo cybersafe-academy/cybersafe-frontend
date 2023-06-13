@@ -23,7 +23,7 @@
             <td>{{ capitalizeString(item.role) }}</td>
             <td>{{ item.email }}</td>
             <td>{{ formatCPF(item.cpf) }}</td>
-            <td>{{ dayjs(item.birthDate).isValid() ? parseDateFormatToString(item.birthDate) : '' }}</td>
+            <td>{{ dayjs(item.birthDate).isValid() ? dayjs(item.birthDate).format("DD/MM/YYYY") : '' }}</td>
             <td class="actionsButtons">
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
@@ -63,7 +63,6 @@ import PreSignUpUser from '@/components/PreSignUpUser.vue'
 import EditUser from '@/components/EditUser.vue'
 
 import type { IErrorResponse } from '@/types/errors'
-import parseDateFormatToString from '@/utils/date'
 import formatCPF from '@/utils/masks'
 import capitalizeString from '@/utils/string'
 import dayjs from 'dayjs';
@@ -126,14 +125,12 @@ export default {
       try {
         const { data: users } = await this.$axios.get('/users')
         this.users = users.data
-
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)
       }
     },
-    parseDateFormatToString,
     formatCPF,
     capitalizeString,
     dayjs,
@@ -168,7 +165,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  background-color: white;
+  background-color: transparent;
 }
 
 .preSignUpBtn {
