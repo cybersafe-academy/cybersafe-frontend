@@ -1,6 +1,6 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 import dayjs from 'dayjs'
-import type { AxiosInstance } from 'axios'
+import type { AxiosError, AxiosInstance } from 'axios'
 import type { App } from 'vue'
 
 import type { ILoginResponse } from '@/types/login'
@@ -30,7 +30,7 @@ api.interceptors.request.use(async (config: InternalAxiosRequestConfig) => {
 
     // Refresh ten minutes before expiration
     if (config.url != 'auth/refresh') {
-      if (dayjs().isAfter(dayjs(tokenExpiration).subtract(10, 'minute'))) {
+      if (dayjs().isAfter(dayjs(tokenExpiration).subtract(15, 'minute'))) {
         try {
           const { data } = await api.post<ILoginResponse>('auth/refresh')
 
@@ -58,8 +58,8 @@ api.interceptors.response.use(
   (response) => {
     return response
   },
-  (error) => {
-    if (error.response.status === 401) {
+  (error: AxiosError) => {
+    if (error.response?.status === 401 && error.config?.url != '/auth/login') {
       localStorage.removeItem('accessToken')
       localStorage.removeItem('tokenExpiration')
       location.href = '/login'
