@@ -1,44 +1,56 @@
 <template>
   <div class="tableContent">
     <v-toolbar class="tableToolbar">
-      <v-btn
-        class="addCourseBtn text-white"
-        rounded="lg"
-        @click="openCreateDialog"
-      >
+      <v-btn class="addCourseBtn text-white" rounded="lg" @click="openCreateDialog">
         Add Course
       </v-btn>
     </v-toolbar>
     <v-table fixed-header hover class="courseTable">
-      <thead>
-        <tr>
-          <th class="text-left">Title</th>
-          <th class="text-left">Level</th>
-          <th class="text-center">Content in hours</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in courses" :key="item.id">
-          <td>{{ item.title }}</td>
-          <td>{{ item.level }}</td>
-          <td class="text-center">{{ item.contentInHours }}</td>
-          <td class="actionsButtons">
-            <v-btn text @click="openEditDialog(item.id)" class="editBtn">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn text @click="deleteCourse(item.id)" class="deleteBtn">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </td>
-        </tr>
-      </tbody>
+      <template v-if="courses">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Level</th>
+            <th>Content in hours</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in pageCourses[currentPage]" :key="item.id">
+            <td>{{ item.title }}</td>
+            <td>{{ item.level }}</td>
+            <td class="text-center">{{ item.contentInHours }}</td>
+            <td class="actionsButtons">
+              <v-btn text @click="openEditDialog(item.id)" class="editBtn">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn text @click="deleteCourse(item.id)" class="deleteBtn">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-else>
+        <tbody>
+          <tr>
+            <th>Title</th>
+            <th>Level</th>
+            <th>Content in hours</th>
+            <th>Actions</th>
+          </tr>
+          <tr>
+            <td :colspan="4" style="text-align: center; padding: 20px">
+              <h2>No courses registered yet</h2>
+            </td>
+          </tr>
+        </tbody>
+      </template>
+      <template v-slot:bottom>
+        <v-pagination @update:modelValue="fetchCourses" :model-value="currentPage" :length="totalPages"></v-pagination>
+      </template>
     </v-table>
-    <CreateCourse
-      ref="createCourse"
-      @savedCourse="addCourse"
-      @editedCourse="editCourse"
-    />
+    <CreateCourse ref="createCourse" @savedCourse="addCourse" @editedCourse="editCourse" />
   </div>
 </template>
 
@@ -55,30 +67,44 @@ export default {
   },
 
   async created() {
-    this.fetchCourses()
+    this.fetchCourses(1)
   },
 
   data() {
     return {
       courses: Array<any>(),
-      isLoading: false
+      isLoading: false,
+      totalPages: 1,
+      currentPage: 1,
+      numberOfnewElements: 0,
+    }
+  },
+
+  computed: {
+    pageCourses() {
+      const courses: any = this.pageCourses ?? {};
+      const offset = (this.currentPage - 1) * 10
+      if (this.courses.length > 0) {
+        courses[this.currentPage] = this.courses.slice(Math.min(this.courses.length-this.numberOfnewElements, offset), offset+10)
+      }
+      return courses;
     }
   },
 
   methods: {
     openCreateDialog(): void {
-      ;(this.$refs.createCourse as any).openDialog()
+      (this.$refs.createCourse as any).openDialog();
     },
     openEditDialog(id: string): void {
-      const course = this.courses.find((course) => course.id === id)
-
-      ;(this.$refs.createCourse as any).openDialog(course)
+      const course = this.courses.find((course) => course.id === id);
+      (this.$refs.createCourse as any).openDialog(course)
     },
     async addCourse(courseData: any) {
-      if (!this.courses) {
-        this.courses = []
-      }
       this.courses.push(courseData)
+      if (this.courses.length > this.totalPages * 10) {
+        this.totalPages++;
+        this.currentPage = this.totalPages;
+      }
     },
     async editCourse(data: any) {
       const courseIndex = this.courses.findIndex(
@@ -91,6 +117,12 @@ export default {
       try {
         await this.$axios.delete(`/courses/${id}`)
         this.courses = this.courses.filter((course) => course.id !== id)
+        if (this.courses.length < this.totalPages*10) {
+          if (this.totalPages === this.currentPage) {
+            this.currentPage--
+          }
+          this.totalPages--;
+        }
 
         this.$toast.success('Course deleted successfully')
       } catch (e: any) {
@@ -99,15 +131,19 @@ export default {
         this.$toast.error(error.description)
       }
     },
-    async fetchCourses() {
-      try {
-        const { data: courses } = await this.$axios.get('/courses')
-        this.courses = courses.data
-      } catch (e: any) {
-        const error: IErrorResponse = e.response.data.error
-
-        this.$toast.error(error.description)
+    async fetchCourses(page: number) {
+      if (!this.pageCourses[page]) {
+        try {
+          const { data: courses } = await this.$axios.get('/courses', { params: { page } })
+          this.totalPages = courses.totalPages
+          this.numberOfnewElements = courses.data.length;
+          this.courses.push(...courses.data);
+        } catch (e: any) {
+          const error: IErrorResponse = e.response.data.error
+          this.$toast.error(error.description)
+        }
       }
+      this.currentPage = page;
     }
   }
 }
@@ -128,9 +164,14 @@ export default {
 }
 
 .courseTable {
-  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  height: 90%;
+}
+
+td,
+th {
+  min-width: 300px;
+  text-align: center !important;
 }
 
 .tableToolbar {
@@ -138,7 +179,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  background-color: white;
+  background-color: transparent;
 }
 
 .addCourseBtn {
@@ -146,6 +187,7 @@ export default {
   height: 3rem;
   width: 10rem;
   background-color: rgb(62, 120, 252);
+  margin: 0 !important;
 }
 
 .actionsButtons {

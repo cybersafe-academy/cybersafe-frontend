@@ -1,52 +1,28 @@
 <template>
   <div class="content">
-    <logo-section class="section" />
+    <LogoSection class="section" />
 
     <div class="section right-section">
       <div class="greeting-container">
         <span class="greeting-subtext"> Fill your password to update it </span>
       </div>
 
-      <div class="input-container">
-        <v-text-field
-          v-model="password"
-          clearable
-          class="password-input"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPassword ? 'text' : 'password'"
-          label="Password"
-          prepend-inner-icon="mdi-lock"
-          @click:append="showPassword = !showPassword"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="updatePassword"
-          :rules="[required, passwordMin]"
-        />
+      <v-form class="input-container" ref="form">
+        <v-text-field v-model="password" clearable class="password-input"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'"
+          label="Password" prepend-inner-icon="mdi-lock" @click:append="showPassword = !showPassword" variant="solo"
+          bg-color="#f5f7f9" @keyup.enter="updatePassword" :rules="[required, passwordMin]"
+          :error-messages="passwordErrors" />
 
-        <v-text-field
-          v-model="passwordConfirmation"
-          clearable
-          class="password-input"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="showPassword ? 'text' : 'password'"
-          label="Password confirmation"
-          prepend-inner-icon="mdi-lock"
-          @click:append="showPassword = !showPassword"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="updatePassword"
-          :rules="[required, passwordMin]"
-        />
-      </div>
+        <v-text-field v-model="passwordConfirmation" clearable class="password-input"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" :type="showPassword ? 'text' : 'password'"
+          label="Password confirmation" prepend-inner-icon="mdi-lock" @click:append="showPassword = !showPassword"
+          variant="solo" bg-color="#f5f7f9" @keyup.enter="updatePassword" :rules="[required, passwordMin]"
+          :error-messages="passwordErrors" />
+      </v-form>
 
-      <v-btn
-        @click="updatePassword"
-        class="login-button text-white"
-        height="65"
-        color="#3e78fc"
-        rounded="lg"
-        :loading="isLoading"
-      >
+      <v-btn @click="updatePassword" class="login-button text-white" height="65" color="#3e78fc" rounded="lg"
+        :loading="isLoading">
         Update password
       </v-btn>
     </div>
@@ -71,8 +47,14 @@ export default {
       passwordConfirmation: '',
       token: '',
       isLoading: false,
-      showPassword: false
+      showPassword: false,
+      passwordErrors: [] as string[],
+      hasError: false
     }
+  },
+
+  mounted() {
+    this.validateToken()
   },
 
   methods: {
@@ -84,30 +66,53 @@ export default {
       return v.length >= 8 || 'Min 8 characters'
     },
 
-    verifyEmptyFields(): boolean {
-      if (!this.password || !this.passwordConfirmation) {
-        this.$toast.error('Please fill all fields')
-
-        return true
-      }
-
+    verifyPasswords() {
       if (this.password !== this.passwordConfirmation) {
-        this.$toast.error('Passwords do not match')
+        this.passwordErrors.push('Passwords do not match')
 
-        return true
+        this.hasError = true
       }
 
-      const { t } = this.$route.query
+      if (this.password.length < 8 || this.passwordConfirmation.length < 8) {
+        this.passwordErrors.push('Min 8 characters')
 
-      this.token = t as string
+        this.hasError = true
+      }
+    },
+
+    validateToken(): void {
+      const { t } = this.$route.query
 
       if (!t) {
         this.$toast.error('Invalid token')
 
-        return true
+        this.$router.push('/login')
       }
 
-      return false
+      this.token = t as string
+    },
+
+    verifyEmptyFields(): boolean {
+      if (!this.password || !this.passwordConfirmation) {
+        this.$toast.error('Fill all fields')
+
+        return false
+      }
+
+      return true
+    },
+
+    verifyFields(): boolean {
+      if (!this.verifyEmptyFields()) return false
+
+      this.hasError = false
+
+      this.passwordErrors = []
+
+      this.validateToken()
+      this.verifyPasswords()
+
+      return !this.hasError
     },
 
     switchLogin(): void {
@@ -116,13 +121,21 @@ export default {
 
     async updatePassword() {
       try {
-        if (this.verifyEmptyFields()) return
+        if (!this.verifyFields()) return
 
         this.isLoading = true
 
-        await this.$axios.post('/auth/update-password?t=' + this.token, {
-          password: this.password
-        })
+        await this.$axios.post(
+          '/auth/update-password',
+          {
+            password: this.password
+          },
+          {
+            params: {
+              t: this.token
+            }
+          }
+        )
 
         this.isLoading = false
 

@@ -1,13 +1,13 @@
 <template>
   <div class="content">
-    <logo-section class="section" />
+    <LogoSection class="section" />
 
     <div class="section right-section">
       <div class="greeting-container">
         <span class="greeting-text"> Join our community! </span>
 
         <span class="greeting-subtext">
-          Fill in the form below to create your account
+          Fill in the form below to finish your sign up
         </span>
       </div>
 
@@ -32,30 +32,24 @@
           prepend-inner-icon="mdi-card-account-details"
           variant="solo"
           bg-color="#f5f7f9"
+          type="number"
           @keyup.enter="signup"
-          :rules="[required, validateCPF]"
+          :counter="11"
+          :rules="[required]"
+          :error-messages="cpfErrors"
         ></v-text-field>
 
         <v-text-field
-          v-model="email"
-          clearable
-          class="default-input"
-          label="Email"
-          prepend-inner-icon="mdi-email"
-          variant="solo"
-          bg-color="#f5f7f9"
-          @keyup.enter="signup"
-          :rules="[required, validateEmail]"
-        ></v-text-field>
-
-        <v-text-field
+          v-model="birthdayDate"
           clearable
           label="Birth Date"
           prepend-inner-icon="mdi-calendar"
-          placeholder="YYYY-MM-DD"
+          placeholder="MM-DD-YYYY"
           variant="solo"
           bg-color="#f5f7f9"
           type="date"
+          :rules="[required]"
+          :error-messages="dateErrors"
         ></v-text-field>
 
         <v-text-field
@@ -70,7 +64,7 @@
           bg-color="#f5f7f9"
           @keyup.enter="signup"
           :rules="[required, passwordMin]"
-          :error="passwordsDoNotMatch"
+          :error-messages="passwordErrors"
         ></v-text-field>
 
         <v-text-field
@@ -85,7 +79,7 @@
           bg-color="#f5f7f9"
           @keyup.enter="signup"
           :rules="[required, passwordMin]"
-          :error="passwordsDoNotMatch"
+          :error-messages="passwordErrors"
         ></v-text-field>
       </div>
 
@@ -109,8 +103,11 @@
 </template>
 
 <script lang="ts">
+import dayjs from 'dayjs'
+
 import LogoSection from '@/components/LogoSection.vue'
-import type { ISignup, ISignupResponse } from '@/types/signup'
+
+import type { ISignup } from '@/types/signup'
 import type { IErrorResponse } from '@/types/errors'
 
 export default {
@@ -124,14 +121,20 @@ export default {
     return {
       name: '',
       cpf: '',
-      birthdayDate: new Date(),
+      birthdayDate: '',
       email: '',
       password: '',
       passwordConfirmation: '',
       showPassword: false,
-      passwordsDoNotMatch: false,
-      menu1: false
+      cpfErrors: [] as string[],
+      passwordErrors: [] as string[],
+      dateErrors: [] as string[],
+      hasError: false
     }
+  },
+
+  mounted() {
+    this.validateToken()
   },
 
   methods: {
@@ -143,16 +146,32 @@ export default {
       return v.length >= 8 || 'Min 8 characters'
     },
 
-    validateEmail(v: any) {
-      const regex = /\S+@\S+\.\S+/
-
-      return regex.test(v) || 'Invalid email'
-    },
-
     validateCPF(v: any) {
       const cpf = v.replace(/\D/g, '')
 
-      return cpf.length === 11 || 'Invalid CPF'
+      if (cpf.length !== 11) {
+        this.cpfErrors.push('Invalid CPF')
+
+        this.hasError = true
+      }
+    },
+
+    verifyPasswords() {
+      if (this.password !== this.passwordConfirmation) {
+        this.passwordErrors.push('Passwords do not match')
+
+        this.hasError = true
+      }
+    },
+
+    validateDate(v: any) {
+      const date = dayjs(v)
+
+      if (date.isAfter(dayjs())) {
+        this.dateErrors.push('Invalid date')
+
+        this.hasError = true
+      }
     },
 
     verifyEmptyFields(): boolean {
@@ -160,7 +179,6 @@ export default {
         !this.name ||
         !this.cpf ||
         !this.birthdayDate ||
-        !this.email ||
         !this.password ||
         !this.passwordConfirmation
       ) {
@@ -172,27 +190,37 @@ export default {
       return true
     },
 
-    verifyPassword(): boolean {
-      if (this.password !== this.passwordConfirmation) {
-        this.passwordsDoNotMatch = true
-        this.$toast.error('Passwords do not match')
+    validateToken(): void {
+      const { t } = this.$route.query
 
-        return false
+      if (t === undefined) {
+        this.$toast.error('Invalid token', {
+          duration: 5000
+        })
+
+        this.$router.push('/login')
       }
-
-      return true
     },
 
     verifyFields(): boolean {
-      console.log(this.birthdayDate)
-      console.log(this.$refs.qqcoisa)
-
       if (!this.verifyEmptyFields()) return false
-      if (!this.verifyPassword()) return false
-      if (!this.validateEmail(this.email)) return false
-      if (!this.validateCPF(this.cpf)) return false
 
-      return true
+      this.hasError = false
+
+      this.cpfErrors = []
+      this.passwordErrors = []
+      this.dateErrors = []
+
+      this.validateToken()
+      this.validateCPF(this.cpf)
+      this.verifyPasswords()
+      this.validateDate(this.birthdayDate)
+
+      return !this.hasError
+    },
+
+    formatDate(date: string): string {
+      return dayjs(date).format('YYYY-MM-DD')
     },
 
     switchLogin(): void {
@@ -206,14 +234,14 @@ export default {
         const signupData: ISignup = {
           name: this.name,
           cpf: this.cpf,
-          age: this.birthdayDate.toISOString(),
-          email: this.email,
-          password: this.password,
-          passwordConfirmation: this.passwordConfirmation
+          birthDate: this.formatDate(this.birthdayDate),
+          password: this.password
         }
 
-        await this.$axios.post<ISignupResponse>('/users', {
-          ...signupData
+        await this.$axios.post('/auth/finish-signup', signupData, {
+          params: {
+            t: this.$route.query.t
+          }
         })
 
         this.$toast.success('Account created successfully!')
@@ -224,10 +252,6 @@ export default {
 
         this.$toast.error(error.description)
       }
-    },
-
-    test() {
-      console.log(this.$refs.qqcoisa)
     }
   }
 }
@@ -253,11 +277,6 @@ export default {
   justify-content: center;
   align-items: center;
   width: 50%;
-}
-
-.logo-image {
-  height: 400px;
-  border-radius: 30px;
 }
 
 .right-section {
@@ -314,10 +333,6 @@ export default {
   text-decoration: underline;
 }
 
-.vuejs3-datepicker {
-  position: static !important;
-}
-
 @media (max-width: 1100px) {
   .content {
     flex-direction: column;
@@ -327,19 +342,9 @@ export default {
     width: 100%;
   }
 
-  .left-section {
-    width: 100%;
-    border-radius: 0;
-    background-color: white;
-  }
-
   .right-section {
     width: 100%;
     padding: 0 5%;
-  }
-
-  .logo-image {
-    height: 300px;
   }
 
   .greeting-text {
@@ -347,10 +352,6 @@ export default {
   }
 
   .greeting-subtext {
-    font-size: 14px;
-  }
-
-  .login-button {
     font-size: 14px;
   }
 }

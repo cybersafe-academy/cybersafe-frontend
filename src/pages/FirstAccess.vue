@@ -5,7 +5,7 @@
     <div class="section right-section">
       <div class="greeting-container">
         <span class="greeting-subtext">
-          Fill your email to receive an recovery link
+          Fill your email to receive an link to finish your sign up
         </span>
       </div>
 
@@ -18,14 +18,14 @@
           prepend-inner-icon="mdi-email"
           variant="solo"
           bg-color="#f5f7f9"
-          @keyup.enter="forgotPassword"
+          @keyup.enter="firstAccessLink"
           :rules="[required]"
           :error-messages="emailErrors"
         ></v-text-field>
       </div>
 
       <v-btn
-        @click="forgotPassword"
+        @click="firstAccessLink"
         class="login-button text-white"
         height="65"
         color="#3e78fc"
@@ -47,10 +47,8 @@
 <script lang="ts">
 import LogoSection from '@/components/LogoSection.vue'
 
-import type { IErrorResponse } from '@/types/errors'
-
 export default {
-  name: 'ForgotPasswordComponent',
+  name: 'FirstAccessComponent',
 
   components: {
     LogoSection
@@ -102,27 +100,31 @@ export default {
       this.$router.push('/login')
     },
 
-    switchForgotPassword(): void {
-      this.$router.push('/forgot-password')
-    },
-
-    async forgotPassword() {
+    async firstAccessLink() {
+      if (!this.verifyFields()) return
       try {
-        if (!this.verifyFields()) return
-
         this.isLoading = true
-        await this.$axios.post('/auth/forgot-password', {
+
+        await this.$axios.post('/auth/first-access', {
           email: this.email
         })
 
-        this.$toast.success('Email sent successfully')
         this.isLoading = false
-        this.$router.push('/login')
-      } catch (e: any) {
-        const error: IErrorResponse = e.response.data.error
 
+        this.$toast.success(
+          'If the email is valid, you will receive a link to finish your sign up',
+          {
+            duration: 5000
+          }
+        )
+
+        this.switchLogin()
+      } catch {
         this.isLoading = false
-        this.$toast.error(error.description)
+
+        this.$toast.error('Unexpected error, please try again later')
+
+        this.switchLogin()
       }
     }
   }
@@ -204,23 +206,9 @@ export default {
     width: 100%;
   }
 
-  .left-section {
-    width: 100%;
-    border-radius: 0;
-    background-color: white;
-  }
-
   .right-section {
     width: 100%;
     padding: 0 5%;
-  }
-
-  .logo-image {
-    height: 300px;
-  }
-
-  .greeting-text {
-    font-size: 24px;
   }
 
   .greeting-subtext {
