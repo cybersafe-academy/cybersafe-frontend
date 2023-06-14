@@ -12,11 +12,7 @@
                 <v-text-field v-model="Email" label="User Email" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-select v-model="Role" label="Role" variant="solo" required :items="[
-                  'default',
-                  'admin',
-                  'master',
-                ]"></v-select>
+                <v-select v-model="Role" label="Role" variant="solo" required :items="roleOptions"></v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -32,8 +28,9 @@
 </template>
 
 <script lang="ts">
-import type { IErrorResponse } from '@/types/errors'
+import { useAuthStore } from '@/stores/auth'
 
+import type { IErrorResponse } from '@/types/errors'
 
 export default {
   props: {
@@ -50,6 +47,18 @@ export default {
     Role: '',
   }),
 
+  computed: {
+    roleOptions() {
+      const authStore = useAuthStore()
+
+      if (authStore.role === 'master') {
+        return ['default', 'admin', 'master']
+      } else {
+        return ['default', 'admin']
+      }
+    },
+  },
+  
   methods: {
     openDialog(user: any) {
       this.dialog = true
@@ -83,20 +92,18 @@ export default {
       if (!this.verifyFields()) return
 
       const user: any = {
-        id: this.id,
-        Email: this.Email,
-        Role: this.Role
+        email: this.Email,
+        role: this.Role
       }
 
       try {
-
-        const { data } = await this.$axios.post('/users/pre-signup', user)
+        await this.$axios.post('/users/pre-signup', user)
 
         this.closeDialog()
 
         this.$toast.success('Pre signedup user successfully')
 
-        this.$emit('preSignedUpUSer', data)
+        this.$emit('preSignedUpUSer', user)
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 

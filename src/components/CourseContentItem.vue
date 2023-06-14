@@ -47,7 +47,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .v-messages,
 .v-input__details {
   display: none;

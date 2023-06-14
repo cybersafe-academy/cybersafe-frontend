@@ -20,7 +20,7 @@
         <tbody>
           <tr v-for="item in users" :key="item.id">
             <td>{{ item.name }}</td>
-            <td>{{ capitalizeString(item.role) }}</td>
+            <td>{{ item.role }}</td>
             <td>{{ item.email }}</td>
             <td>{{ formatCPF(item.cpf) }}</td>
             <td>{{ dayjs(item.birthDate).isValid() ? dayjs(item.birthDate).format("DD/MM/YYYY") : '' }}</td>
@@ -64,7 +64,6 @@ import EditUser from '@/components/EditUser.vue'
 
 import type { IErrorResponse } from '@/types/errors'
 import formatCPF from '@/utils/masks'
-import capitalizeString from '@/utils/string'
 import dayjs from 'dayjs';
 
 
@@ -132,7 +131,6 @@ export default {
       }
     },
     formatCPF,
-    capitalizeString,
     dayjs,
   }
 }
