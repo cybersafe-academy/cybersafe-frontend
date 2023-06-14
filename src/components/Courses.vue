@@ -142,7 +142,6 @@ export default {
       if (!this.pageCourses[page]) {
         try {
           const { data: courses } = await this.$axios.get('/courses', { params: { page } })
-
           if (courses.data) {
             this.totalPages = courses.totalPages
             this.numberOfnewElements = courses.data.length;
