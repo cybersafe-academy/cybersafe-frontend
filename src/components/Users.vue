@@ -6,7 +6,7 @@
       </v-btn>
     </v-toolbar>
     <v-table fixed-header hover class="userTable">
-      <template v-if="users">
+      <template v-if="users.length > 0">
         <thead>
           <tr>
             <th class="text-left">Name</th>
@@ -28,7 +28,7 @@
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn text @click="deleteUser(item.id)" class="deleteBtn">
+              <v-btn text @click="openDeleteDialog(item.id)" class="deleteBtn">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -52,15 +52,20 @@
           </tr>
         </tbody>
       </template>
+      <template v-slot:bottom>
+        <v-pagination @update:modelValue="fetchUsers" :model-value="currentPage" :length="totalPages"></v-pagination>
+      </template>
     </v-table>
     <EditUser ref="EditUser" @editedUser="editUser" />
     <PreSignUpUser ref="PreSignUpUser" @preSignedUpUSer="addUser" />
+    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteUser" />
   </div>
 </template>
 
 <script lang="ts">
 import PreSignUpUser from '@/components/PreSignUpUser.vue'
 import EditUser from '@/components/EditUser.vue'
+import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
 
 import type { IErrorResponse } from '@/types/errors'
 import formatCPF from '@/utils/masks'
@@ -72,7 +77,8 @@ export default {
 
   components: {
     PreSignUpUser,
-    EditUser
+    EditUser,
+    DeleteItemConfirmation
   },
 
   async created() {
@@ -82,8 +88,22 @@ export default {
   data() {
     return {
       users: Array<any>(),
-      isLoading: false
+      isLoading: false,
+      totalPages: 1,
+      currentPage: 1,
+      numberOfnewElements: 0,
     }
+  },
+
+  computed: {
+    pageUsers() {
+      const users: any = this.pageUsers ?? {};
+      const offset = (this.currentPage - 1) * 10
+      if (this.users.length > 0) {
+        users[this.currentPage] = this.users.slice(Math.min(this.users.length - this.numberOfnewElements, offset), offset + 10)
+      }
+      return users;
+    },
   },
 
   methods: {
@@ -91,13 +111,19 @@ export default {
       ; (this.$refs.PreSignUpUser as any).openDialog()
     },
     openEditDialog(id: string): void {
-      const user = this.users.find((user) => user.id === id)
-
-        ; (this.$refs.EditUser as any).openDialog(user)
+      const user = this.users.find((user) => user.id === id);
+      (this.$refs.EditUser as any).openDialog(user)
+    },
+    openDeleteDialog(id: string): void {
+      (this.$refs.deleteItem as any).openDialog(id)
     },
     async addUser(userData: any) {
       if (!this.users) {
         this.users = []
+      }
+      if (this.users.length > this.totalPages * 10) {
+        this.totalPages++;
+        this.currentPage = this.totalPages;
       }
       this.users.push(userData)
     },
@@ -112,6 +138,12 @@ export default {
       try {
         await this.$axios.delete(`/users/${id}`)
         this.users = this.users.filter((user) => user.id !== id)
+        if (this.users.length < this.totalPages * 10) {
+          if (this.totalPages === this.currentPage) {
+            this.currentPage--
+          }
+          this.totalPages--;
+        }
 
         this.$toast.success('User deleted successfully')
       } catch (e: any) {
@@ -123,7 +155,11 @@ export default {
     async fetchUsers() {
       try {
         const { data: users } = await this.$axios.get('/users')
-        this.users = users.data
+        if (users.data) {
+          this.totalPages = users.totalPages;
+          this.numberOfnewElements = users.data.length;
+          this.users.push(...users.data);
+        }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 

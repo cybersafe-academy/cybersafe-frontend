@@ -24,7 +24,7 @@
               <v-btn :disabled="role != 'master'" text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn :disabled="role != 'master'" text @click="deleteCourse(item.id)" class="deleteBtn">
+              <v-btn :disabled="role != 'master'" text @click="openDeleteDialog(item.id)" class="deleteBtn">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -51,11 +51,13 @@
       </template>
     </v-table>
     <CreateCourse ref="createCourse" @savedCourse="addCourse" @editedCourse="editCourse" />
+    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteCourse" />
   </div>
 </template>
 
 <script lang="ts">
 import CreateCourse from '@/components/CreateCourse.vue'
+import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
 
 import { useAuthStore } from '@/stores/auth'
 
@@ -65,7 +67,8 @@ export default {
   name: 'CoursesComponent',
 
   components: {
-    CreateCourse
+    CreateCourse,
+    DeleteItemConfirmation
   },
 
   async created() {
@@ -105,6 +108,9 @@ export default {
     openEditDialog(id: string): void {
       const course = this.courses.find((course) => course.id === id);
       (this.$refs.createCourse as any).openDialog(course)
+    },
+    openDeleteDialog(id: string): void {
+      (this.$refs.deleteItem as any).openDialog(id)
     },
     async addCourse(courseData: any) {
       this.courses.push(courseData)

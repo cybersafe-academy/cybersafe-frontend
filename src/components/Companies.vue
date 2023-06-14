@@ -6,7 +6,7 @@
       </v-btn>
     </v-toolbar>
     <v-table fixed-header hover class="companyTable">
-      <template v-if="companies">
+      <template v-if="companies.length > 0">
         <thead>
           <tr>
             <th class="text-left">Trade Name</th>
@@ -24,7 +24,7 @@
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn text @click="deleteCompany(item.id)" class="deleteBtn">
+              <v-btn text @click="openDeleteDialog(item.id)" class="deleteBtn">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -46,16 +46,17 @@
           </tr>
         </tbody>
       </template>
+      <template v-slot:bottom>
+        <v-pagination @update:modelValue="fetchCompanies" :model-value="currentPage" :length="totalPages"></v-pagination>
+      </template>
     </v-table>
-    <CreateCompany
-      ref="createCompany"
-      @savedCompany="addCompany"
-      @editedCompany="editCompany"
-    />
+    <CreateCompany ref="createCompany" @savedCompany="addCompany" @editedCompany="editCompany" />
+    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteCompany" />
   </div>
 </template>
 
 <script lang="ts">
+import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
 import CreateCompany from '@/components/CreateCompany.vue'
 
 import type { IErrorResponse } from '@/types/errors'
@@ -63,8 +64,10 @@ import type { IErrorResponse } from '@/types/errors'
 export default {
   name: 'CompaniesComponent',
 
+
   components: {
-    CreateCompany
+    CreateCompany,
+    DeleteItemConfirmation
   },
 
   async created() {
@@ -74,22 +77,42 @@ export default {
   data() {
     return {
       companies: Array<any>(),
-      isLoading: false
+      isLoading: false,
+      totalPages: 1,
+      currentPage: 1,
+      numberOfnewElements: 0,
     }
+  },
+
+  computed: {
+    pageCompanies() {
+      const users: any = this.pageCompanies ?? {};
+      const offset = (this.currentPage - 1) * 10
+      if (this.companies.length > 0) {
+        users[this.currentPage] = this.companies.slice(Math.min(this.companies.length - this.numberOfnewElements, offset), offset + 10)
+      }
+      return users;
+    },
   },
 
   methods: {
     openCreateDialog(): void {
-      ;(this.$refs.createCompany as any).openDialog()
+      ; (this.$refs.createCompany as any).openDialog()
     },
     openEditDialog(id: string): void {
-      const company = this.companies.find((company) => company.id === id)
-
-      ;(this.$refs.createCompany as any).openDialog(company)
+      const company = this.companies.find((company) => company.id === id);
+      (this.$refs.createCompany as any).openDialog(company)
+    },
+    openDeleteDialog(id: string): void {
+      (this.$refs.deleteItem as any).openDialog(id)
     },
     async addCompany(companyData: any) {
       if (!this.companies) {
         this.companies = []
+      }
+      if (this.companies.length > this.totalPages * 10) {
+        this.totalPages++;
+        this.currentPage = this.totalPages;
       }
 
       this.companies.push(companyData)
@@ -105,6 +128,12 @@ export default {
       try {
         await this.$axios.delete(`/companies/${id}`)
         this.companies = this.companies.filter((company) => company.id !== id)
+        if (this.companies.length < this.totalPages * 10) {
+          if (this.totalPages === this.currentPage) {
+            this.currentPage--
+          }
+          this.totalPages--;
+        }
 
         this.$toast.success('Company deleted successfully')
       } catch (e: any) {
@@ -115,8 +144,12 @@ export default {
     },
     async fetchCompanies() {
       try {
-        const { data: companies } = await this.$axios.get('/companies')
-        this.companies = companies.data
+        const { data: companies } = await this.$axios.get('/companies');
+        if (companies.data) {
+          this.totalPages = companies.totalPages;
+          this.numberOfnewElements = companies.data.length;
+          this.companies.push(...companies.data);
+        }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
