@@ -1,12 +1,16 @@
 <template>
   <div class="tableContent">
     <v-toolbar class="tableToolbar">
-      <v-btn class="preSignUpBtn text-white" rounded="lg" @click="openCreateDialog">
+      <v-btn
+        class="preSignUpBtn text-white"
+        rounded="lg"
+        @click="openCreateDialog"
+      >
         Pre-Signup User
       </v-btn>
     </v-toolbar>
-    <v-table fixed-header hover class="userTable">
-      <template v-if="users">
+    <v-table ref="itemTable" fixed-header hover class="userTable">
+      <template v-if="users.length > 0">
         <thead>
           <tr>
             <th class="text-left">Name</th>
@@ -23,12 +27,18 @@
             <td>{{ item.role }}</td>
             <td>{{ item.email }}</td>
             <td>{{ formatCPF(item.cpf) }}</td>
-            <td>{{ dayjs(item.birthDate).isValid() ? dayjs(item.birthDate).format("DD/MM/YYYY") : '' }}</td>
+            <td>
+              {{
+                dayjs(item.birthDate).isValid()
+                  ? dayjs(item.birthDate).format('DD/MM/YYYY')
+                  : ''
+              }}
+            </td>
             <td class="actionsButtons">
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn text @click="deleteUser(item.id)" class="deleteBtn">
+              <v-btn text @click="openDeleteDialog(item.id)" class="deleteBtn">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -52,59 +62,100 @@
           </tr>
         </tbody>
       </template>
+      <template v-slot:bottom>
+        <v-pagination
+          @update:modelValue="fetchUsers"
+          :model-value="currentPage"
+          :length="totalPages"
+        ></v-pagination>
+      </template>
     </v-table>
     <EditUser ref="EditUser" @editedUser="editUser" />
     <PreSignUpUser ref="PreSignUpUser" @preSignedUpUSer="addUser" />
+    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteUser" />
   </div>
 </template>
 
 <script lang="ts">
 import PreSignUpUser from '@/components/PreSignUpUser.vue'
 import EditUser from '@/components/EditUser.vue'
+import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
 
 import type { IErrorResponse } from '@/types/errors'
 import formatCPF from '@/utils/masks'
-import dayjs from 'dayjs';
-
+import dayjs from 'dayjs'
 
 export default {
   name: 'UsersComponent',
 
   components: {
     PreSignUpUser,
-    EditUser
+    EditUser,
+    DeleteItemConfirmation
   },
 
-  async created() {
-    await this.fetchUsers()
+  mounted() {
+    this.$nextTick(() => {
+      if (this.$refs.itemTable) {
+        this.numberOfItemsToFetch = Math.floor(
+          (this.$refs.itemTable as any).$el.offsetHeight / 60
+        )
+      } else {
+        this.numberOfItemsToFetch = 10
+      }
+
+      this.fetchUsers(1)
+    })
   },
 
   data() {
     return {
       users: Array<any>(),
-      isLoading: false
+      isLoading: false,
+      totalPages: 1,
+      currentPage: 1,
+      numberOfnewElements: 0,
+      numberOfItemsToFetch: 0
+    }
+  },
+
+  computed: {
+    pageUsers() {
+      const users: any = this.pageUsers ?? {}
+      const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
+      if (this.users.length > 0) {
+        users[this.currentPage] = this.users.slice(
+          Math.min(this.users.length - this.numberOfnewElements, offset),
+          offset + this.numberOfItemsToFetch
+        )
+      }
+      return users
     }
   },
 
   methods: {
     openCreateDialog(): void {
-      ; (this.$refs.PreSignUpUser as any).openDialog()
+      ;(this.$refs.PreSignUpUser as any).openDialog()
     },
     openEditDialog(id: string): void {
       const user = this.users.find((user) => user.id === id)
-
-        ; (this.$refs.EditUser as any).openDialog(user)
+      ;(this.$refs.EditUser as any).openDialog(user)
+    },
+    openDeleteDialog(id: string): void {
+      ;(this.$refs.deleteItem as any).openDialog(id)
     },
     async addUser(userData: any) {
       if (!this.users) {
         this.users = []
       }
+      if (this.users.length > this.totalPages * this.numberOfItemsToFetch) {
+        this.totalPages++
+        this.currentPage = this.totalPages
+      }
       this.users.push(userData)
     },
     async editUser(data: any) {
-      const userIndex = this.users.findIndex(
-        (user) => user.id === data.id
-      )
+      const userIndex = this.users.findIndex((user) => user.id === data.id)
 
       this.users[userIndex] = data
     },
@@ -112,6 +163,12 @@ export default {
       try {
         await this.$axios.delete(`/users/${id}`)
         this.users = this.users.filter((user) => user.id !== id)
+        if (this.users.length < this.totalPages * this.numberOfItemsToFetch) {
+          if (this.totalPages === this.currentPage) {
+            this.currentPage--
+          }
+          this.totalPages--
+        }
 
         this.$toast.success('User deleted successfully')
       } catch (e: any) {
@@ -120,22 +177,25 @@ export default {
         this.$toast.error(error.description)
       }
     },
-    async fetchUsers() {
+    async fetchUsers(page: number) {
       try {
         const { data: users } = await this.$axios.get('/users')
-        this.users = users.data
+        if (users.data) {
+          this.totalPages = users.totalPages
+          this.numberOfnewElements = users.data.length
+          this.users.push(...users.data)
+        }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)
       }
+      this.currentPage = page
     },
     formatCPF,
-    dayjs,
+    dayjs
   }
 }
-
-
 </script>
 
 <style scoped>
@@ -153,9 +213,8 @@ export default {
 }
 
 .userTable {
-  border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  height: 90%;
 }
 
 .tableToolbar {

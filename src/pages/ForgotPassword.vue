@@ -115,14 +115,22 @@ export default {
           email: this.email
         })
 
-        this.$toast.success('Email sent successfully')
         this.isLoading = false
+
+        this.$toast.success(
+          'If the email is valid, you will receive a link to recover your password',
+          {
+            duration: 5000
+          }
+        )
+
         this.$router.push('/login')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
         this.isLoading = false
-        this.$toast.error(error.description)
+
+        this.$toast.error('Unexpected error, please try again later')
       }
     }
   }

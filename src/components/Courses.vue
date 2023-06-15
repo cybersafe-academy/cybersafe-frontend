@@ -1,11 +1,15 @@
 <template>
   <div class="tableContent">
     <v-toolbar v-if="role === 'master'" class="tableToolbar">
-      <v-btn class="addCourseBtn text-white" rounded="lg" @click="openCreateDialog">
+      <v-btn
+        class="addCourseBtn text-white"
+        rounded="lg"
+        @click="openCreateDialog"
+      >
         Add Course
       </v-btn>
     </v-toolbar>
-    <v-table fixed-header hover class="courseTable">
+    <v-table ref="itemTable" fixed-header hover class="courseTable">
       <template v-if="courses.length > 0">
         <thead>
           <tr>
@@ -21,10 +25,20 @@
             <td>{{ item.level }}</td>
             <td class="text-center">{{ item.contentInHours }}</td>
             <td class="actionsButtons">
-              <v-btn :disabled="role != 'master'" text @click="openEditDialog(item.id)" class="editBtn">
+              <v-btn
+                :disabled="role != 'master'"
+                text
+                @click="openEditDialog(item.id)"
+                class="editBtn"
+              >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
-              <v-btn :disabled="role != 'master'" text @click="deleteCourse(item.id)" class="deleteBtn">
+              <v-btn
+                :disabled="role != 'master'"
+                text
+                @click="openDeleteDialog(item.id)"
+                class="deleteBtn"
+              >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -47,15 +61,25 @@
         </tbody>
       </template>
       <template v-slot:bottom>
-        <v-pagination @update:modelValue="fetchCourses" :model-value="currentPage" :length="totalPages"></v-pagination>
+        <v-pagination
+          @update:modelValue="fetchCourses"
+          :model-value="currentPage"
+          :length="totalPages"
+        ></v-pagination>
       </template>
     </v-table>
-    <CreateCourse ref="createCourse" @savedCourse="addCourse" @editedCourse="editCourse" />
+    <CreateCourse
+      ref="createCourse"
+      @savedCourse="addCourse"
+      @editedCourse="editCourse"
+    />
+    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteCourse" />
   </div>
 </template>
 
 <script lang="ts">
 import CreateCourse from '@/components/CreateCourse.vue'
+import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
 
 import { useAuthStore } from '@/stores/auth'
 
@@ -65,11 +89,22 @@ export default {
   name: 'CoursesComponent',
 
   components: {
-    CreateCourse
+    CreateCourse,
+    DeleteItemConfirmation
   },
 
-  async created() {
-    this.fetchCourses(1)
+  mounted() {
+    this.$nextTick(() => {
+      if (this.$refs.itemTable) {
+        this.numberOfItemsToFetch = Math.floor(
+          (this.$refs.itemTable as any).$el.offsetHeight / 60
+        )
+      } else {
+        this.numberOfItemsToFetch = 10
+      }
+
+      this.fetchCourses(1)
+    })
   },
 
   data() {
@@ -79,18 +114,22 @@ export default {
       totalPages: 1,
       currentPage: 1,
       numberOfnewElements: 0,
+      numberOfItemsToFetch: 0
     }
   },
 
   computed: {
     pageCourses() {
-      const courses: any = this.pageCourses ?? {};
-      const offset = (this.currentPage - 1) * 10
+      const courses: any = this.pageCourses ?? {}
+      const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
       if (this.courses.length > 0) {
-        courses[this.currentPage] = this.courses.slice(Math.min(this.courses.length-this.numberOfnewElements, offset), offset+10)
+        courses[this.currentPage] = this.courses.slice(
+          Math.min(this.courses.length - this.numberOfnewElements, offset),
+          offset + this.numberOfItemsToFetch
+        )
       }
-      return courses;
-    }, 
+      return courses
+    },
     role() {
       const authStore = useAuthStore()
 
@@ -100,17 +139,20 @@ export default {
 
   methods: {
     openCreateDialog(): void {
-      (this.$refs.createCourse as any).openDialog();
+      ;(this.$refs.createCourse as any).openDialog()
     },
     openEditDialog(id: string): void {
-      const course = this.courses.find((course) => course.id === id);
-      (this.$refs.createCourse as any).openDialog(course)
+      const course = this.courses.find((course) => course.id === id)
+      ;(this.$refs.createCourse as any).openDialog(course)
+    },
+    openDeleteDialog(id: string): void {
+      ;(this.$refs.deleteItem as any).openDialog(id)
     },
     async addCourse(courseData: any) {
       this.courses.push(courseData)
-      if (this.courses.length > this.totalPages * 10) {
-        this.totalPages++;
-        this.currentPage = this.totalPages;
+      if (this.courses.length > this.totalPages * this.numberOfItemsToFetch) {
+        this.totalPages++
+        this.currentPage = this.totalPages
       }
     },
     async editCourse(data: any) {
@@ -124,11 +166,11 @@ export default {
       try {
         await this.$axios.delete(`/courses/${id}`)
         this.courses = this.courses.filter((course) => course.id !== id)
-        if (this.courses.length < this.totalPages*10) {
+        if (this.courses.length < this.totalPages * this.numberOfItemsToFetch) {
           if (this.totalPages === this.currentPage) {
             this.currentPage--
           }
-          this.totalPages--;
+          this.totalPages--
         }
 
         this.$toast.success('Course deleted successfully')
@@ -141,18 +183,20 @@ export default {
     async fetchCourses(page: number) {
       if (!this.pageCourses[page]) {
         try {
-          const { data: courses } = await this.$axios.get('/courses', { params: { page } })
+          const { data: courses } = await this.$axios.get('/courses', {
+            params: { page, limit: this.numberOfItemsToFetch }
+          })
           if (courses.data) {
             this.totalPages = courses.totalPages
-            this.numberOfnewElements = courses.data.length;
-            this.courses.push(...courses.data);
+            this.numberOfnewElements = courses.data.length
+            this.courses.push(...courses.data)
           }
         } catch (e: any) {
           const error: IErrorResponse = e.response.data.error
           this.$toast.error(error.description)
         }
       }
-      this.currentPage = page;
+      this.currentPage = page
     }
   }
 }
