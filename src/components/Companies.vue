@@ -5,7 +5,7 @@
         Add Company
       </v-btn>
     </v-toolbar>
-    <v-table fixed-header hover class="companyTable">
+    <v-table ref="itemTable" fixed-header hover class="companyTable">
       <template v-if="companies.length > 0">
         <thead>
           <tr>
@@ -47,10 +47,18 @@
         </tbody>
       </template>
       <template v-slot:bottom>
-        <v-pagination @update:modelValue="fetchCompanies" :model-value="currentPage" :length="totalPages"></v-pagination>
+        <v-pagination
+          @update:modelValue="fetchCompanies"
+          :model-value="currentPage"
+          :length="totalPages"
+        ></v-pagination>
       </template>
     </v-table>
-    <CreateCompany ref="createCompany" @savedCompany="addCompany" @editedCompany="editCompany" />
+    <CreateCompany
+      ref="createCompany"
+      @savedCompany="addCompany"
+      @editedCompany="editCompany"
+    />
     <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteCompany" />
   </div>
 </template>
@@ -64,14 +72,23 @@ import type { IErrorResponse } from '@/types/errors'
 export default {
   name: 'CompaniesComponent',
 
-
   components: {
     CreateCompany,
     DeleteItemConfirmation
   },
 
-  async created() {
-    this.fetchCompanies()
+  mounted() {
+    this.$nextTick(() => {
+      if (this.$refs.itemTable) {
+        this.numberOfItemsToFetch = Math.floor(
+          (this.$refs.itemTable as any).$el.offsetHeight / 60
+        )
+      } else {
+        this.numberOfItemsToFetch = 10
+      }
+
+      this.fetchCompanies(1)
+    })
   },
 
   data() {
@@ -81,38 +98,42 @@ export default {
       totalPages: 1,
       currentPage: 1,
       numberOfnewElements: 0,
+      numberOfItemsToFetch: 0
     }
   },
 
   computed: {
     pageCompanies() {
-      const users: any = this.pageCompanies ?? {};
-      const offset = (this.currentPage - 1) * 10
+      const users: any = this.pageCompanies ?? {}
+      const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
       if (this.companies.length > 0) {
-        users[this.currentPage] = this.companies.slice(Math.min(this.companies.length - this.numberOfnewElements, offset), offset + 10)
+        users[this.currentPage] = this.companies.slice(
+          Math.min(this.companies.length - this.numberOfnewElements, offset),
+          offset + this.numberOfItemsToFetch
+        )
       }
-      return users;
-    },
+      return users
+    }
   },
 
   methods: {
     openCreateDialog(): void {
-      ; (this.$refs.createCompany as any).openDialog()
+      ;(this.$refs.createCompany as any).openDialog()
     },
     openEditDialog(id: string): void {
-      const company = this.companies.find((company) => company.id === id);
-      (this.$refs.createCompany as any).openDialog(company)
+      const company = this.companies.find((company) => company.id === id)
+      ;(this.$refs.createCompany as any).openDialog(company)
     },
     openDeleteDialog(id: string): void {
-      (this.$refs.deleteItem as any).openDialog(id)
+      ;(this.$refs.deleteItem as any).openDialog(id)
     },
     async addCompany(companyData: any) {
       if (!this.companies) {
         this.companies = []
       }
-      if (this.companies.length > this.totalPages * 10) {
-        this.totalPages++;
-        this.currentPage = this.totalPages;
+      if (this.companies.length > this.totalPages * this.numberOfItemsToFetch) {
+        this.totalPages++
+        this.currentPage = this.totalPages
       }
 
       this.companies.push(companyData)
@@ -128,11 +149,14 @@ export default {
       try {
         await this.$axios.delete(`/companies/${id}`)
         this.companies = this.companies.filter((company) => company.id !== id)
-        if (this.companies.length < this.totalPages * 10) {
+        if (
+          this.companies.length <
+          this.totalPages * this.numberOfItemsToFetch
+        ) {
           if (this.totalPages === this.currentPage) {
             this.currentPage--
           }
-          this.totalPages--;
+          this.totalPages--
         }
 
         this.$toast.success('Company deleted successfully')
@@ -142,19 +166,19 @@ export default {
         this.$toast.error(error.description)
       }
     },
-    async fetchCompanies() {
+    async fetchCompanies(page: number) {
       try {
-        const { data: companies } = await this.$axios.get('/companies');
+        const { data: companies } = await this.$axios.get('/companies')
         if (companies.data) {
-          this.totalPages = companies.totalPages;
-          this.numberOfnewElements = companies.data.length;
-          this.companies.push(...companies.data);
+          this.totalPages = companies.totalPages
+          this.numberOfnewElements = companies.data.length
+          this.companies.push(...companies.data)
         }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
-
         this.$toast.error(error.description)
       }
+      this.currentPage = page
     }
   }
 }
