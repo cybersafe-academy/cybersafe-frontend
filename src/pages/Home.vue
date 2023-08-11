@@ -4,8 +4,11 @@
     <div v-if="selectedPage === 'courses'" class="right-section">
       <CoursesComponent />
     </div>
-    <div v-if="selectedPage === 'spans'" class="right-section">
-      <span class="greeting-text"> Work in progress! 🧑‍🏭 </span>
+    <div v-if="selectedPage === 'users'" class="right-section">
+      <UsersComponent />
+    </div>
+    <div v-if="selectedPage === 'companies'" class="right-section">
+      <CompaniesComponent />
     </div>
   </div>
 </template>
@@ -13,13 +16,17 @@
 <script lang="ts">
 import DrawerComponent from '@/components/Drawer.vue'
 import CoursesComponent from '@/components/Courses.vue'
+import CompaniesComponent from '@/components/Companies.vue'
+import UsersComponent from '@/components/Users.vue'
 
 export default {
   name: 'HomeComponent',
 
   components: {
     DrawerComponent,
-    CoursesComponent
+    CoursesComponent,
+    CompaniesComponent,
+    UsersComponent
   },
 
   data() {
@@ -49,6 +56,7 @@ export default {
   flex-direction: row;
   height: 100vh;
   width: 100vw;
+  background-color: #f8f8f8;
 }
 
 .right-section {
@@ -57,5 +65,6 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  background-color: #f8f8f8;
 }
 </style>

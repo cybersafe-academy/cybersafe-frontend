@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
     email: useLocalStorage('email', ''),
     cpf: '',
     age: 0,
+    role: useLocalStorage('role', ''),
     accessToken: useLocalStorage('accessToken', ''),
     tokenExpiration: useLocalStorage('tokenExpiration', '')
   }),
@@ -30,6 +31,7 @@ export const useAuthStore = defineStore('auth', {
       this.email = data.email
       this.cpf = data.cpf
       this.age = data.age
+      this.role = data.role
     },
     async logout() {
       this.accessToken = ''
@@ -38,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
       this.email = ''
       this.cpf = ''
       this.age = 0
+      this.role = ''
     }
   }
 })

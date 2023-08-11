@@ -1,28 +1,16 @@
-interface ICourse {
-  title: string
-  description: string
-  level: string
-  thumbnailURL: string
-  contentInHours: number
-  contents: IContent[]
-}
-
 interface IContent {
-  title: string
+  URL: string
   contentType: string
-  imageURL: string
-  youtubeURL: string
-  PDFURL: string
+  title: string
 }
 
-interface ICourseResponse {
-  id: string
-  title: string
+interface ICourse {
+  contentInHours: number
+  contents: IContent[]
   description: string
   level: string
   thumbnailURL: string
-  contentInHours: number
-  contents: IContent[]
+  title: string
 }
 
-export type { ICourse, IContent, ICourseResponse }
+export type { ICourse }

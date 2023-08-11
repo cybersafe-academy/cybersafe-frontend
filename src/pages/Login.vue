@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <logo-section class="section" />
+    <LogoSection class="section" />
 
     <div class="section right-section">
       <div class="greeting-container">
@@ -51,14 +51,15 @@
         height="65"
         color="#3e78fc"
         rounded="lg"
+        :loading="isLoading"
       >
         Login
       </v-btn>
 
       <div class="signup-container">
-        <span> Don't have an account? </span>
+        <span> First acess? </span>
 
-        <span @click="switchSignup" class="link"> Sign up </span>
+        <span @click="switchFirstAccess" class="link"> Click here! </span>
       </div>
     </div>
   </div>
@@ -84,7 +85,8 @@ export default {
     return {
       cpf: '',
       password: '',
-      showPassword: false
+      showPassword: false,
+      isLoading: false
     }
   },
 
@@ -103,8 +105,8 @@ export default {
       return false
     },
 
-    switchSignup(): void {
-      this.$router.push('/signup')
+    switchFirstAccess(): void {
+      this.$router.push('/first-access')
     },
 
     switchForgotPassword(): void {
@@ -125,6 +127,8 @@ export default {
           cpf: this.cpf,
           password: this.password
         }
+        
+        this.isLoading = true
 
         const { data: loginData } = await this.$axios.post<ILoginResponse>(
           '/auth/login',
@@ -136,12 +140,14 @@ export default {
         const { data: userData } = await this.$axios.get<IUserData>('/users/me')
         authStore.updateUserData(userData)
 
+        this.isLoading = false
         this.$toast.success('Logged in successfully')
 
         this.switchHome()
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
+        this.isLoading = false
         this.$toast.error(error.description)
       }
     }
