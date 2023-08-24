@@ -1,262 +1,171 @@
 <template>
   <div class="tableContent">
-    <v-toolbar v-if="role === 'master'" class="tableToolbar">
-      <v-btn
-        class="addCourseBtn text-white"
-        rounded="lg"
-        @click="openCreateDialog"
-      >
-        Add Course
-      </v-btn>
-    </v-toolbar>
-    <v-table ref="itemTable" fixed-header hover class="courseTable">
-      <template v-if="courses.length > 0">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Level</th>
-            <th>Content in hours</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in pageCourses[currentPage]" :key="item.id">
-            <td>{{ item.title }}</td>
-            <td>{{ item.level }}</td>
-            <td class="text-center">{{ item.contentInHours }}</td>
-            <td class="actionsButtons">
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openEditDialog(item.id)"
-                class="editBtn"
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openDeleteDialog(item.id)"
-                class="deleteBtn"
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-      <template v-else>
-        <tbody>
-          <tr>
-            <th>Title</th>
-            <th>Level</th>
-            <th>Content in hours</th>
-            <th>Actions</th>
-          </tr>
-          <tr>
-            <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>No courses registered yet</h2>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-      <template v-slot:bottom>
-        <v-pagination
-          @update:modelValue="fetchCourses"
-          :model-value="currentPage"
-          :length="totalPages"
-        ></v-pagination>
-      </template>
-    </v-table>
-    <CreateCourse
-      ref="createCourse"
-      @savedCourse="addCourse"
-      @editedCourse="editCourse"
-    />
-    <DeleteItemConfirmation ref="deleteItem" @confirmed="deleteCourse" />
+    <v-row>
+      <v-col>
+        <v-text-field
+          class="search-bar"
+          :loading="loadingCourses"
+          density="compact"
+          variant="solo"
+          label="Search Courses"
+          append-inner-icon="mdi-magnify"
+          single-line
+          hide-details
+          @click:append-inner="loadCourses"
+        />
+      </v-col>
+    </v-row>
+    <v-row class="mt-12">
+      <v-col>
+        <v-row class='mb-12' v-for="(category, i) in categories" :key="i">
+          <p class="text-h5 mb-6">
+            {{category.name}}
+          </p>
+          <v-carousel
+            height="auto"
+            hide-delimiter-background
+            show-arrows="hover"
+            hide-delimiters
+          >
+            <v-carousel-item
+              v-for="(coursesPage, j) in category.coursesPages"
+              :key="j"
+            >
+              <div class="d-flex">
+                <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k">
+                  <img class='course-thumbnail' :src="course.thumbnailUrl" alt="">
+                  <p class="text-h6">{{course.title}}</p>
+                  <span class="d-flex">
+                    <b class="mr-1" style="color: #b4761a">{{course.avg_rating.toFixed(1)}}</b>
+                    <v-rating
+                      class="rating d-flex align-center"
+                      color="orange-lighten-1"
+                      half-increments
+                      v-model="course.avg_rating"
+                      readonly
+                      density="compact"
+                      size="small"
+                    />
+                  </span>
+                </div>
+              </div>
+            </v-carousel-item>
+          </v-carousel>
+        </v-row>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script lang="ts">
-import CreateCourse from '@/components/CreateCourse.vue'
-import DeleteItemConfirmation from '@/components/DeleteItemConfirmation.vue'
-
-import { useAuthStore } from '@/stores/auth'
-
-import type { IErrorResponse } from '@/types/errors'
-
 export default {
-  name: 'CoursesComponent',
-
-  components: {
-    CreateCourse,
-    DeleteItemConfirmation
-  },
-
-  mounted() {
-    this.$nextTick(() => {
-      if (this.$refs.itemTable) {
-        this.numberOfItemsToFetch = Math.floor(
-          (this.$refs.itemTable as any).$el.offsetHeight / 60
-        )
-      } else {
-        this.numberOfItemsToFetch = 10
-      }
-
-      this.fetchCourses(1)
-    })
-  },
-
-  data() {
-    return {
-      courses: Array<any>(),
-      isLoading: false,
-      totalPages: 1,
-      currentPage: 1,
-      numberOfnewElements: 0,
-      numberOfItemsToFetch: 0
-    }
-  },
-
-  computed: {
-    pageCourses() {
-      const courses: any = this.pageCourses ?? {}
-      const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
-      if (this.courses.length > 0) {
-        courses[this.currentPage] = this.courses.slice(
-          Math.min(this.courses.length - this.numberOfnewElements, offset),
-          offset + this.numberOfItemsToFetch
-        )
-      }
-      return courses
-    },
-    role() {
-      const authStore = useAuthStore()
-
-      return authStore.role || ''
-    }
-  },
+  data: () => ({
+    loadedCourses: false,
+    loadingCourses: false,
+    categories: [
+      {
+        name: "Segurança de dados",
+        coursesPages: [
+          {
+            page: 1, 
+            courses: [
+              {avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+            ]
+          },
+          {
+            page: 2, 
+            courses: [
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+            ]
+          }
+        ]
+      },
+      {
+        name: "Segurança de redes",
+        coursesPages: [
+          {
+            page: 1, 
+            courses: [
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+            ]
+          },
+          {
+            page: 2, 
+            courses: [
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+            ]
+          }
+        ]
+      },
+    ]
+  }),
 
   methods: {
-    openCreateDialog(): void {
-      ;(this.$refs.createCourse as any).openDialog()
-    },
-    openEditDialog(id: string): void {
-      const course = this.courses.find((course) => course.id === id)
-      ;(this.$refs.createCourse as any).openDialog(course)
-    },
-    openDeleteDialog(id: string): void {
-      ;(this.$refs.deleteItem as any).openDialog(id)
-    },
-    async addCourse(courseData: any) {
-      this.courses.push(courseData)
-      if (this.courses.length > this.totalPages * this.numberOfItemsToFetch) {
-        this.totalPages++
-        this.currentPage = this.totalPages
-      }
-    },
-    async editCourse(data: any) {
-      const courseIndex = this.courses.findIndex(
-        (course) => course.id === data.id
-      )
+    loadCourses () {
+      this.loadingCourses = true
 
-      this.courses[courseIndex] = data
+      setTimeout(() => {
+        this.loadingCourses = false
+        this.loadedCourses = true
+      }, 2000)
     },
-    async deleteCourse(id: string) {
-      try {
-        await this.$axios.delete(`/courses/${id}`)
-        this.courses = this.courses.filter((course) => course.id !== id)
-        if (this.courses.length < this.totalPages * this.numberOfItemsToFetch) {
-          if (this.totalPages === this.currentPage) {
-            this.currentPage--
-          }
-          this.totalPages--
-        }
-
-        this.$toast.success('Course deleted successfully')
-      } catch (e: any) {
-        const error: IErrorResponse = e.response.data.error
-
-        this.$toast.error(error.description)
-      }
-    },
-    async fetchCourses(page: number) {
-      if (!this.pageCourses[page]) {
-        try {
-          const { data: courses } = await this.$axios.get('/courses', {
-            params: { page, limit: this.numberOfItemsToFetch }
-          })
-          if (courses.data) {
-            this.totalPages = courses.totalPages
-            this.numberOfnewElements = courses.data.length
-            this.courses.push(...courses.data)
-          }
-        } catch (e: any) {
-          const error: IErrorResponse = e.response.data.error
-          this.$toast.error(error.description)
-        }
-      }
-      this.currentPage = page
-    }
-  }
+  },
 }
 </script>
 
 <style scoped>
-* {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', sans-serif;
-  overflow-y: auto;
-}
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    overflow-y: auto;
+  }
+  .tableContent {
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
+  }
+  .search-bar {
+    width: 600px;
+  }
 
-.tableContent {
-  width: 100%;
-  height: 100%;
-  padding: 2rem;
-}
+  .course-card {
+    min-width: 200px;
+    margin-right: 30px;
+    overflow: hidden;
+  }
 
-.courseTable {
-  border-radius: 4px;
-  height: 90%;
-}
+  .course-thumbnail {
+    width: 100%;
+    border: 1px solid grey;
+  }
+  .rating {
+    overflow: hidden;
+  }
 
-td,
-th {
-  min-width: 300px;
-  text-align: center !important;
-}
+  ::v-deep .v-rating__item label {
+    display: flex;
+    align-items: center;
+  }
 
-.tableToolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  background-color: transparent;
-}
-
-.addCourseBtn {
-  font-size: 1rem;
-  height: 3rem;
-  width: 10rem;
-  background-color: rgb(62, 120, 252);
-  margin: 0 !important;
-}
-
-.actionsButtons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.editBtn {
-  color: lightgray;
-  background-color: orange;
-  margin-right: 0.5rem;
-}
-
-.deleteBtn {
-  color: lightgray;
-  background-color: red;
-}
 </style>

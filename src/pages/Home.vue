@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <DrawerComponent @changePage="handleChangePage" />
-    <div v-if="selectedPage === 'courses'" class="right-section">
-      <CoursesComponent />
+    <div v-if="selectedPage === 'courses-management'" class="right-section">
+      <CoursesManagementComponent />
     </div>
     <div v-if="selectedPage === 'users'" class="right-section">
       <UsersComponent />
@@ -10,23 +10,28 @@
     <div v-if="selectedPage === 'companies'" class="right-section">
       <CompaniesComponent />
     </div>
+    <div v-if="selectedPage === 'courses'" class="right-section">
+      <CoursesComponent />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import DrawerComponent from '@/components/Drawer.vue'
-import CoursesComponent from '@/components/Courses.vue'
+import CoursesManagementComponent from '@/components/CoursesManagement.vue'
 import CompaniesComponent from '@/components/Companies.vue'
 import UsersComponent from '@/components/Users.vue'
+import CoursesComponent from '@/components/Courses.vue'
 
 export default {
   name: 'HomeComponent',
 
   components: {
     DrawerComponent,
-    CoursesComponent,
+    CoursesManagementComponent,
     CompaniesComponent,
-    UsersComponent
+    UsersComponent,
+    CoursesComponent
   },
 
   data() {
