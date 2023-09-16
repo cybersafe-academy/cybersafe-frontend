@@ -32,7 +32,7 @@
               :key="j"
             >
               <div class="d-flex">
-                <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k">
+                <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k" @click="openCourseView(course.course_id)">
                   <img class='course-thumbnail' :src="course.thumbnailUrl" alt="">
                   <p class="text-h6">{{course.title}}</p>
                   <span class="d-flex">
@@ -58,7 +58,10 @@
 </template>
 
 <script lang="ts">
+
 export default {
+  name: 'CoursesComponent',
+
   data: () => ({
     loadedCourses: false,
     loadingCourses: false,
@@ -69,23 +72,23 @@ export default {
           {
             page: 1, 
             courses: [
-              {avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
             ]
           },
           {
             page: 2, 
             courses: [
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
             ]
           }
         ]
@@ -96,23 +99,23 @@ export default {
           {
             page: 1, 
             courses: [
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
             ]
           },
           {
             page: 2, 
             courses: [
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {avg_rating: 2, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
+              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
             ]
           }
         ]
@@ -129,6 +132,9 @@ export default {
         this.loadedCourses = true
       }, 2000)
     },
+    openCourseView (courseId: string) {
+      this.$emit('course-view-opened', courseId)
+    }
   },
 }
 </script>
@@ -138,7 +144,8 @@ export default {
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
   }
   .tableContent {
     width: 100%;
@@ -153,6 +160,7 @@ export default {
     min-width: 200px;
     margin-right: 30px;
     overflow: hidden;
+    cursor: pointer;
   }
 
   .course-thumbnail {

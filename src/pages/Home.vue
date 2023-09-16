@@ -11,7 +11,10 @@
       <CompaniesComponent />
     </div>
     <div v-if="selectedPage === 'courses'" class="right-section">
-      <CoursesComponent />
+      <CoursesComponent @courseViewOpened='openCourseView' />
+    </div>
+    <div v-if="selectedPage === 'course-view'" class="right-section">
+      <CourseView :course-id='selectedCourseId' />
     </div>
   </div>
 </template>
@@ -22,6 +25,7 @@ import CoursesManagementComponent from '@/components/CoursesManagement.vue'
 import CompaniesComponent from '@/components/Companies.vue'
 import UsersComponent from '@/components/Users.vue'
 import CoursesComponent from '@/components/Courses.vue'
+import CourseView from './CourseView.vue'
 
 export default {
   name: 'HomeComponent',
@@ -31,18 +35,24 @@ export default {
     CoursesManagementComponent,
     CompaniesComponent,
     UsersComponent,
-    CoursesComponent
-  },
+    CoursesComponent,
+    CourseView
+},
 
   data() {
     return {
-      selectedPage: 'courses'
+      selectedPage: 'courses',
+      selectedCourseId: '',
     }
   },
 
   methods: {
     handleChangePage(page: string) {
       this.selectedPage = page
+    },
+    openCourseView(courseId: string) {
+      this.selectedPage = 'course-view';
+      this.selectedCourseId = courseId;
     }
   }
 }

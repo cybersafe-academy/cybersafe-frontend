@@ -86,7 +86,7 @@ import { useAuthStore } from '@/stores/auth'
 import type { IErrorResponse } from '@/types/errors'
 
 export default {
-  name: 'CoursesComponent',
+  name: 'CoursesManagementComponent',
 
   components: {
     CreateCourse,
