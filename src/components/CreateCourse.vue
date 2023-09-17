@@ -6,31 +6,17 @@
           <span> Create a new course </span>
         </v-card-title>
         <v-card-text>
-          <v-container>
-            <v-row class="mb-12">
-              <v-col cols="12">
-                <v-text-field v-model="title" label="Course title" variant="solo" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea v-model="description" label="Description" variant="solo" required></v-textarea>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field v-model="thumbnail" label="Thumbnail URL" type="string" variant="solo"
-                  required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-text-field v-model="contentInHours" label="Content in hours" type="number" required variant="solo"
-                  :rules="[
-                    (v) => v >= 1 || 'Content must be a positive number'
-                  ]"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select v-model="level" label="Level" variant="solo" required
-                  :items="['beginner', 'intermediate', 'advanced']"></v-select>
+          <v-container class='mt-6'>
+            <v-row>
+              <v-col cols="6">
+                <v-select v-model='selectedLanguage' :items='languages' label='Language'/>
               </v-col>
             </v-row>
-            <course-content-form :contents="contents"></course-content-form>
           </v-container>
+          <v-divider />
+          <template v-for='language in languages'>
+            <CourseForm v-if="selectedLanguage === language"  :info='courseForm[language + "Info"]' />
+          </template>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -45,13 +31,22 @@
 <script lang="ts">
 import type { ICourse } from '@/types/course'
 import type { IErrorResponse } from '@/types/errors'
-import CourseContentForm from '@/components/CourseContentForm.vue'
+import CourseForm from '@/components/CourseForm.vue'
+
+const info = {
+  title: '',
+  description: '',
+  thumbnail: '',
+  contentInHours: 0,
+  level: '',
+  videoURL: '',
+  questions: [],
+}
 
 export default {
   components: {
-    CourseContentForm
+    CourseForm
   },
-
   props: {
     course: {
       type: Object,
@@ -59,72 +54,97 @@ export default {
     }
   },
 
-  data: () => ({
-    dialog: false,
-    id: '',
-    title: '',
-    description: '',
-    thumbnail: '',
-    contentInHours: 0,
-    level: '',
-    contents: [],
-  }),
-
+  data: () => {
+    const languages = ['portuguese', 'english']
+    return {
+      courseForm: {
+          id: '',
+          englishInfo: {
+            ...info
+          },
+          portugueseInfo: {...info},
+        } as any,
+        dialog: false,
+        languages,
+        selectedLanguage: languages[0],
+    }
+  },
   methods: {
+    getInfo(language: string) {
+      return this.courseForm[language + 'Info']
+    },
     openDialog(course: any) {
-      this.dialog = true
+      for (const language of this.languages) {
+        const info = this.getInfo(language)
+        this.dialog = true
 
-      if (course) {
-        this.id = course.id
-        this.title = course.title
-        this.description = course.description
-        this.thumbnail = course.thumbnailURL
-        this.contentInHours = course.contentInHours
-        this.level = course.level
-        this.contents = course.contents || []
+        if (course) {
+          info.id = course.id
+          info.title = course.title
+          info.description = course.description
+          info.thumbnail = course.thumbnailURLd
+          info.videoURL = course.videoURL
+          info.contentInHours = course.contentInHours
+          info.level = course.level
+          info.questions = course.questions ?? []
+        }
       }
     },
     closeDialog() {
-      this.dialog = false
+      for (const language of this.languages) {
+        const info = this.getInfo(language)
 
-      this.id = ''
-      this.title = ''
-      this.description = ''
-      this.thumbnail = ''
-      this.contentInHours = 1
-      this.level = ''
-      this.contents = []
+        this.dialog = false
+        info.id = ''
+        info.title = ''
+        info.description = ''
+        info.thumbnail = ''
+        info.videoURL = ''
+        info.contentInHours = 1
+        info.level = ''
+        info.questions = []
+      }
     },
     verifyFields() {
-      if (
-        !this.title ||
-        !this.description ||
-        !this.thumbnail ||
-        !this.contentInHours ||
-        !this.level
-      ) {
-        this.$toast.error('Please fill all the fields')
+      for (const language of this.languages) {
+        const info = this.getInfo(language)
 
-        return false
+        if (
+          !info.title ||
+          !info.description ||
+          !info.thumbnail ||
+          !info.contentInHours ||
+          !info.level
+        ) {
+          this.$toast.error('Please fill all the fields')
+
+          return false
+        }
       }
-
       return true
     },
     async saveCourse() {
       if (!this.verifyFields()) return
 
-      const course: ICourse = {
-        title: this.title,
-        description: this.description,
-        thumbnailURL: this.thumbnail,
-        contentInHours: +this.contentInHours,
-        level: this.level,
-        contents: this.contents
+      const course: ICourse = {}
+      for (const language of this.languages) {
+        const info = this.getInfo(language)
+        
+        const key = language + 'Info' as keyof ICourse
+        course[key] = {
+          title: info.title,
+          description: info.description,
+          thumbnailURL: info.thumbnail,
+          videoURL: info.videoURL,
+          contentInHours: +info.contentInHours,
+          level: info.level,
+          questions: info.questions
+        }
       }
 
       try {
-        if (this.id) {
-          const { data } = await this.$axios.put(`/courses/${this.id}`, course)
+        if (this.course.id) {
+          const { data } = await this.$axios.put(`/courses/${this.course.id}`, course)
 
           this.closeDialog()
 

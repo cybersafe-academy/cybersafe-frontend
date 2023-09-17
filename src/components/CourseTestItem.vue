@@ -3,17 +3,13 @@
     <div style="padding: 10px;">
       <v-row>
         <v-col cols="12">
-          <v-text-field v-model="contentItem.title" label="Content Title" type="string" required
+          <v-text-field v-model="question.question" label="Question" type="string" required
             variant="solo"></v-text-field>
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="6">
-          <v-select v-model="contentItem.contentType" label="Content Type" required variant="solo"
-            :items="['youtube', 'pdf', 'image']"></v-select>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <v-text-field v-model="contentItem.URL" label="Content URL" type="string" required
+        <v-col cols="12">
+          <v-text-field v-model="question.answer" label="Answer" type="string" required
             variant="solo"></v-text-field>
         </v-col>
       </v-row>
@@ -27,9 +23,9 @@
 
 <script lang="ts">
 export default {
-  name: 'CourseContentItem',
+  name: 'CourseTestItem',
   props: {
-    contentItem: {
+    question: {
       type: Object,
       required: true
     }

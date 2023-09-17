@@ -2,13 +2,13 @@
     <div>
         <h2 class="mb-6">Contents</h2>
         <div style="padding: 3px;">
-            <template v-if="contents.length === 0">
+            <template v-if="questions.length === 0">
                 <h2>No contents registered yet</h2>
             </template>
-            <template v-else v-for="(content, i) in contents" v-key='i'>
+            <template v-else v-for="(question, i) in questions" v-key='i'>
                 <div style="margin-bottom: 20px">
-                    <course-content-item :content-item="content"
-                        @remove-item="removeCourseContent(i)"></course-content-item>
+                    <course-test-item :question="question"
+                        @remove-item="removeCourseContent(i)"></course-test-item>
                 </div>
             </template>
             <div class="d-flex flex-end">
@@ -21,24 +21,24 @@
 </template>
 
 <script lang="ts">
-import CourseContentItem from '@/components/CourseContentItem.vue'
+import CourseTestItem from '@/components/CourseTestItem.vue'
 export default {
-    name: 'CourseContentForm',
+    name: 'CourseTestForm',
     props: {
-        contents: {
+        questions: {
             type: Array,
             required: true
         }
     },
     components: {
-        CourseContentItem
+        CourseTestItem
     },
     methods: {
         addCourseContent() {
-            this.contents.push({})
+            this.questions.push({})
         },
         removeCourseContent(index: number) {
-            this.contents.splice(index, 1);
+            setTimeout(()=>this.questions.splice(index, 1), 20)
         }
     }
 }
