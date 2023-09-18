@@ -6,19 +6,19 @@
         rounded="lg"
         @click="openCreateDialog"
       >
-        Pre-Signup User
+        {{$t('PRE_SIGNUP_USER')}}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="userTable">
       <template v-if="users.length > 0">
         <thead>
           <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Role</th>
-            <th class="text-left">Email</th>
-            <th class="text-left">CPF</th>
-            <th class="text-left">Birth Date</th>
-            <th class="text-left">Actions</th>
+            <th class="text-left">{{$t('NAME')}}</th>
+            <th class="text-left">{{$t('ROLE')}}</th>
+            <th class="text-left">{{$t('EMAIL')}}</th>
+            <th class="text-left">{{$t('CPF')}}</th>
+            <th class="text-left">{{$t('BIRTH_DATE')}}</th>
+            <th class="text-left">{{$t('ACTIONS')}}</th>
           </tr>
         </thead>
         <tbody>
@@ -48,16 +48,16 @@
       <template v-else>
         <tbody>
           <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Role</th>
-            <th class="text-center">Email</th>
-            <th class="text-center">CPF</th>
-            <th class="text-center">Birth Date</th>
-            <th class="text-center">Actions</th>
+            <th class="text-left">{{$t('NAME')}}</th>
+            <th class="text-left">{{$t('ROLE')}}</th>
+            <th class="text-left">{{$t('EMAIL')}}</th>
+            <th class="text-left">{{$t('CPF')}}</th>
+            <th class="text-left">{{$t('BIRTH_DATE')}}</th>
+            <th class="text-left">{{$t('ACTIONS')}}</th>
           </tr>
           <tr>
             <td :colspan="6" style="text-align: center; padding: 20px">
-              <h2>No users registered yet</h2>
+              <h2>{{$t('NO_USERS_REGISTERED_YET')}}</h2>
             </td>
           </tr>
         </tbody>
@@ -226,9 +226,9 @@ export default {
 }
 
 .preSignUpBtn {
+  padding: 10px;
   font-size: 1rem;
   height: 3rem;
-  width: 13rem;
   background-color: rgb(62, 120, 252);
 }
 

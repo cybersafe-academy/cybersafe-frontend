@@ -7,12 +7,12 @@
         <v-divider />
 
         <template v-if="role !== 'default'">
-          <v-list-item prepend-icon="mdi-list-box" title="Gerenciar Cursos" value="courses-management" link @click="emitPage('courses-management')" />
-          <v-list-item v-if="role === 'master'" prepend-icon="mdi-badge-account-horizontal" title="Users" value="users" link @click="emitPage('users')" />
-          <v-list-item v-if="role === 'master'" prepend-icon="mdi-briefcase" title="Companies" value="companies" link @click="emitPage('companies')" />
+          <v-list-item prepend-icon="mdi-list-box" :title="$t('MANAGE_COURSES')" value="courses-management" link @click="emitPage('courses-management')" />
+          <v-list-item v-if="role === 'master'" prepend-icon="mdi-badge-account-horizontal" :title="$t('USERS')" value="users" link @click="emitPage('users')" />
+          <v-list-item v-if="role === 'master'" prepend-icon="mdi-briefcase" :title="$t('COMPANIES')" value="companies" link @click="emitPage('companies')" />
         </template>
       
-        <v-list-item prepend-icon="mdi-list-box" title="Cursos" value="courses" link @click="emitPage('courses')" />
+        <v-list-item prepend-icon="mdi-list-box" :title="$t('COURSES')" value="courses" link @click="emitPage('courses')" />
 
       </v-list>
       <template v-slot:append>

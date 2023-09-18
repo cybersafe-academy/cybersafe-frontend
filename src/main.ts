@@ -20,6 +20,8 @@ import 'vue-toast-notification/dist/theme-bootstrap.css'
 // Router
 import router from '@/utils/routes'
 
+import i18n from './i18n'
+
 const vuetify = createVuetify({
   components,
   directives,
@@ -32,7 +34,7 @@ const vuetify = createVuetify({
   }
 })
 
-const app = createApp(App)
+const app = createApp(App).use(i18n)
 
 app.use(router)
 app.use(createPinia())

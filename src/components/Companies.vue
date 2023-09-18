@@ -2,17 +2,17 @@
   <div class="tableContent">
     <v-toolbar class="tableToolbar">
       <v-btn class="addBtn text-white" rounded="lg" @click="openCreateDialog">
-        Add Company
+        {{$t("ADD_COMPANY")}}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="companyTable">
       <template v-if="companies.length > 0">
         <thead>
           <tr>
-            <th class="text-left">Trade Name</th>
-            <th class="text-left">CNPJ</th>
-            <th class="text-left">Email</th>
-            <th class="text-center">Actions</th>
+            <th class="text-left">{{$t('TRADE_NAME')}}</th>
+            <th class="text-left">{{$t('CNPJ')}}</th>
+            <th class="text-left">{{$t('EMAIL')}}</th>
+            <th class="text-center">{{$t('ACTIONS')}}</th>
           </tr>
         </thead>
         <tbody>
@@ -34,14 +34,14 @@
       <template v-else>
         <tbody>
           <tr>
-            <th class="text-left">Trade Name</th>
-            <th class="text-left">CNPJ</th>
-            <th class="text-left">Email</th>
-            <th class="text-center">Actions</th>
+            <th class="text-left">{{$t('TRADE_NAME')}}</th>
+            <th class="text-left">{{$t('CNPJ')}}</th>
+            <th class="text-left">{{$t('EMAIL')}}</th>
+            <th class="text-center">{{$t('ACTIONS')}}</th>
           </tr>
           <tr>
             <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>No companies registered yet</h2>
+              <h2>{{$t('NO_COMPANIES_REGISTERED_YET')}}</h2>
             </td>
           </tr>
         </tbody>
@@ -213,8 +213,8 @@ export default {
 
 .addBtn {
   font-size: 1rem;
+  padding: 10px;
   height: 3rem;
-  width: 10rem;
   background-color: rgb(62, 120, 252);
   margin: 0 !important;
 }

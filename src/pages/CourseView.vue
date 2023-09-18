@@ -8,13 +8,13 @@
                 v-model="currentTab"
             >
                 <v-tab value='1'>
-                    Descrição do curso
+                    {{$t("COURSE_DESCRIPTION")}}
                 </v-tab>
                 <v-tab value='2'>
-                    Avaliações
+                    {{$t("REVIEWS")}}
                 </v-tab>
                 <v-tab value='3'>
-                    Teste prático
+                    {{$t("PRACTICAL_TEST")}}
                 </v-tab>
             </v-tabs>
         </v-row>
@@ -65,7 +65,7 @@
                                     v-model="newRating"
                                     density="compact"
                                 />
-                                <v-btn :disabled='!finishedRating' :class='finishedRating ? "bg-green" : "bg-grey"'>Enviar</v-btn>
+                                <v-btn :disabled='!finishedRating' :class='finishedRating ? "bg-green" : "bg-grey"'>{{$t("SEND")}}</v-btn>
                             </div>
                         </div>
                         <v-divider class='mt-6 mb-4'/>
@@ -89,8 +89,8 @@
                         </div>
                     </div>
                     <div class='mt-4 d-flex justify-end'>
-                        <v-btn class='bg-red mr-4' @click="resetAlternatives">Limpar Respostas</v-btn>
-                        <v-btn :disabled='!finishedTest' :class='finishedTest ? "bg-green" : "bg-grey"'>Enviar</v-btn>
+                        <v-btn class='bg-red mr-4' @click="resetAlternatives">{{$t("CLEAR_ANSWERS")}}</v-btn>
+                        <v-btn :disabled='!finishedTest' :class='finishedTest ? "bg-green" : "bg-grey"'>{{$t("SEND")}}</v-btn>
                     </div>
                 </v-window-item>
             </v-window>

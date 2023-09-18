@@ -3,13 +3,13 @@
     <div class="createCourseDialog">
       <v-card>
         <v-card-title class="text-center">
-          <span> Create a new course </span>
+          <span> {{ $t("CREATE_NEW_COURSE")}}</span>
         </v-card-title>
         <v-card-text>
           <v-container class='mt-6'>
             <v-row>
               <v-col cols="6">
-                <v-select v-model='selectedLanguage' :items='languages' label='Language'/>
+                <v-select v-model='selectedLanguage' :items='languages' :label='$t("LANGUAGE")'/>
               </v-col>
             </v-row>
           </v-container>
@@ -29,14 +29,14 @@
 </template>
 
 <script lang="ts">
-import type { ICourse } from '@/types/course'
+import type { ICourseInfo } from '@/types/course'
 import type { IErrorResponse } from '@/types/errors'
 import CourseForm from '@/components/CourseForm.vue'
 
 const info = {
   title: '',
   description: '',
-  thumbnail: '',
+  thumbnailURL: '',
   contentInHours: 0,
   level: '',
   videoURL: '',
@@ -47,26 +47,20 @@ export default {
   components: {
     CourseForm
   },
-  props: {
-    course: {
-      type: Object,
-      default: () => null
-    }
-  },
-
   data: () => {
     const languages = ['portuguese', 'english']
     return {
+      course: {},
       courseForm: {
-          id: '',
-          englishInfo: {
-            ...info
-          },
-          portugueseInfo: {...info},
-        } as any,
-        dialog: false,
-        languages,
-        selectedLanguage: languages[0],
+        id: '',
+        englishInfo: {
+          ...info
+        },
+        portugueseInfo: {...info},
+      } as any,
+      dialog: false,
+      languages,
+      selectedLanguage: languages[0],
     }
   },
   methods: {
@@ -74,6 +68,8 @@ export default {
       return this.courseForm[language + 'Info']
     },
     openDialog(course: any) {
+      this.course = course
+      console.log(this.course)
       for (const language of this.languages) {
         const info = this.getInfo(language)
         this.dialog = true
@@ -82,7 +78,7 @@ export default {
           info.id = course.id
           info.title = course.title
           info.description = course.description
-          info.thumbnail = course.thumbnailURLd
+          info.thumbnailURL = course.thumbnailURL
           info.videoURL = course.videoURL
           info.contentInHours = course.contentInHours
           info.level = course.level
@@ -98,7 +94,7 @@ export default {
         info.id = ''
         info.title = ''
         info.description = ''
-        info.thumbnail = ''
+        info.thumbnailURL = ''
         info.videoURL = ''
         info.contentInHours = 1
         info.level = ''
@@ -112,7 +108,7 @@ export default {
         if (
           !info.title ||
           !info.description ||
-          !info.thumbnail ||
+          !info.thumbnailURL ||
           !info.contentInHours ||
           !info.level
         ) {
@@ -126,21 +122,18 @@ export default {
     async saveCourse() {
       if (!this.verifyFields()) return
 
-      const course: ICourse = {}
-      for (const language of this.languages) {
-        const info = this.getInfo(language)
-        
-        const key = language + 'Info' as keyof ICourse
-        course[key] = {
-          title: info.title,
-          description: info.description,
-          thumbnailURL: info.thumbnail,
-          videoURL: info.videoURL,
-          contentInHours: +info.contentInHours,
-          level: info.level,
-          questions: info.questions
-        }
+      const course: ICourseInfo = {  
+        title: this.courseForm.englishInfo.title,
+        description: this.courseForm.englishInfo.description,
+        thumbnailURL: this.courseForm.englishInfo.thumbnailURL,
+        // videoURL: this.courseForm.englishInfo.videoURL,
+        contentInHours: this.courseForm.englishInfo.contentInHours,
+        level: this.courseForm.englishInfo.level,
+        category: this.courseForm.category
+        //questions: this.courseForm.englishInfo.questions
       }
+
+      console.log(course)
 
       try {
         if (this.course.id) {
@@ -161,6 +154,7 @@ export default {
           this.$emit('savedCourse', data)
         }
       } catch (e: any) {
+        console.log(e)
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)

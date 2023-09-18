@@ -11,15 +11,15 @@
           append-inner-icon="mdi-magnify"
           single-line
           hide-details
-          @click:append-inner="loadCourses"
+          @click:append-inner="loadCategories"
         />
       </v-col>
     </v-row>
     <v-row class="mt-12">
       <v-col>
-        <v-row class='mb-12' v-for="(category, i) in categories" :key="i">
+        <v-row class='mb-12' v-for="(category, i) in Object.keys(categories)" :key="i">
           <p class="text-h5 mb-6">
-            {{category.name}}
+            {{category}}
           </p>
           <v-carousel
             height="auto"
@@ -28,15 +28,15 @@
             hide-delimiters
           >
             <v-carousel-item
-              v-for="(coursesPage, j) in category.coursesPages"
+              v-for="(coursesPage, j) in (categories[category] as any)"
               :key="j"
             >
               <div class="d-flex">
                 <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k" @click="openCourseView(course.course_id)">
-                  <img class='course-thumbnail' :src="course.thumbnailUrl" alt="">
+                  <img class='course-thumbnail' :src="course.thumbnailURL" alt="">
                   <p class="text-h6">{{course.title}}</p>
                   <span class="d-flex">
-                    <b class="mr-1" style="color: #b4761a">{{course.avg_rating.toFixed(1)}}</b>
+                    <b class="mr-1" style="color: #b4761a">{{course.avgRating.toFixed(1)}}</b>
                     <v-rating
                       class="rating d-flex align-center"
                       color="orange-lighten-1"
@@ -58,79 +58,42 @@
 </template>
 
 <script lang="ts">
-
 export default {
   name: 'CoursesComponent',
 
   data: () => ({
     loadedCourses: false,
     loadingCourses: false,
-    categories: [
-      {
-        name: "Segurança de dados",
-        coursesPages: [
-          {
-            page: 1, 
-            courses: [
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-            ]
-          },
-          {
-            page: 2, 
-            courses: [
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-            ]
-          }
-        ]
-      },
-      {
-        name: "Segurança de redes",
-        coursesPages: [
-          {
-            page: 1, 
-            courses: [
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-            ]
-          },
-          {
-            page: 2, 
-            courses: [
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-              {course_id: '1', avg_rating: 2.5, thumbnailUrl: "https://img-b.udemycdn.com/course/240x135/1701388_0134.jpg", title: "Curso de java"},
-            ]
-          }
-        ]
-      },
-    ]
+    categories: {
+    } as any,
   }),
-
+  created: function () {
+    this.loadCategories()
+  },
   methods: {
-    loadCourses () {
+    async loadCategories () {
       this.loadingCourses = true
 
-      setTimeout(() => {
-        this.loadingCourses = false
-        this.loadedCourses = true
-      }, 2000)
+      const {data: categories} = await this.$axios.get("/courses/fetch")
+
+      for (const category in categories) {
+        let page = 1;
+        const pageCourses: any[] = [{page, courses: []}];
+        for (let courseIndex = 0; courseIndex < categories[category].length; courseIndex++) {
+          const course = categories[category][courseIndex];
+          pageCourses[page - 1].courses.push(course)
+          if (courseIndex > 0 && courseIndex % 5 === 0) {
+            page++
+            pageCourses.push({page, courses: []})
+          }
+        }
+        categories[category] = pageCourses
+      }
+
+      this.categories = categories;
+
+      this.loadingCourses = false
+      this.loadedCourses = true
     },
     openCourseView (courseId: string) {
       this.$emit('course-view-opened', courseId)

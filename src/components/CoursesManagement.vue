@@ -6,17 +6,17 @@
         rounded="lg"
         @click="openCreateDialog"
       >
-        Add Course
+        {{$t('ADD_COURSE')}}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="courseTable">
       <template v-if="courses.length > 0">
         <thead>
           <tr>
-            <th>Title</th>
-            <th>Level</th>
-            <th>Content in hours</th>
-            <th>Actions</th>
+            <th>{{$t("COURSE_TITLE")}}</th>
+            <th>{{$t("LEVEL")}}</th>
+            <th>{{$t("CONTENT_IN_HOURS")}}</th>
+            <th>{{$t("ACTIONS")}}</th>
           </tr>
         </thead>
         <tbody>
@@ -48,14 +48,14 @@
       <template v-else>
         <tbody>
           <tr>
-            <th>Title</th>
-            <th>Level</th>
-            <th>Content in hours</th>
-            <th>Actions</th>
+            <th>{{$t("COURSE_TITLE")}}</th>
+            <th>{{$t("LEVEL")}}</th>
+            <th>{{$t("CONTENT_IN_HOURS")}}</th>
+            <th>{{$t("ACTIONS")}}</th>
           </tr>
           <tr>
             <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>No courses registered yet</h2>
+              <h2>{{$t('NO_COURSES_REGISTERED_YET')}}</h2>
             </td>
           </tr>
         </tbody>
@@ -238,7 +238,7 @@ th {
 .addCourseBtn {
   font-size: 1rem;
   height: 3rem;
-  width: 10rem;
+  padding: 10px;
   background-color: rgb(62, 120, 252);
   margin: 0 !important;
 }

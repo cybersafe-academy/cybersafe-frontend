@@ -8,7 +8,7 @@
                 <v-textarea v-model="info.description" label="Description" variant="solo" required></v-textarea>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="info.thumbnail" label="Thumbnail URL" type="string" variant="solo"
+                <v-text-field v-model="info.thumbnailURL" label="Thumbnail URL" type="string" variant="solo"
                   required></v-text-field>
                 <v-text-field v-model="info.videoURL" label="Video URL" type="string" variant="solo"
                   required></v-text-field>
