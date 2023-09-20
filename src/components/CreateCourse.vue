@@ -39,7 +39,7 @@ const info = {
   thumbnailURL: '',
   contentInHours: 0,
   level: '',
-  videoURL: '',
+  contentURL: '',
   questions: [],
 }
 
@@ -69,7 +69,7 @@ export default {
     },
     openDialog(course: any) {
       this.course = course
-      console.log(this.course)
+
       for (const language of this.languages) {
         const info = this.getInfo(language)
         this.dialog = true
@@ -79,7 +79,7 @@ export default {
           info.title = course.title
           info.description = course.description
           info.thumbnailURL = course.thumbnailURL
-          info.videoURL = course.videoURL
+          info.contentURL = course.contentURL
           info.contentInHours = course.contentInHours
           info.level = course.level
           info.questions = course.questions ?? []
@@ -95,7 +95,7 @@ export default {
         info.title = ''
         info.description = ''
         info.thumbnailURL = ''
-        info.videoURL = ''
+        info.contentURL = ''
         info.contentInHours = 1
         info.level = ''
         info.questions = []
@@ -109,6 +109,7 @@ export default {
           !info.title ||
           !info.description ||
           !info.thumbnailURL ||
+          !info.contentURL ||
           !info.contentInHours ||
           !info.level
         ) {
@@ -126,17 +127,17 @@ export default {
         title: this.courseForm.englishInfo.title,
         description: this.courseForm.englishInfo.description,
         thumbnailURL: this.courseForm.englishInfo.thumbnailURL,
-        // videoURL: this.courseForm.englishInfo.videoURL,
+        contentURL: this.courseForm.englishInfo.contentURL,
         contentInHours: this.courseForm.englishInfo.contentInHours,
         level: this.courseForm.englishInfo.level,
-        category: this.courseForm.category
-        //questions: this.courseForm.englishInfo.questions
+        category: this.courseForm.category,
+        questions: this.courseForm.englishInfo.questions
       }
 
-      console.log(course)
+      console.log(this.course)
 
       try {
-        if (this.course.id) {
+        if (this.course?.id) {
           const { data } = await this.$axios.put(`/courses/${this.course.id}`, course)
 
           this.closeDialog()

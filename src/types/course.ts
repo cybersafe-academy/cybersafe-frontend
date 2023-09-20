@@ -1,6 +1,7 @@
 interface IQuestion {
-  question: string
-  answer: string
+  answers: { id: string; text: string }[]
+  id: string
+  wording: string
 }
 
 interface ICourseInfo {
@@ -9,7 +10,7 @@ interface ICourseInfo {
   description: string
   level: string
   thumbnailURL: string
-  videoURL: string
+  contentURL: string
   title: string
 }
 

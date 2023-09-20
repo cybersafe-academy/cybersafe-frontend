@@ -35,7 +35,9 @@ export default {
     },
     methods: {
         addCourseContent() {
-            this.questions.push({})
+            this.questions.push({
+                answers: [{},{},{},{}],
+            })
         },
         removeCourseContent(index: number) {
             setTimeout(()=>this.questions.splice(index, 1), 20)
