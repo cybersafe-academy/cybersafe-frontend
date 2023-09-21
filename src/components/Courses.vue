@@ -74,7 +74,7 @@ export default {
     async loadCategories () {
       this.loadingCourses = true
 
-      const {data: categories} = await this.$axios.get("/courses/fetch")
+      const {data: categories} = await this.$axios.get("/courses")
 
       for (const category in categories) {
         let page = 1;

@@ -78,6 +78,7 @@ export default {
           info.id = course.id
           info.title = course.title
           info.description = course.description
+          info.categoryId = course.categoryId
           info.thumbnailURL = course.thumbnailURL
           info.contentURL = course.contentURL
           info.contentInHours = course.contentInHours
@@ -93,6 +94,7 @@ export default {
         this.dialog = false
         info.id = ''
         info.title = ''
+        info.categoryId = ''
         info.description = ''
         info.thumbnailURL = ''
         info.contentURL = ''
@@ -107,6 +109,7 @@ export default {
 
         if (
           !info.title ||
+          !info.categoryId ||
           !info.description ||
           !info.thumbnailURL ||
           !info.contentURL ||
@@ -130,12 +133,10 @@ export default {
         contentURL: this.courseForm.englishInfo.contentURL,
         contentInHours: this.courseForm.englishInfo.contentInHours,
         level: this.courseForm.englishInfo.level,
-        category: this.courseForm.category,
+        categoryId: this.courseForm.englishInfo.categoryId,
         questions: this.courseForm.englishInfo.questions
       }
-
-      console.log(this.course)
-
+3
       try {
         if (this.course?.id) {
           const { data } = await this.$axios.put(`/courses/${this.course.id}`, course)
@@ -155,7 +156,6 @@ export default {
           this.$emit('savedCourse', data)
         }
       } catch (e: any) {
-        console.log(e)
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)

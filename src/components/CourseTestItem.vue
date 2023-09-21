@@ -11,19 +11,19 @@
         <v-col cols="12">
           <div class="d-flex align-center">
             <v-text-field class='mb-2 mr-2' v-model="question.answers[0].text" label="Alternative 1" type="string" required
-            variant="solo" hide-details></v-text-field> <input type="radio" v-model="question.answers[0].isCorrect" value="true" name='alternatives' />
+            variant="solo" hide-details></v-text-field> <input type="radio" v-model="question.answers[0].IsCorrect" :value="true" name='alternatives' />
           </div>
           <div class="d-flex align-center">
           <v-text-field class='mb-2 mr-2' v-model="question.answers[1].text" label="Alternative 2" type="string" required
-            variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[0].isCorrect" value="true" name='alternatives' />
+            variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[1].IsCorrect" :value="true" name='alternatives' />
          </div>
          <div class="d-flex align-center">
         <v-text-field class='mb-2 mr-2'  v-model="question.answers[2].text" label="Alternative 3" type="string" required
-          variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[0].isCorrect" value="true" name='alternatives' />
+          variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[2].IsCorrect" :value="true" name='alternatives' />
          </div>
          <div class="d-flex align-center">
           <v-text-field  class='mb-2 mr-2' v-model="question.answers[3].text" label="Alternative 4" type="string" required
-            variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[0].isCorrect" value="true" name='alternatives' />
+            variant="solo" hide-details></v-text-field> <input type="radio"  v-model="question.answers[3].IsCorrect" :value="true" name='alternatives' />
          </div>
         </v-col>
       </v-row>

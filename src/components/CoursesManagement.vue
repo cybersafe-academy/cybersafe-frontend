@@ -173,6 +173,7 @@ export default {
           this.totalPages--
         }
 
+        
         this.$toast.success('Course deleted successfully')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
@@ -183,7 +184,7 @@ export default {
     async fetchCourses(page: number) {
       if (!this.pageCourses[page]) {
         try {
-          const { data: courses } = await this.$axios.get('/courses', {
+          const { data: courses } = await this.$axios.get('/courses/management', {
             params: { page, limit: this.numberOfItemsToFetch }
           })
           if (courses.data) {

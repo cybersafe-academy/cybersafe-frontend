@@ -5,10 +5,8 @@
                 <v-text-field v-model="info.title" label="Course title" variant="solo" required></v-text-field>
               </v-col>
               <v-col cols="12">
-                {{categories }}
                 <v-select v-model="info.categoryId" label="Category" variant="solo" required
-                  :items="categories" item-title="name">
-           
+                  :items="categories" item-title="name" item-value="id">
                 </v-select>
               </v-col>
               <v-col cols="12">
