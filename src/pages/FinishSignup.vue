@@ -39,6 +39,20 @@
           :error-messages="cpfErrors"
         ></v-text-field>
 
+        <v-file-input
+          clearable
+          class="default-input"
+          label="Profile picture"
+          prepend-inner-icon="mdi-image"
+          prepend-icon=""
+          variant="solo"
+          bg-color="#f5f7f9"
+          accept="image/*"
+          @change="handleProfilePicture"
+          @keyup.enter="signup"
+          :rules="[required]"
+        ></v-file-input>
+
         <v-text-field
           v-model="birthdayDate"
           clearable
@@ -121,6 +135,7 @@ export default {
     return {
       name: '',
       cpf: '',
+      profilePicture: null as any,
       birthdayDate: '',
       email: '',
       password: '',
@@ -180,7 +195,8 @@ export default {
         !this.cpf ||
         !this.birthdayDate ||
         !this.password ||
-        !this.passwordConfirmation
+        !this.passwordConfirmation ||
+        !this.profilePicture
       ) {
         this.$toast.error('Please fill in all fields')
 
@@ -223,6 +239,22 @@ export default {
       return dayjs(date).format('YYYY-MM-DD')
     },
 
+    handleProfilePicture(e: any): void {
+      this.profilePicture = e.target.files[0]
+    },
+
+    async convertToBase64(file: any): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+
+        reader.readAsDataURL(file)
+
+        reader.onload = () => resolve(reader.result as string)
+
+        reader.onerror = (error) => reject(error)
+      })
+    },
+
     switchLogin(): void {
       this.$router.push('/login')
     },
@@ -234,6 +266,7 @@ export default {
         const signupData: ISignup = {
           name: this.name,
           cpf: this.cpf,
+          profilePicture: await this.convertToBase64(this.profilePicture),
           birthDate: this.formatDate(this.birthdayDate),
           password: this.password
         }
@@ -248,6 +281,7 @@ export default {
 
         this.switchLogin()
       } catch (e: any) {
+        console.log(e)
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)
