@@ -19,4 +19,4 @@ interface ICourse {
   englishInfo?: ICourseInfo
 }
 
-export type { ICourse }
+export type { ICourse, ICourseInfo, IQuestion }

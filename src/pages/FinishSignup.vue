@@ -47,7 +47,7 @@
           prepend-icon=""
           variant="solo"
           bg-color="#f5f7f9"
-          accept="image/*"
+          accept="image/png, image/jpeg"
           @change="handleProfilePicture"
           @keyup.enter="signup"
           :rules="[required]"
@@ -103,6 +103,7 @@
         height="65"
         color="#3e78fc"
         rounded="lg"
+        :loading="isLoading"
       >
         Sign up
       </v-btn>
@@ -144,7 +145,8 @@ export default {
       cpfErrors: [] as string[],
       passwordErrors: [] as string[],
       dateErrors: [] as string[],
-      hasError: false
+      hasError: false,
+      isLoading: false
     }
   },
 
@@ -263,6 +265,8 @@ export default {
       try {
         if (!this.verifyFields()) return
 
+        this.isLoading = true
+
         const signupData: ISignup = {
           name: this.name,
           cpf: this.cpf,
@@ -277,11 +281,14 @@ export default {
           }
         })
 
+        this.isLoading = false
+
         this.$toast.success('Account created successfully!')
 
         this.switchLogin()
       } catch (e: any) {
-        console.log(e)
+        this.isLoading = false
+
         const error: IErrorResponse = e.response.data.error
 
         this.$toast.error(error.description)
