@@ -1,6 +1,5 @@
 import * as VueRouter from 'vue-router'
 
-import LandingComponent from '@/pages/Landing.vue'
 import LoginComponent from '@/pages/Login.vue'
 import FinishSignupComponent from '@/pages/FinishSignup.vue'
 import HomeComponent from '@/pages/Home.vue'
