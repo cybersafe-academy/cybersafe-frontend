@@ -9,7 +9,7 @@ import UpdatePasswordComponent from '@/pages/UpdatePassword.vue'
 import FirstAccessComponent from '@/pages/FirstAccess.vue'
 
 const routes: any = [
-  { path: '/', name: 'landing', component: LandingComponent },
+  { path: '/', name: 'landing', component: LoginComponent },
   { path: '/login', name: 'login', component: LoginComponent },
   { path: '/finish-signup', name: 'signup', component: FinishSignupComponent },
   {
@@ -33,7 +33,7 @@ const routes: any = [
     name: 'first-access',
     component: FirstAccessComponent
   },
-  { path: '/:pathMatch(.*)*', redirect: '/' }
+  { path: '/:pathMatch(.*)*', redirect: '/login' }
 ]
 
 const router = VueRouter.createRouter({
