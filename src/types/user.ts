@@ -3,6 +3,7 @@ interface IUserData {
   name: string
   email: string
   cpf: string
+  profilePictureURL: string
   age: number
   role: string
 }

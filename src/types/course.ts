@@ -1,16 +1,25 @@
-interface IContent {
-  URL: string
-  contentType: string
+interface IQuestion {
+  answers: { id: string; text: string }[]
+  id: string
+  wording: string
+}
+
+interface ICourseInfo {
+  questions: IQuestion[]
+  descriptionPtBr: string
+  description: string
+  thumbnailURL: string
+  contentURL: string
+  titlePtBr: string
   title: string
 }
 
 interface ICourse {
-  contentInHours: number
-  contents: IContent[]
-  description: string
   level: string
   thumbnailURL: string
-  title: string
+  contentURL: string
+  portugueseInfo?: ICourseInfo
+  englishInfo?: ICourseInfo
 }
 
-export type { ICourse }
+export type { ICourse, ICourseInfo, IQuestion }

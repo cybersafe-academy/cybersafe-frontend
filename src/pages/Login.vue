@@ -127,7 +127,7 @@ export default {
           cpf: this.cpf,
           password: this.password
         }
-        
+
         this.isLoading = true
 
         const { data: loginData } = await this.$axios.post<ILoginResponse>(

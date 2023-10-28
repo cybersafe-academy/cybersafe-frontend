@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', {
     name: useLocalStorage('name', ''),
     email: useLocalStorage('email', ''),
     cpf: '',
+    profilePictureURL: useLocalStorage('profilePictureURL', ''),
     age: 0,
     role: useLocalStorage('role', ''),
     accessToken: useLocalStorage('accessToken', ''),
@@ -30,6 +31,7 @@ export const useAuthStore = defineStore('auth', {
       this.name = data.name
       this.email = data.email
       this.cpf = data.cpf
+      this.profilePictureURL = data.profilePictureURL
       this.age = data.age
       this.role = data.role
     },
@@ -39,6 +41,7 @@ export const useAuthStore = defineStore('auth', {
       this.name = ''
       this.email = ''
       this.cpf = ''
+      this.profilePictureURL = ''
       this.age = 0
       this.role = ''
     }

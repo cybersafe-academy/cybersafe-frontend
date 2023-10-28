@@ -1,22 +1,62 @@
 <template>
   <v-layout>
-    <v-navigation-drawer rail expand-on-hover width="400" class="navigation-drawer">
+    <v-navigation-drawer
+      rail
+      expand-on-hover
+      width="400"
+      class="navigation-drawer"
+    >
       <v-list>
-        <v-list-item prepend-icon="mdi-account-circle" :title="userName" :subtitle="userEmail" class="pointer"
-          @click="openProfile" />
-
+        <v-list-item
+          :prepend-avatar="userProfilePicture"
+          :title="userName"
+          :subtitle="userEmail"
+          class="pointer"
+          @click="openProfile"
+        />
         <v-divider />
 
-        <v-list-item prepend-icon="mdi-list-box" title="Courses" value="courses" link @click="emitPage('courses')" />
+        <template v-if="role !== 'default'">
+          <v-list-item
+            prepend-icon="mdi-list-box"
+            :title="$t('MANAGE_COURSES')"
+            value="courses-management"
+            link
+            @click="emitPage('courses-management')"
+          />
+          <v-list-item
+            v-if="role === 'master'"
+            prepend-icon="mdi-badge-account-horizontal"
+            :title="$t('MANAGE_USERS')"
+            value="users"
+            link
+            @click="emitPage('users')"
+          />
+          <v-list-item
+            v-if="role === 'master'"
+            prepend-icon="mdi-briefcase"
+            :title="$t('MANAGE_COMPANIES')"
+            value="companies"
+            link
+            @click="emitPage('companies')"
+          />
+        </template>
 
-        <v-list-item v-if="role === 'master'" prepend-icon="mdi-badge-account-horizontal" title="Users" value="users" link
-          @click="emitPage('users')" />
-
-        <v-list-item v-if="role === 'master'" prepend-icon="mdi-briefcase" title="Companies" value="companies" link
-          @click="emitPage('companies')" />
+        <v-list-item
+          prepend-icon="mdi-list-box"
+          :title="$t('COURSES')"
+          value="courses"
+          link
+          @click="emitPage('courses')"
+        />
       </v-list>
       <template v-slot:append>
-        <v-list-item prepend-icon="mdi-logout" title="Logout" link @click="logout" />
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Logout"
+          link
+          @click="logout"
+        />
       </template>
     </v-navigation-drawer>
   </v-layout>
@@ -28,14 +68,14 @@ import { useAuthStore } from '@/stores/auth'
 export default {
   name: 'DrawerComponent',
 
-  
   data() {
     return {
       userName: '',
       userEmail: '',
+      userProfilePicture: ''
     }
   },
-  
+
   computed: {
     role() {
       const authStore = useAuthStore()
@@ -53,6 +93,7 @@ export default {
 
     this.userName = authStore.name || ''
     this.userEmail = authStore.email || ''
+    this.userProfilePicture = authStore.profilePictureURL || ''
   },
 
   methods: {
