@@ -1,7 +1,7 @@
 {
   "MANAGE_COURSES": "Gerenciar cursos",
-  "USERS": "Usuários",
-  "COMPANIES": "Empresas",
+  "MANAGE_USERS": "Gerenciar Usuários",
+  "MANAGE_COMPANIES": "Gerenciar Empresas",
   "COURSES": "Cursos",
   "ADD_COURSE": "Adicionar curso",
   "COURSE_TITLE": "Título do curso",

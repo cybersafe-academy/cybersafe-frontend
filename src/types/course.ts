@@ -6,7 +6,11 @@ interface IQuestion {
 
 interface ICourseInfo {
   questions: IQuestion[]
+  descriptionPtBr: string
   description: string
+  thumbnailURL: string
+  contentURL: string
+  titlePtBr: string
   title: string
 }
 

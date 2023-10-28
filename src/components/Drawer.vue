@@ -27,7 +27,7 @@
           <v-list-item
             v-if="role === 'master'"
             prepend-icon="mdi-badge-account-horizontal"
-            :title="$t('USERS')"
+            :title="$t('MANAGE_USERS')"
             value="users"
             link
             @click="emitPage('users')"
@@ -35,7 +35,7 @@
           <v-list-item
             v-if="role === 'master'"
             prepend-icon="mdi-briefcase"
-            :title="$t('COMPANIES')"
+            :title="$t('MANAGE_COMPANIES')"
             value="companies"
             link
             @click="emitPage('companies')"

@@ -16,8 +16,27 @@
             </v-row>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="courseForm.thumbnailURL" label="Thumbnail URL" type="string" variant="solo"
-                  required></v-text-field>
+                  <v-file-input
+                    clearable
+                    class="default-input"
+                    label="Profile picture"
+                    prepend-inner-icon="mdi-image"
+                    prepend-icon=""
+                    variant="solo"
+                    bg-color="#f5f7f9"
+                    accept="image/png, image/jpeg"
+                    @change="handleProfilePicture"
+                    @keyup.enter="signup"
+                    :rules="[required]"
+                  ></v-file-input>
+                  <v-dialog>
+                      <v-img 
+                      class="mb-6"
+                      :width="300"
+                      cover
+                      :src="course.thumbnailURL"
+                    />
+                  </v-dialog>
                 <v-text-field v-model="courseForm.contentURL" label="Video URL" type="string" variant="solo"
                   required></v-text-field>
               </v-col>
@@ -82,6 +101,7 @@ export default {
       courseForm: {
         id: '',
         category: {},
+        thumbnailPicture: undefined,
         thumbnailURL: '',
         contentURL: '',
         level: '',
@@ -146,7 +166,7 @@ export default {
           !info.title ||
           !info.description ||
           !this.courseForm.category.id ||
-          !this.courseForm.thumbnailURL ||
+          !this.courseForm.thumbnailPicture ||
           !this.courseForm.contentURL ||
           !this.courseForm.level
         ) {
@@ -166,7 +186,7 @@ export default {
         description: this.courseForm.englishInfo.description,
         descriptionPtBr: this.courseForm.portugueseInfo.description,
         questions: this.courseForm.englishInfo.questions,
-        thumbnailURL: this.courseForm.thumbnailURL,
+        thumbnailURL: this.courseForm.thumbnailPicture,
         contentURL: this.courseForm.contentURL,
         level: this.courseForm.level,
         categoryId: this.courseForm.category.id,
@@ -195,7 +215,27 @@ export default {
 
         this.$toast.error(error.description)
       }
-    }
+    },
+
+    async handleProfilePicture(e: any): void {
+      const imageFile = e.target.files[0]
+      this.course.thumbnailURL = window.URL.createObjectURL(imageFile)
+
+      const base64Picture = await this.convertToBase64(imageFile)
+      this.courseForm.thumbnailPicture = base64Picture;
+    },
+
+    async convertToBase64(file: any): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+
+        reader.readAsDataURL(file)
+
+        reader.onload = () => resolve(reader.result as string)
+
+        reader.onerror = (error) => reject(error)
+      })
+    },
   }
 }
 </script>
