@@ -15,7 +15,6 @@
           <tr>
             <th>{{$t("COURSE_TITLE")}}</th>
             <th>{{$t("LEVEL")}}</th>
-            <th>{{$t("CONTENT_IN_HOURS")}}</th>
             <th>{{$t("ACTIONS")}}</th>
           </tr>
         </thead>
@@ -23,7 +22,6 @@
           <tr v-for="item in pageCourses[currentPage]" :key="item.id">
             <td>{{ item.title }}</td>
             <td>{{ item.level }}</td>
-            <td class="text-center">{{ item.contentInHours }}</td>
             <td class="actionsButtons">
               <v-btn
                 :disabled="role != 'master'"

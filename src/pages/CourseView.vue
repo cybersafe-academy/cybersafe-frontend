@@ -1,7 +1,7 @@
 <template>
-    <div class='tableContent'>
-        <v-row>
-            <iframe class="course-video" src="https://www.youtube.com/embed/0pMgFTVLzIw" title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <div v-if='course' class='tableContent'>
+        <v-row> 
+            <iframe class="course-video" :src="course.contentURL" title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </v-row>
         <v-row>
             <v-tabs
@@ -29,12 +29,12 @@
                     </a-row>
                     <a-row>
                         <span class="mt-2 d-flex">
-                            <b class="mr-1" style="color: #b4761a">{{course.avg_rating.toFixed(1)}}</b>
+                            <b class="mr-1" style="color: #b4761a">{{course.avgRating.toFixed(1)}}</b>
                             <v-rating
                                 class="rating d-flex align-center"
                                 color="orange-lighten-1"
                                 half-increments
-                                v-model="course.avg_rating"
+                                v-model="course.avgRating"
                                 readonly
                                 density="compact"
                                 size="small"
@@ -43,18 +43,18 @@
                     </a-row>
                     <hr class='mt-6 mb-4'>
                     <a-row>
-                        <a-col style='margin-right: 200px;'>Autor</a-col>
+                        <a-col style='max-width: 600px; margin-right: 200px;'>Autor</a-col>
                         <a-col>John Krasinki</a-col>
                     </a-row>
                     <hr class='mt-4 mb-4'>
                     <a-row>
-                        <a-col style='margin-right: 200px;'>Autor</a-col>
-                        <a-col>John Krasinki</a-col>
+                        <a-col style='max-width: 600px; margin-right: 200px;'>Demais informações</a-col>
+                        <a-col>Curso de segurança</a-col>
                     </a-row>
                 </v-window-item>
                 <v-window-item value="2">
                     <div class='d-flex flex-column'>
-                        <div class="w-100">
+                        <div class="w-100" v-if="!course.reviews.UserReviewedCourse">
                             <textarea v-model='newRatingComment' class="w-100 mb-6 pa-2" style='border: 1px solid grey;'></textarea>
                             <div class="d-flex align-center">
                                 <v-rating
@@ -65,19 +65,22 @@
                                     v-model="newRating"
                                     density="compact"
                                 />
-                                <v-btn :disabled='!finishedRating' :class='finishedRating ? "bg-green" : "bg-grey"'>{{$t("SEND")}}</v-btn>
+                                <v-btn @click='sendReview' :disabled='!finishedRating' :class='finishedRating ? "bg-green" : "bg-grey"'>{{$t("SEND")}}</v-btn>
                             </div>
                         </div>
                         <v-divider class='mt-6 mb-4'/>
-                        <div>
-                            <div v-for="review in course.reviews">
+                        <div v-if="course.reviews.Reviews">
+                            <div v-for="review in course.reviews.Reviews">
                                 <UserReview :review='review' />
                                 <v-divider class='mt-3'/>
                             </div>
                         </div>
+                        <div v-else>
+                            <p>No Reviews yet</p>
+                        </div>
                     </div>
                 </v-window-item>
-                <v-window-item value="3">
+                <v-window-item v-if='course.questions' value="3">
                     <div class='mb-1' v-for='question, i in course.questions'>
                         <div class='question'>
                             <p class='text-h6'>{{i}}. {{question.description}}</p>
@@ -119,70 +122,7 @@ export default {
             answeredQuestions: 0,
             newRatingComment: '',
             newRating: 0,
-            course: {
-                title: 'Curso de java', 
-                description: "Este curso é bem legal, vai ensinar linguagem daora",
-                avg_rating: 3,
-                reviews: [
-                    {user: {name: 'Paulinho gogó',profilePicture: 'https://imagens.brasil.elpais.com/resizer/fk-ECyPRWJZPD2VRJV-HirnItOg=/1200x0/cloudfront-eu-central-1.images.arcpublishing.com/prisa/RYKM5GEQ7ZE6JLUJFJ7Y3ZORFA.jpg'}, comment: 'kk', rating: 3 },
-                    {user: {name: 'Paulinho gogó',profilePicture: 'https://imagens.brasil.elpais.com/resizer/fk-ECyPRWJZPD2VRJV-HirnItOg=/1200x0/cloudfront-eu-central-1.images.arcpublishing.com/prisa/RYKM5GEQ7ZE6JLUJFJ7Y3ZORFA.jpg'}, comment: 'kk', rating: 3 }
-                ],
-                questions: {
-                    1: {
-                        id: 1,
-                        description: 'Quem invetou o rojão?',
-                        alternatives: [
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Oppenheimer'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Rodrigo faro'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Deus'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'joao'
-                            }
-                        ]
-                        
-                    },
-                    2: {
-                        id: 1,
-                        description: 'Quem invetou o rojão?',
-                        alternatives: [
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Oppenheimer'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Rodrigo faro'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'Deus'
-                            },
-                            {
-                                alternative_id: 1,
-                                question_id: 1,
-                                description: 'joao'
-                            }
-                        ]
-                    }
-                }
-            }
+            course: undefined
         }
     },
     computed: {
@@ -190,7 +130,26 @@ export default {
             return this.newRating && this.newRatingComment !== ''
         }
     },
+    created: async function () {
+        await this.loadCourse();
+        await this.loadReviews();
+        await this.loadQuestions();
+    },
     methods: {
+        async loadCourse() {
+            this.course = (await this.$axios.get(`courses/${this.courseId}`)).data;
+            const isPortuguese = JSON.parse(localStorage.getItem("isPortuguese") || "false")
+            if (isPortuguese) {
+                this.course.title = this.course.titlePtBr
+                this.course.description = this.course.descriptionPtBr
+            }
+        },
+        async loadReviews() {
+            this.course.reviews = (await this.$axios.get(`courses/${this.courseId}/reviews`)).data;
+        },
+        async loadQuestions() {
+            this.course.questions = (await this.$axios.get(`courses/${this.courseId}/questions`)).data;
+        },
         setAlternative(alternatives: any[], selectedAlternative: any) {
             alternatives.forEach(alternative=>alternative.selected = false);
             selectedAlternative.selected = true
@@ -201,6 +160,15 @@ export default {
             this.answeredQuestions = 0;
             this.finishedTest = false;
             (Object as any).values(this.course.questions).forEach((question: any)=>question.alternatives.forEach((alternative: any)=>alternative.selected = false))
+        },
+        async sendReview() {
+            const review = (await this.$axios.post(`courses/${this.courseId}/reviews`, {
+                comment: this.newRatingComment,
+                rating: this.newRating,
+            })).data;
+
+            this.course.reviews.Reviews.push(review);
+            this.course.reviews.UserReviewedCourse = true;
         }
     }
 }

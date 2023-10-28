@@ -2,7 +2,7 @@
     <v-container class="ml-5 mt-4">
         <v-row>
             <a-col>
-                <img class='profile-picture' :src="review.user.profilePicture">
+                <!-- <img class='profile-picture' :src="review.user.profilePicture"> -->
             </a-col>
             <a-col class='d-flex flex-column pl-9'>
                 <p class='text-h6'>{{review.user.name}}</p>

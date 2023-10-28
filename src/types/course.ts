@@ -5,16 +5,15 @@ interface IQuestion {
 }
 
 interface ICourseInfo {
-  contentInHours: number
   questions: IQuestion[]
   description: string
-  level: string
-  thumbnailURL: string
-  contentURL: string
   title: string
 }
 
 interface ICourse {
+  level: string
+  thumbnailURL: string
+  contentURL: string
   portugueseInfo?: ICourseInfo
   englishInfo?: ICourseInfo
 }

@@ -8,15 +8,47 @@
         <v-card-text>
           <v-container class='mt-6'>
             <v-row>
-              <v-col cols="6">
-                <v-select v-model='selectedLanguage' :items='languages' :label='$t("LANGUAGE")'/>
+              <v-col cols="12">
+                <v-select v-model="courseForm.category.id" label="Category" variant="solo" required
+                  :items="categories" item-title="name" item-value="id">
+                </v-select>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <v-text-field v-model="courseForm.thumbnailURL" label="Thumbnail URL" type="string" variant="solo"
+                  required></v-text-field>
+                <v-text-field v-model="courseForm.contentURL" label="Video URL" type="string" variant="solo"
+                  required></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-select v-model="courseForm.level" label="Level" variant="solo" required
+                  :items="['beginner', 'intermediate', 'advanced']"></v-select>
               </v-col>
             </v-row>
           </v-container>
           <v-divider />
+          <v-container> 
+            <v-row>
+              <v-col cols="6">
+                <v-tabs
+                  v-model="selectedLanguage"
+                >
+                    <v-tab value='portuguese'>
+                      {{$t("PORTUGUESE")}}
+                    </v-tab>
+                    <v-tab value='english'>
+                      {{$t("ENGLISH")}}
+                    </v-tab>
+                </v-tabs>
+              </v-col>
+            </v-row>
+          </v-container>
           <template v-for='language in languages'>
-            <CourseForm v-if="selectedLanguage === language"  :info='courseForm[language + "Info"]' />
-          </template>
+              <CourseForm v-if="selectedLanguage === language"  :info='courseForm[language + "Info"]' />
+            </template>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -36,10 +68,6 @@ import CourseForm from '@/components/CourseForm.vue'
 const info = {
   title: '',
   description: '',
-  thumbnailURL: '',
-  contentInHours: 0,
-  level: '',
-  contentURL: '',
   questions: [],
 }
 
@@ -53,6 +81,10 @@ export default {
       course: {},
       courseForm: {
         id: '',
+        category: {},
+        thumbnailURL: '',
+        contentURL: '',
+        level: '',
         englishInfo: {
           ...info
         },
@@ -61,7 +93,12 @@ export default {
       dialog: false,
       languages,
       selectedLanguage: languages[0],
+      categories: [],
     }
+  },
+  created: async function () {
+    const response  = await this.$axios.get('/courses/categories')
+    this.categories = response.data.data
   },
   methods: {
     getInfo(language: string) {
@@ -69,37 +106,35 @@ export default {
     },
     openDialog(course: any) {
       this.course = course
+      this.dialog = true
 
-      for (const language of this.languages) {
-        const info = this.getInfo(language)
-        this.dialog = true
+      this.courseForm.englishInfo.title = course.title
+      this.courseForm.portugueseInfo.title = course.titlePtBr
+      this.courseForm.englishInfo.description = course.description
+      this.courseForm.portugueseInfo.description = course.descriptionPtBr
 
-        if (course) {
-          info.id = course.id
-          info.title = course.title
-          info.description = course.description
-          info.categoryId = course.categoryId
-          info.thumbnailURL = course.thumbnailURL
-          info.contentURL = course.contentURL
-          info.contentInHours = course.contentInHours
-          info.level = course.level
-          info.questions = course.questions ?? []
-        }
-      }
+      this.courseForm.englishInfo.questions = course.questions ?? []
+      this.courseForm.portugueseInfo.questions = course.questions ?? []
+ 
+ 
+      this.courseForm.id = course.id
+      this.courseForm.category = course.category
+      this.courseForm.thumbnailURL = course.thumbnailURL
+      this.courseForm.contentURL = course.contentURL
+      this.courseForm.level = course.level
     },
     closeDialog() {
       for (const language of this.languages) {
         const info = this.getInfo(language)
 
         this.dialog = false
-        info.id = ''
+        this.courseForm.id = ''
+        this.courseForm.thumbnailURL = ''
+        this.courseForm.category = {}
+        this.courseForm.contentURL = ''
+        this.courseForm.level = ''
         info.title = ''
-        info.categoryId = ''
         info.description = ''
-        info.thumbnailURL = ''
-        info.contentURL = ''
-        info.contentInHours = 1
-        info.level = ''
         info.questions = []
       }
     },
@@ -109,12 +144,11 @@ export default {
 
         if (
           !info.title ||
-          !info.categoryId ||
           !info.description ||
-          !info.thumbnailURL ||
-          !info.contentURL ||
-          !info.contentInHours ||
-          !info.level
+          !this.courseForm.category.id ||
+          !this.courseForm.thumbnailURL ||
+          !this.courseForm.contentURL ||
+          !this.courseForm.level
         ) {
           this.$toast.error('Please fill all the fields')
 
@@ -128,15 +162,16 @@ export default {
 
       const course: ICourseInfo = {  
         title: this.courseForm.englishInfo.title,
+        titlePtBr: this.courseForm.portugueseInfo.title,
         description: this.courseForm.englishInfo.description,
-        thumbnailURL: this.courseForm.englishInfo.thumbnailURL,
-        contentURL: this.courseForm.englishInfo.contentURL,
-        contentInHours: this.courseForm.englishInfo.contentInHours,
-        level: this.courseForm.englishInfo.level,
-        categoryId: this.courseForm.englishInfo.categoryId,
-        questions: this.courseForm.englishInfo.questions
+        descriptionPtBr: this.courseForm.portugueseInfo.description,
+        questions: this.courseForm.englishInfo.questions,
+        thumbnailURL: this.courseForm.thumbnailURL,
+        contentURL: this.courseForm.contentURL,
+        level: this.courseForm.level,
+        categoryId: this.courseForm.category.id,
       }
-3
+
       try {
         if (this.course?.id) {
           const { data } = await this.$axios.put(`/courses/${this.course.id}`, course)

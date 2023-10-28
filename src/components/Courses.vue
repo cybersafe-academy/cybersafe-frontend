@@ -32,7 +32,7 @@
               :key="j"
             >
               <div class="d-flex">
-                <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k" @click="openCourseView(course.course_id)">
+                <div class='course-card' v-for="(course, k) in coursesPage.courses" :key="k" @click="openCourseView(course.id)">
                   <img class='course-thumbnail' :src="course.thumbnailURL" alt="">
                   <p class="text-h6">{{course.title}}</p>
                   <span class="d-flex">
@@ -76,11 +76,18 @@ export default {
 
       const {data: categories} = await this.$axios.get("/courses")
 
+      const isPortuguese = JSON.parse(localStorage.getItem("isPortuguese") || "false")
+
       for (const category in categories) {
         let page = 1;
         const pageCourses: any[] = [{page, courses: []}];
         for (let courseIndex = 0; courseIndex < categories[category].length; courseIndex++) {
           const course = categories[category][courseIndex];
+          console.log(course)
+          if (isPortuguese) {
+            course.title = course.titlePtBr
+            course.description =course.descriptionPtBr
+          }
           pageCourses[page - 1].courses.push(course)
           if (courseIndex > 0 && courseIndex % 5 === 0) {
             page++
