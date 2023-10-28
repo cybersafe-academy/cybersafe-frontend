@@ -17,8 +17,16 @@ declare module '@vue/runtime-core' {
   }
 }
 
+let baseURL: string
+
+if (import.meta.env.VITE_API_ENV === 'local') {
+  baseURL = import.meta.env.VITE_API_BACKEND_BASE_URL_LOCAL
+} else {
+  baseURL = import.meta.env.VITE_API_BACKEND_BASE_URL_PROD
+}
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/',
+  baseURL: baseURL,
   timeout: 15000
 })
 
