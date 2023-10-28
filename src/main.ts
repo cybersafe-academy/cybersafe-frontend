@@ -40,8 +40,6 @@ app.use(router)
 app.use(createPinia())
 app.use(vuetify)
 app.use(ToastPlugin)
-app.use(axios, {
-  baseUrl: 'http://localhost:8080/api/'
-})
+app.use(axios, {})
 
 app.mount('#app')
