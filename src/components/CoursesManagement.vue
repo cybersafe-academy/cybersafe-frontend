@@ -6,16 +6,23 @@
         rounded="lg"
         @click="openCreateDialog"
       >
-        {{$t('ADD_COURSE')}}
+        {{ $t('ADD_COURSE') }}
+      </v-btn>
+      <v-btn
+        class="addCourseBtn text-white"
+        rounded="lg"
+        @click="openCreateCategoryDialog"
+      >
+        {{ $t('ADD_CATEGORY') }}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="courseTable">
       <template v-if="courses.length > 0">
         <thead>
           <tr>
-            <th>{{$t("COURSE_TITLE")}}</th>
-            <th>{{$t("LEVEL")}}</th>
-            <th>{{$t("ACTIONS")}}</th>
+            <th>{{ $t('COURSE_TITLE') }}</th>
+            <th>{{ $t('LEVEL') }}</th>
+            <th>{{ $t('ACTIONS') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -46,14 +53,14 @@
       <template v-else>
         <tbody>
           <tr>
-            <th>{{$t("COURSE_TITLE")}}</th>
-            <th>{{$t("LEVEL")}}</th>
-            <th>{{$t("CONTENT_IN_HOURS")}}</th>
-            <th>{{$t("ACTIONS")}}</th>
+            <th>{{ $t('COURSE_TITLE') }}</th>
+            <th>{{ $t('LEVEL') }}</th>
+            <th>{{ $t('CONTENT_IN_HOURS') }}</th>
+            <th>{{ $t('ACTIONS') }}</th>
           </tr>
           <tr>
             <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>{{$t('NO_COURSES_REGISTERED_YET')}}</h2>
+              <h2>{{ $t('NO_COURSES_REGISTERED_YET') }}</h2>
             </td>
           </tr>
         </tbody>
@@ -139,6 +146,9 @@ export default {
     openCreateDialog(): void {
       ;(this.$refs.createCourse as any).openDialog()
     },
+    openCreateCategoryDialog(): void {
+      ;(this.$refs.createCourse as any).openCategoryDialog()
+    },
     openEditDialog(id: string): void {
       const course = this.courses.find((course) => course.id === id)
       ;(this.$refs.createCourse as any).openDialog(course)
@@ -171,7 +181,6 @@ export default {
           this.totalPages--
         }
 
-        
         this.$toast.success('Course deleted successfully')
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
@@ -182,9 +191,12 @@ export default {
     async fetchCourses(page: number) {
       if (!this.pageCourses[page]) {
         try {
-          const { data: courses } = await this.$axios.get('/courses/management', {
-            params: { page, limit: this.numberOfItemsToFetch }
-          })
+          const { data: courses } = await this.$axios.get(
+            '/courses/management',
+            {
+              params: { page, limit: this.numberOfItemsToFetch }
+            }
+          )
           if (courses.data) {
             this.totalPages = courses.totalPages
             this.numberOfnewElements = courses.data.length
@@ -240,6 +252,7 @@ th {
   padding: 10px;
   background-color: rgb(62, 120, 252);
   margin: 0 !important;
+  margin-right: 1rem !important;
 }
 
 .actionsButtons {

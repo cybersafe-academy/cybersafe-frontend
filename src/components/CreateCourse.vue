@@ -3,76 +3,133 @@
     <div class="createCourseDialog">
       <v-card>
         <v-card-title class="text-center">
-          <span> {{ $t("CREATE_NEW_COURSE")}}</span>
+          <span> {{ $t('CREATE_NEW_COURSE') }}</span>
         </v-card-title>
         <v-card-text>
-          <v-container class='mt-6'>
+          <v-container class="mt-6">
             <v-row>
               <v-col cols="12">
-                <v-select v-model="courseForm.category.id" label="Category" variant="solo" required
-                  :items="categories" item-title="name" item-value="id">
+                <v-select
+                  v-model="courseForm.category.id"
+                  label="Category"
+                  variant="solo"
+                  required
+                  :items="categories"
+                  item-title="name"
+                  item-value="id"
+                >
                 </v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12">
-                  <v-file-input
-                    clearable
-                    class="default-input"
-                    label="Profile picture"
-                    prepend-inner-icon="mdi-image"
-                    prepend-icon=""
-                    variant="solo"
-                    bg-color="#f5f7f9"
-                    accept="image/png, image/jpeg"
-                    @change="handleProfilePicture"
-                    @keyup.enter="signup"
-                    :rules="[required]"
-                  ></v-file-input>
-                  <v-dialog>
-                      <v-img 
-                      class="mb-6"
-                      :width="300"
-                      cover
-                      :src="course.thumbnailURL"
-                    />
-                  </v-dialog>
-                <v-text-field v-model="courseForm.contentURL" label="Video URL" type="string" variant="solo"
-                  required></v-text-field>
+                <v-file-input
+                  clearable
+                  class="default-input"
+                  label="Profile picture"
+                  prepend-inner-icon="mdi-image"
+                  prepend-icon=""
+                  variant="solo"
+                  bg-color="#f5f7f9"
+                  accept="image/png, image/jpeg"
+                  @change="handleProfilePicture"
+                  @keyup.enter="signup"
+                  :rules="[required]"
+                ></v-file-input>
+                <v-dialog>
+                  <v-img
+                    class="mb-6"
+                    :width="300"
+                    cover
+                    :src="course.thumbnailURL"
+                  />
+                </v-dialog>
+                <v-text-field
+                  v-model="courseForm.contentURL"
+                  label="Video URL"
+                  type="string"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col cols="12" sm="6">
-                <v-select v-model="courseForm.level" label="Level" variant="solo" required
-                  :items="['beginner', 'intermediate', 'advanced']"></v-select>
+                <v-select
+                  v-model="courseForm.level"
+                  label="Level"
+                  variant="solo"
+                  required
+                  :items="['beginner', 'intermediate', 'advanced']"
+                ></v-select>
               </v-col>
             </v-row>
           </v-container>
           <v-divider />
-          <v-container> 
+          <v-container>
             <v-row>
               <v-col cols="6">
-                <v-tabs
-                  v-model="selectedLanguage"
-                >
-                    <v-tab value='portuguese'>
-                      {{$t("PORTUGUESE")}}
-                    </v-tab>
-                    <v-tab value='english'>
-                      {{$t("ENGLISH")}}
-                    </v-tab>
+                <v-tabs v-model="selectedLanguage">
+                  <v-tab value="portuguese">
+                    {{ $t('PORTUGUESE') }}
+                  </v-tab>
+                  <v-tab value="english">
+                    {{ $t('ENGLISH') }}
+                  </v-tab>
                 </v-tabs>
               </v-col>
             </v-row>
           </v-container>
-          <template v-for='language in languages'>
-              <CourseForm v-if="selectedLanguage === language"  :info='courseForm[language + "Info"]' />
-            </template>
+          <template v-for="language in languages">
+            <CourseForm
+              v-if="selectedLanguage === language"
+              :info="courseForm[language + 'Info']"
+            />
+          </template>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
-          <v-btn class="saveCourseBtn" @click="saveCourse"> Save </v-btn>
+          <v-btn class="saveCourseBtn" :loading="isLoading" @click="saveCourse">
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
+  </v-dialog>
+  <v-dialog v-model="categoryDialog" persistent width="1024">
+    <div class="createCourseDialog">
+      <v-card>
+        <v-card-title class="text-center">
+          <span> {{ $t('CREATE_NEW_CATEGORY') }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container class="mt-6">
+            <v-row>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="categoryName"
+                  label="Category Name"
+                  type="string"
+                  variant="solo"
+                  required
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="closeDialogBtn" @click="closeCategoryDialog">
+            Close
+          </v-btn>
+          <v-btn
+            class="saveCourseBtn"
+            :loading="isLoading"
+            @click="saveCategory"
+          >
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -87,7 +144,7 @@ import CourseForm from '@/components/CourseForm.vue'
 const info = {
   title: '',
   description: '',
-  questions: [],
+  questions: []
 }
 
 export default {
@@ -108,21 +165,32 @@ export default {
         englishInfo: {
           ...info
         },
-        portugueseInfo: {...info},
+        portugueseInfo: { ...info }
       } as any,
       dialog: false,
+      categoryDialog: false,
+      categoryName: '',
       languages,
       selectedLanguage: languages[0],
       categories: [],
+      isLoading: false
     }
   },
   created: async function () {
-    const response  = await this.$axios.get('/courses/categories')
+    const response = await this.$axios.get('/courses/categories')
     this.categories = response.data.data
   },
   methods: {
     getInfo(language: string) {
       return this.courseForm[language + 'Info']
+    },
+    openCategoryDialog() {
+      this.categoryDialog = true
+    },
+    closeCategoryDialog() {
+      this.categoryDialog = false
+      this.categoryName = ''
+      this.isLoading = false
     },
     openDialog(course: any) {
       this.course = course
@@ -135,8 +203,7 @@ export default {
 
       this.courseForm.englishInfo.questions = course.questions ?? []
       this.courseForm.portugueseInfo.questions = course.questions ?? []
- 
- 
+
       this.courseForm.id = course.id
       this.courseForm.category = course.category
       this.courseForm.thumbnailURL = course.thumbnailURL
@@ -180,7 +247,9 @@ export default {
     async saveCourse() {
       if (!this.verifyFields()) return
 
-      const course: ICourseInfo = {  
+      this.isLoading = true
+
+      const course: ICourseInfo = {
         title: this.courseForm.englishInfo.title,
         titlePtBr: this.courseForm.portugueseInfo.title,
         description: this.courseForm.englishInfo.description,
@@ -189,12 +258,17 @@ export default {
         thumbnailURL: this.courseForm.thumbnailPicture,
         contentURL: this.courseForm.contentURL,
         level: this.courseForm.level,
-        categoryId: this.courseForm.category.id,
+        categoryId: this.courseForm.category.id
       }
 
       try {
         if (this.course?.id) {
-          const { data } = await this.$axios.put(`/courses/${this.course.id}`, course)
+          const { data } = await this.$axios.put(
+            `/courses/${this.course.id}`,
+            course
+          )
+
+          this.isLoading = false
 
           this.closeDialog()
 
@@ -203,6 +277,8 @@ export default {
           this.$emit('editedCourse', data)
         } else {
           const { data } = await this.$axios.post('/courses', course)
+
+          this.isLoading = false
 
           this.closeDialog()
 
@@ -213,6 +289,42 @@ export default {
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
+        this.isLoading = false
+
+        this.$toast.error(error.description)
+      }
+    },
+
+    async saveCategory() {
+      if (!this.categoryName) {
+        this.$toast.error('Please fill all the fields')
+
+        return
+      }
+
+      this.isLoading = true
+
+      const category = {
+        name: this.categoryName
+      }
+
+      try {
+        const { data } = await this.$axios.post('/courses/categories', category)
+
+        this.isLoading = false
+
+        this.categories.push(data.name)
+
+        this.categoryName = ''
+
+        this.closeCategoryDialog()
+
+        this.$toast.success('Category created successfully')
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+
+        this.isLoading = false
+
         this.$toast.error(error.description)
       }
     },
@@ -222,7 +334,7 @@ export default {
       this.course.thumbnailURL = window.URL.createObjectURL(imageFile)
 
       const base64Picture = await this.convertToBase64(imageFile)
-      this.courseForm.thumbnailPicture = base64Picture;
+      this.courseForm.thumbnailPicture = base64Picture
     },
 
     async convertToBase64(file: any): Promise<string> {
@@ -235,13 +347,12 @@ export default {
 
         reader.onerror = (error) => reject(error)
       })
-    },
+    }
   }
 }
 </script>
 
 <style scoped>
-
 .createCourseDialog {
   overflow-y: auto;
 }

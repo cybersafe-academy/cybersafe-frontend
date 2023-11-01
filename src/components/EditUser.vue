@@ -9,24 +9,47 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="Name" label="User Name" variant="solo" required></v-text-field>
+                <v-text-field
+                  v-model="Name"
+                  label="User Name"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field :disabled="true" v-model="Email" label="User Email" variant="solo" required></v-text-field>
+                <v-text-field
+                  :disabled="true"
+                  v-model="Email"
+                  label="User Email"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-select v-model="Role" label="Role" variant="solo" required :items="[
-                  'default',
-                  'admin',
-                  'master',
-                ]"></v-select>
+                <v-select
+                  v-model="Role"
+                  label="Role"
+                  variant="solo"
+                  required
+                  :items="['default', 'admin', 'master']"
+                ></v-select>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="CPF" label="User CPF" variant="solo" required></v-text-field>
+                <v-text-field
+                  v-model="CPF"
+                  label="User CPF"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field type="date" v-model="BirthDate" label="User Birth Date" variant="solo"
-                  required></v-text-field>
+                <v-text-field
+                  type="date"
+                  v-model="BirthDate"
+                  label="User Birth Date"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -34,7 +57,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
-          <v-btn class="editUserBtn" @click="editUser"> Save </v-btn>
+          <v-btn class="editUserBtn" :loading="isLoading" @click="editUser">
+            Save
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -44,7 +69,7 @@
 <script lang="ts">
 import type { IErrorResponse } from '@/types/errors'
 import formatCPF from '@/utils/masks'
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
 
 export default {
   props: {
@@ -61,7 +86,8 @@ export default {
     Email: '',
     Role: '',
     CPF: '',
-    BirthDate: ''
+    BirthDate: '',
+    isLoading: false
   }),
 
   methods: {
@@ -69,7 +95,6 @@ export default {
       this.dialog = true
 
       if (user) {
-
         this.id = user.id
         this.Name = user.name
         this.Email = user.email
@@ -89,12 +114,7 @@ export default {
       this.BirthDate = ''
     },
     verifyFields() {
-      if (
-        !this.Name ||
-        !this.Role ||
-        !this.CPF ||
-        !this.BirthDate
-      ) {
+      if (!this.Name || !this.Role || !this.CPF || !this.BirthDate) {
         this.$toast.error('Please fill all the fields')
 
         return false
@@ -105,6 +125,8 @@ export default {
     async editUser() {
       if (!this.verifyFields()) return
 
+      this.isLoading = true
+
       const user: any = {
         id: this.id,
         Name: this.Name,
@@ -113,9 +135,12 @@ export default {
         CPF: this.CPF.replace(/\D/g, ''),
         BirthDate: this.BirthDate
       }
+
       try {
         if (this.id) {
           const { data } = await this.$axios.put(`/users/${this.id}`, user)
+
+          this.isLoading = false
 
           this.closeDialog()
 
@@ -125,6 +150,8 @@ export default {
         }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
+
+        this.isLoading = false
 
         this.$toast.error(error.description)
       }
