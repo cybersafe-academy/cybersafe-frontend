@@ -43,7 +43,7 @@
         </template>
 
         <v-list-item
-          prepend-icon="mdi-list-box"
+          prepend-icon="mdi-television"
           :title="$t('COURSES')"
           value="courses"
           link
