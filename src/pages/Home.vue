@@ -16,6 +16,9 @@
     <div v-if="selectedPage === 'course-view'" class="right-section">
       <CourseView :course-id='selectedCourseId' />
     </div>
+    <div v-if="selectedPage === 'analytics'" class="right-section">
+      <Analytics />
+    </div>
   </div>
 </template>
 
@@ -26,6 +29,7 @@ import CompaniesComponent from '@/components/Companies.vue'
 import UsersComponent from '@/components/Users.vue'
 import CoursesComponent from '@/components/Courses.vue'
 import CourseView from './CourseView.vue'
+import Analytics from './Analytics.vue'
 
 export default {
   name: 'HomeComponent',
@@ -36,7 +40,8 @@ export default {
     CompaniesComponent,
     UsersComponent,
     CoursesComponent,
-    CourseView
+    CourseView,
+    Analytics
 },
 
   data() {
