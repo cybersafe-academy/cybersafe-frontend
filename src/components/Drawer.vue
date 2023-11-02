@@ -66,6 +66,14 @@
           link
           @click="emitPage('courses')"
         />
+
+        <v-list-item
+          prepend-icon="mdi-list-box"
+          :title="$t('ANALYTICS')"
+          value="analytics"
+          link
+          @click="emitPage('analytics')"
+        />
       </v-list>
       <template v-slot:append>
         <v-list-item
