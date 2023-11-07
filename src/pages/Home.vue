@@ -88,7 +88,6 @@ export default {
   height: 100vh;
   width: 100vw;
   background-color: var(--background);
-  background-color: red;
 }
 
 .right-section {

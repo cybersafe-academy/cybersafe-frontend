@@ -29,7 +29,7 @@
   "CREATE_NEW_COURSE": "Create New Course",
   "CREATE_NEW_CATEGORY": "Create New Category",
   "LANGUAGE": "Language",
-  "COURSE_THUMBNAIL": "Thumbnail",
+  "THUMBNAIL_URL": "Thumbnail URL",
   "VIDEO_URL": "Video URL",
   "CLOSE": "Close",
   "CLEAR_ANSWERS": "Clear Answers",

@@ -122,7 +122,6 @@ export default {
       localStorage.setItem('language', this.selectedLanguage)
       this.$i18n.locale = this.selectedLanguage
     },
-
     toggleDarkMode() {
       const theme = this.lightMode ? 'light' : 'dark'
 
