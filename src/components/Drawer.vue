@@ -12,7 +12,7 @@
           :title="userName"
           :subtitle="userEmail"
           class="pointer"
-          @click="openProfile"
+          @click="openPreferences"
         />
         <v-divider />
 
@@ -41,6 +41,14 @@
             @click="emitPage('companies')"
           />
         </template>
+
+        <v-list-item
+          prepend-icon="mdi-pencil-ruler"
+          :title="$t('CONTENT_CUSTOMIZATION')"
+          value="category-customization"
+          link
+          @click="emitPage('category-customization')"
+        />
 
         <v-list-item
           prepend-icon="mdi-television"
@@ -101,8 +109,8 @@ export default {
       this.$emit('changePage', page)
     },
 
-    async openProfile() {
-      console.log('open profile')
+    openPreferences() {
+      this.emitPage('user-preferences')
     },
 
     async logout() {
@@ -126,5 +134,7 @@ export default {
   border-radius: 0 16px 16px 0;
   border: none;
   padding-bottom: 15px;
+  background-color: var(--divider);
+  color: var(--text);
 }
 </style>

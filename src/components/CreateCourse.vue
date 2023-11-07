@@ -11,7 +11,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="courseForm.category.id"
-                  label="Category"
+                  :label="$t('CATEGORY')"
                   variant="solo"
                   required
                   :items="categories"
@@ -26,7 +26,7 @@
                 <v-file-input
                   clearable
                   class="default-input"
-                  label="Profile picture"
+                  :label="$t('PROFILE_PICTURE')"
                   prepend-inner-icon="mdi-image"
                   prepend-icon=""
                   variant="solo"
@@ -46,7 +46,7 @@
                 </v-dialog>
                 <v-text-field
                   v-model="courseForm.contentURL"
-                  label="Video URL"
+                  :label="$t('VIDEO_URL')"
                   type="string"
                   variant="solo"
                   required
@@ -57,7 +57,7 @@
               <v-col cols="12" sm="6">
                 <v-select
                   v-model="courseForm.level"
-                  label="Level"
+                  :label="$t('LEVEL')"
                   variant="solo"
                   required
                   :items="['beginner', 'intermediate', 'advanced']"
@@ -89,9 +89,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
+          <v-btn class="closeDialogBtn" @click="closeDialog">
+            {{ $t('CLOSE') }}
+          </v-btn>
           <v-btn class="saveCourseBtn" :loading="isLoading" @click="saveCourse">
-            Save
+            {{ $t('SAVE') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -109,7 +111,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="categoryName"
-                  label="Category Name"
+                  :label="$t('CATEGORY_NAME')"
                   type="string"
                   variant="solo"
                   required
@@ -121,14 +123,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeCategoryDialog">
-            Close
+            {{ $t('CLOSE') }}
           </v-btn>
           <v-btn
             class="saveCourseBtn"
             :loading="isLoading"
             @click="saveCategory"
           >
-            Save
+            {{ $t('SAVE') }}
           </v-btn>
         </v-card-actions>
       </v-card>

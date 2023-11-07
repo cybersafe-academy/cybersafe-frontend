@@ -1,6 +1,9 @@
 <template>
   <div class="content">
     <DrawerComponent @changePage="handleChangePage" />
+    <div v-if="selectedPage === 'user-preferences'" class="right-section">
+      <UserPreferences />
+    </div>
     <div v-if="selectedPage === 'courses-management'" class="right-section">
       <CoursesManagementComponent />
     </div>
@@ -11,10 +14,13 @@
       <CompaniesComponent />
     </div>
     <div v-if="selectedPage === 'courses'" class="right-section">
-      <CoursesComponent @courseViewOpened='openCourseView' />
+      <CoursesComponent @courseViewOpened="openCourseView" />
+    </div>
+    <div v-if="selectedPage === 'category-customization'" class="right-section">
+      <CategoryCustomization />
     </div>
     <div v-if="selectedPage === 'course-view'" class="right-section">
-      <CourseView :course-id='selectedCourseId' />
+      <CourseView :course-id="selectedCourseId" />
     </div>
   </div>
 </template>
@@ -25,6 +31,9 @@ import CoursesManagementComponent from '@/components/CoursesManagement.vue'
 import CompaniesComponent from '@/components/Companies.vue'
 import UsersComponent from '@/components/Users.vue'
 import CoursesComponent from '@/components/Courses.vue'
+import CategoryCustomization from './CategoryCustomization.vue'
+import UserPreferences from './UserPreferences.vue'
+
 import CourseView from './CourseView.vue'
 
 export default {
@@ -36,13 +45,15 @@ export default {
     CompaniesComponent,
     UsersComponent,
     CoursesComponent,
-    CourseView
-},
+    CategoryCustomization,
+    CourseView,
+    UserPreferences
+  },
 
   data() {
     return {
       selectedPage: 'courses',
-      selectedCourseId: '',
+      selectedCourseId: ''
     }
   },
 
@@ -51,8 +62,8 @@ export default {
       this.selectedPage = page
     },
     openCourseView(courseId: string) {
-      this.selectedPage = 'course-view';
-      this.selectedCourseId = courseId;
+      this.selectedPage = 'course-view'
+      this.selectedCourseId = courseId
     }
   }
 }
@@ -71,7 +82,7 @@ export default {
   flex-direction: row;
   height: 100vh;
   width: 100vw;
-  background-color: #f8f8f8;
+  background-color: var(--background);
 }
 
 .right-section {
@@ -80,6 +91,6 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: #f8f8f8;
+  background-color: var(--background);
 }
 </style>

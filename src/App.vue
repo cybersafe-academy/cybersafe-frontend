@@ -8,7 +8,14 @@
 
 <script lang="ts">
 export default {
-  name: 'App'
+  name: 'App',
+  created() {
+    const theme = localStorage.getItem('theme') ?? 'light'
+    document.body.setAttribute('data-theme', theme)
+
+    const language = localStorage.getItem('language')
+    this.$i18n.locale = language
+  }
 }
 </script>
 
@@ -24,5 +31,62 @@ export default {
 }
 .v-toast {
   z-index: 9999 !important;
+}
+
+html {
+  overflow-y: hidden !important;
+}
+
+[data-theme='dark'] {
+  --text: white;
+  --divider: #1e2124;
+  --background: #282b30;
+  --inputs: #424549;
+  --general: #36393e;
+}
+
+:root {
+  --text: black;
+  --divider: white;
+  --background: #ecf0f1;
+  --inputs: white;
+  --general: white;
+}
+
+.tableContent {
+  width: 900px;
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--background);
+}
+
+.v-card,
+.v-card-text,
+.v-card-title,
+.v-card-actions,
+.v-table,
+.v-dialog,
+.v-col,
+.v-row,
+table,
+tr,
+td,
+th,
+thead,
+ul {
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+}
+
+.v-field {
+  background-color: var(--inputs) !important;
+  color: var(--text) !important;
+}
+
+p {
+  color: var(--text);
 }
 </style>

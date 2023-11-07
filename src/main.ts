@@ -34,8 +34,9 @@ const vuetify = createVuetify({
   }
 })
 
-const app = createApp(App).use(i18n)
+const app = createApp(App)
 
+app.use(i18n)
 app.use(router)
 app.use(createPinia())
 app.use(vuetify)

@@ -1,32 +1,39 @@
 <template>
-    <v-container>
-            <v-row class="mb-3">
-              <v-col cols="12">
-                <v-text-field v-model="info.title" label="Course title" variant="solo" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea v-model="info.description" label="Description" variant="solo" required></v-textarea>
-              </v-col>
-            </v-row>
-            <CourseTestForm :questions='info.questions'/>
-    </v-container>
+  <v-container>
+    <v-row class="mb-3">
+      <v-col cols="12">
+        <v-text-field
+          v-model="info.title"
+          :label="$t('COURSE_TITLE')"
+          variant="solo"
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col cols="12">
+        <v-textarea
+          v-model="info.description"
+          :label="$t('COURSE_DESCRIPTION')"
+          variant="solo"
+          required
+        ></v-textarea>
+      </v-col>
+    </v-row>
+    <CourseTestForm :questions="info.questions" />
+  </v-container>
 </template>
-
-
 
 <script lang="ts">
 import CourseTestForm from '@/components/CourseTestForm.vue'
 
 export default {
-    props: {
-        info: {
-            type: Object,
-            required: true,
-        }
-    },
-    components: {
-        CourseTestForm
-    },
+  props: {
+    info: {
+      type: Object,
+      required: true
+    }
+  },
+  components: {
+    CourseTestForm
+  }
 }
-
 </script>
