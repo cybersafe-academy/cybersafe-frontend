@@ -49,13 +49,13 @@
               </v-col>
               <v-col cols="12">
                 <v-select
-                  v-model="companyID"
+                  v-model="selectedCompany"
                   label="Company"
                   variant="solo"
                   required
                   :items="companies"
                   item-title="tradeName"
-                  item-value="id"
+                  return-object
                 ></v-select>
               </v-col>
               <v-col cols="12">
@@ -109,7 +109,10 @@ export default {
     email: '',
     role: '',
     companies: [] as any,
-    companyID: '',
+    selectedCompany: {
+      id: '',
+      tradeName: ''
+    } as any,
     cpf: '',
     birthDate: '',
     profilePicture: null as any,
@@ -130,7 +133,7 @@ export default {
         this.cpf = formatCPF(user.cpf)
         this.birthDate = user.birthDate
         this.profilePicture = user.profilePicture
-        this.companyID = user.company.id
+        this.selectedCompany = user.company
       }
     },
     closeDialog() {
@@ -143,7 +146,7 @@ export default {
       this.role = ''
       this.cpf = ''
       this.birthDate = ''
-      this.companyID = ''
+      this.selectedCompany.id = ''
       this.companies = []
       this.profilePicture = null
     },
@@ -196,7 +199,7 @@ export default {
         cpf: this.cpf.replace(/\D/g, ''),
         birthdate: this.birthDate,
         profilePictureURL: await this.convertToBase64(this.profilePicture),
-        companyID: this.companyID
+        companyID: this.selectedCompany.id
       }
 
       try {
