@@ -3,6 +3,17 @@
     <p style="margin-bottom: 70px" class="text-h4 text-center">
       {{ $t('CONTENT_CUSTOMIZATION') }}
     </p>
+
+    <v-select
+      v-if="userRole === 'master'"
+      class="input"
+      :label="$t('COMPANY')"
+      v-model="selectedCompany"
+      :items="companies"
+      item-title="tradeName"
+      return-object
+    />
+
     <v-select
       class="input"
       :label="$t('PERSONALITY')"
@@ -33,7 +44,7 @@
                       class="text-h6"
                       style="min-width: 200px; margin-right: 100px"
                     >
-                      {{ category }}
+                      {{ category.name }}
                     </p>
                     <v-icon color="red" @click="removeCategory(i)"
                       >mdi-trash-can</v-icon
@@ -67,6 +78,8 @@
                         class="dropdown mb-6"
                         :label="$t('CATEGORIES')"
                         :items="availableCategories"
+                        item-title="name"
+                        return-object
                         hide-details
                       />
                       <div class="w-100 d-flex justify-end">
@@ -97,16 +110,65 @@
 </template>
 
 <script lang="ts">
+import type { IErrorResponse } from '@/types/errors'
+
+import { useAuthStore } from '@/stores/auth'
+
 export default {
   data: () => {
     return {
       selectedPersonality: '',
       dialog: false,
-      allCategories: ['Pentest', 'Xanega', 'A', 'B', 'C', 'D', 'E'],
+      allCategories: [],
       selectedCategories: [],
       personalitiesCategories: {
+        ISTJ: [],
+        ISFJ: [],
+        INFJ: [],
         INTJ: [],
-        ENFP: []
+        ISTP: [],
+        ISFP: [],
+        INFP: [],
+        INTP: [],
+        ESTP: [],
+        ESFP: [],
+        ENFP: [],
+        ENTP: [],
+        ESTJ: [],
+        ESFJ: [],
+        ENFJ: [],
+        ENTJ: []
+      },
+      companyID: '',
+      userRole: '',
+      selectedCompany: {
+        id: '',
+        tradeName: ''
+      },
+      companies: []
+    }
+  },
+
+  created: async function () {
+    try {
+      const response = await this.$axios.get('/courses/categories')
+      this.allCategories = response.data.data
+    } catch (e: any) {
+      const error: IErrorResponse = e.response.data.error
+      this.$toast.error(error.description)
+    }
+
+    const authStore = useAuthStore()
+    this.companyID = authStore.companyID
+    this.userRole = authStore.role
+
+    if (this.userRole === 'master') {
+      try {
+        const response = await this.$axios.get('/companies')
+        this.companies = response.data.data
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+        this.$toast.error(error.description)
       }
     }
   },
@@ -126,17 +188,54 @@ export default {
       )
     }
   },
+
   methods: {
     addCategory() {
       this.personalityCategories.push(...this.selectedCategories)
       this.dialog = false
       this.selectedCategories = []
     },
+
     removeCategory(index: number) {
       this.personalityCategories.splice(index, 1)
     },
-    saveCategories() {
-      alert('Chamar backend')
+
+    async saveCategories() {
+      const categories = this.personalityCategories.map(
+        (category) => category.id
+      )
+
+      if (!categories.length) {
+        this.$toast.error('Please select at least one category')
+        return
+      }
+
+      if (this.userRole === 'master') {
+        this.companyID = this.selectedCompany.id
+      }
+
+      try {
+        await this.$axios.put(
+          `/companies/${this.companyID}/content-recommendations`,
+          {
+            mbtiType: this.selectedPersonality,
+            companyID: this.companyID,
+            categories
+          }
+        )
+
+        this.$toast.success('Categories saved successfully')
+
+        this.selectedPersonality = ''
+        this.personalityCategories = []
+        this.selectedCompany = {
+          id: '',
+          tradeName: ''
+        }
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+        this.$toast.error(error.description)
+      }
     }
   }
 }
