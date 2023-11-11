@@ -97,6 +97,7 @@ export default {
 
     if (!authStore.isLogged) {
       this.$router.push('/login')
+      authStore.logout()
     }
 
     this.userName = authStore.name || ''
