@@ -6,19 +6,19 @@
         rounded="lg"
         @click="openCreateDialog"
       >
-        {{$t('PRE_SIGNUP_USER')}}
+        {{ $t('PRE_SIGNUP_USER') }}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="userTable">
       <template v-if="users.length > 0">
         <thead>
           <tr>
-            <th class="text-left">{{$t('NAME')}}</th>
-            <th class="text-left">{{$t('ROLE')}}</th>
-            <th class="text-left">{{$t('EMAIL')}}</th>
-            <th class="text-left">{{$t('CPF')}}</th>
-            <th class="text-left">{{$t('BIRTH_DATE')}}</th>
-            <th class="text-left">{{$t('ACTIONS')}}</th>
+            <th class="text-left">{{ $t('NAME') }}</th>
+            <th class="text-left">{{ $t('ROLE') }}</th>
+            <th class="text-left">{{ $t('EMAIL') }}</th>
+            <th class="text-left">{{ $t('CPF') }}</th>
+            <th class="text-left">{{ $t('BIRTH_DATE') }}</th>
+            <th class="text-left">{{ $t('ACTIONS') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -48,16 +48,16 @@
       <template v-else>
         <tbody>
           <tr>
-            <th class="text-left">{{$t('NAME')}}</th>
-            <th class="text-left">{{$t('ROLE')}}</th>
-            <th class="text-left">{{$t('EMAIL')}}</th>
-            <th class="text-left">{{$t('CPF')}}</th>
-            <th class="text-left">{{$t('BIRTH_DATE')}}</th>
-            <th class="text-left">{{$t('ACTIONS')}}</th>
+            <th class="text-left">{{ $t('NAME') }}</th>
+            <th class="text-left">{{ $t('ROLE') }}</th>
+            <th class="text-left">{{ $t('EMAIL') }}</th>
+            <th class="text-left">{{ $t('CPF') }}</th>
+            <th class="text-left">{{ $t('BIRTH_DATE') }}</th>
+            <th class="text-left">{{ $t('ACTIONS') }}</th>
           </tr>
           <tr>
             <td :colspan="6" style="text-align: center; padding: 20px">
-              <h2>{{$t('NO_USERS_REGISTERED_YET')}}</h2>
+              <h2>{{ $t('NO_USERS_REGISTERED_YET') }}</h2>
             </td>
           </tr>
         </tbody>
@@ -203,7 +203,6 @@ export default {
   margin: 0;
   padding: 0;
   font-family: 'Inter', sans-serif;
-  overflow-y: auto;
 }
 
 .tableContent {

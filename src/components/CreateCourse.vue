@@ -11,7 +11,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="courseForm.category.id"
-                  label="Category"
+                  :label="$t('CATEGORY')"
                   variant="solo"
                   required
                   :items="categories"
@@ -26,14 +26,13 @@
                 <v-file-input
                   clearable
                   class="default-input"
-                  label="Profile picture"
+                  :label="$t('COURSE_THUMBNAIL')"
                   prepend-inner-icon="mdi-image"
                   prepend-icon=""
                   variant="solo"
                   bg-color="#f5f7f9"
                   accept="image/png, image/jpeg"
                   @change="handleProfilePicture"
-                  @keyup.enter="signup"
                   :rules="[required]"
                 ></v-file-input>
                 <v-dialog>
@@ -46,7 +45,7 @@
                 </v-dialog>
                 <v-text-field
                   v-model="courseForm.contentURL"
-                  label="Video URL"
+                  :label="$t('VIDEO_URL')"
                   type="string"
                   variant="solo"
                   required
@@ -57,7 +56,7 @@
               <v-col cols="12" sm="6">
                 <v-select
                   v-model="courseForm.level"
-                  label="Level"
+                  :label="$t('LEVEL')"
                   variant="solo"
                   required
                   :items="['beginner', 'intermediate', 'advanced']"
@@ -89,9 +88,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
+          <v-btn class="closeDialogBtn" @click="closeDialog">
+            {{ $t('CLOSE') }}
+          </v-btn>
           <v-btn class="saveCourseBtn" :loading="isLoading" @click="saveCourse">
-            Save
+            {{ $t('SAVE') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -109,7 +110,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="categoryName"
-                  label="Category Name"
+                  :label="$t('CATEGORY_NAME')"
                   type="string"
                   variant="solo"
                   required
@@ -121,14 +122,14 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeCategoryDialog">
-            Close
+            {{ $t('CLOSE') }}
           </v-btn>
           <v-btn
             class="saveCourseBtn"
             :loading="isLoading"
             @click="saveCategory"
           >
-            Save
+            {{ $t('SAVE') }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -151,6 +152,7 @@ export default {
   components: {
     CourseForm
   },
+  emits: ['savedCourse', 'editedCourse'],
   data: () => {
     const languages = ['portuguese', 'english']
     return {
@@ -172,15 +174,25 @@ export default {
       categoryName: '',
       languages,
       selectedLanguage: languages[0],
-      categories: [],
-      isLoading: false
+      isLoading: false,
+      categories: [] as any
     }
   },
   created: async function () {
-    const response = await this.$axios.get('/courses/categories')
-    this.categories = response.data.data
+    try {
+      const response = await this.$axios.get('/courses/categories')
+      this.categories = response.data.data ?? []
+    } catch (e: any) {
+      const error: IErrorResponse = e.response.data.error
+
+      this.$toast.error(error.description)
+    }
   },
   methods: {
+    required(v: any) {
+      return !!v || 'Field is required'
+    },
+
     getInfo(language: string) {
       return this.courseForm[language + 'Info']
     },
@@ -193,22 +205,22 @@ export default {
       this.isLoading = false
     },
     openDialog(course: any) {
-      this.course = course
+      this.course = course ?? {}
       this.dialog = true
 
-      this.courseForm.englishInfo.title = course.title
-      this.courseForm.portugueseInfo.title = course.titlePtBr
-      this.courseForm.englishInfo.description = course.description
-      this.courseForm.portugueseInfo.description = course.descriptionPtBr
+      this.courseForm.englishInfo.title = this.course.title
+      this.courseForm.portugueseInfo.title = this.course.titlePtBr
+      this.courseForm.englishInfo.description = this.course.description
+      this.courseForm.portugueseInfo.description = this.course.descriptionPtBr
 
-      this.courseForm.englishInfo.questions = course.questions ?? []
-      this.courseForm.portugueseInfo.questions = course.questions ?? []
+      this.courseForm.englishInfo.questions = this.course.questions ?? []
+      this.courseForm.portugueseInfo.questions = this.course.questions ?? []
 
-      this.courseForm.id = course.id
-      this.courseForm.category = course.category
-      this.courseForm.thumbnailURL = course.thumbnailURL
-      this.courseForm.contentURL = course.contentURL
-      this.courseForm.level = course.level
+      this.courseForm.id = this.course.id
+      this.courseForm.category = this.course.category ?? {}
+      this.courseForm.thumbnailURL = this.course.thumbnailURL
+      this.courseForm.contentURL = this.course.contentURL
+      this.courseForm.level = this.course.level
     },
     closeDialog() {
       for (const language of this.languages) {
@@ -255,7 +267,9 @@ export default {
         description: this.courseForm.englishInfo.description,
         descriptionPtBr: this.courseForm.portugueseInfo.description,
         questions: this.courseForm.englishInfo.questions,
-        thumbnailURL: this.courseForm.thumbnailPicture,
+        thumbnailURL: await this.convertToBase64(
+          this.courseForm.thumbnailPicture
+        ),
         contentURL: this.courseForm.contentURL,
         level: this.courseForm.level,
         categoryId: this.courseForm.category.id
@@ -312,15 +326,13 @@ export default {
         const { data } = await this.$axios.post('/courses/categories', category)
 
         this.isLoading = false
-
-        this.categories.push(data.name)
-
-        this.categoryName = ''
-
+        this.categories.push(data)
         this.closeCategoryDialog()
 
         this.$toast.success('Category created successfully')
       } catch (e: any) {
+        alert(e)
+
         const error: IErrorResponse = e.response.data.error
 
         this.isLoading = false
@@ -329,15 +341,13 @@ export default {
       }
     },
 
-    async handleProfilePicture(e: any): void {
+    async handleProfilePicture(e: any) {
       const imageFile = e.target.files[0]
-      this.course.thumbnailURL = window.URL.createObjectURL(imageFile)
-
-      const base64Picture = await this.convertToBase64(imageFile)
-      this.courseForm.thumbnailPicture = base64Picture
     },
 
     async convertToBase64(file: any): Promise<string> {
+      if (!file) return ''
+
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
 

@@ -6,6 +6,16 @@ interface IUserData {
   profilePictureURL: string
   age: number
   role: string
+  company: ICompanyData
+}
+
+interface ICompanyData {
+  id: string
+  legalName: string
+  tradeName: string
+  cnpj: string
+  email: string
+  phone: string
 }
 
 export type { IUserData }

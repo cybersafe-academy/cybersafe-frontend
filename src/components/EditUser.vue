@@ -10,16 +10,29 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  v-model="Name"
+                  v-model="name"
                   label="User Name"
                   variant="solo"
                   required
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-file-input
+                  clearable
+                  label="Profile picture"
+                  prepend-inner-icon="mdi-image"
+                  prepend-icon=""
+                  variant="solo"
+                  bg-color="#f5f7f9"
+                  accept="image/png, image/jpeg"
+                  @change="handleProfilePicture"
+                  required
+                ></v-file-input>
+              </v-col>
+              <v-col cols="12">
                 <v-text-field
                   :disabled="true"
-                  v-model="Email"
+                  v-model="email"
                   label="User Email"
                   variant="solo"
                   required
@@ -27,7 +40,7 @@
               </v-col>
               <v-col cols="12">
                 <v-select
-                  v-model="Role"
+                  v-model="role"
                   label="Role"
                   variant="solo"
                   required
@@ -35,8 +48,19 @@
                 ></v-select>
               </v-col>
               <v-col cols="12">
+                <v-select
+                  v-model="selectedCompany"
+                  label="Company"
+                  variant="solo"
+                  required
+                  :items="companies"
+                  item-title="tradeName"
+                  return-object
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
                 <v-text-field
-                  v-model="CPF"
+                  v-model="cpf"
                   label="User CPF"
                   variant="solo"
                   required
@@ -45,7 +69,7 @@
               <v-col cols="12">
                 <v-text-field
                   type="date"
-                  v-model="BirthDate"
+                  v-model="birthDate"
                   label="User Birth Date"
                   variant="solo"
                   required
@@ -69,7 +93,6 @@
 <script lang="ts">
 import type { IErrorResponse } from '@/types/errors'
 import formatCPF from '@/utils/masks'
-import dayjs from 'dayjs'
 
 export default {
   props: {
@@ -82,39 +105,80 @@ export default {
   data: () => ({
     dialog: false,
     id: '',
-    Name: '',
-    Email: '',
-    Role: '',
-    CPF: '',
-    BirthDate: '',
+    name: '',
+    email: '',
+    role: '',
+    companies: [] as any,
+    selectedCompany: {
+      id: '',
+      tradeName: ''
+    } as any,
+    cpf: '',
+    birthDate: '',
+    profilePicture: null as any,
     isLoading: false
   }),
 
   methods: {
-    openDialog(user: any) {
+    async openDialog(user: any) {
       this.dialog = true
+
+      await this.loadCompanies()
 
       if (user) {
         this.id = user.id
-        this.Name = user.name
-        this.Email = user.email
-        this.Role = user.role
-        this.CPF = formatCPF(user.cpf)
-        this.BirthDate = user.birthDate
+        this.name = user.name
+        this.email = user.email
+        this.role = user.role
+        this.cpf = formatCPF(user.cpf)
+        this.birthDate = user.birthDate
+        this.profilePicture = user.profilePicture
+        this.selectedCompany = user.company
       }
     },
     closeDialog() {
       this.dialog = false
+      this.isLoading = false
 
       this.id = ''
-      this.Name = ''
-      this.Email = ''
-      this.Role = ''
-      this.CPF = ''
-      this.BirthDate = ''
+      this.name = ''
+      this.email = ''
+      this.role = ''
+      this.cpf = ''
+      this.birthDate = ''
+      this.selectedCompany.id = ''
+      this.companies = []
+      this.profilePicture = null
+    },
+    handleProfilePicture(e: any): void {
+      this.profilePicture = e.target.files[0]
+    },
+    async convertToBase64(file: any): Promise<string> {
+      if (!file) return ''
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+
+        reader.readAsDataURL(file)
+
+        reader.onload = () => resolve(reader.result as string)
+
+        reader.onerror = (error) => reject(error)
+      })
+    },
+    async loadCompanies() {
+      try {
+        const { data } = await this.$axios.get('/companies')
+
+        this.companies = data.data
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+
+        this.$toast.error(error.description)
+      }
     },
     verifyFields() {
-      if (!this.Name || !this.Role || !this.CPF || !this.BirthDate) {
+      if (!this.name || !this.role || !this.cpf || !this.birthDate) {
         this.$toast.error('Please fill all the fields')
 
         return false
@@ -129,11 +193,13 @@ export default {
 
       const user: any = {
         id: this.id,
-        Name: this.Name,
-        Email: this.Email,
-        Role: this.Role,
-        CPF: this.CPF.replace(/\D/g, ''),
-        BirthDate: this.BirthDate
+        name: this.name,
+        email: this.email,
+        role: this.role,
+        cpf: this.cpf.replace(/\D/g, ''),
+        birthdate: this.birthDate,
+        profilePictureURL: await this.convertToBase64(this.profilePicture),
+        companyID: this.selectedCompany.id
       }
 
       try {

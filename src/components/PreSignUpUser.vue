@@ -9,10 +9,32 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="Email" label="User Email" variant="solo" required></v-text-field>
+                <v-text-field
+                  v-model="email"
+                  label="User Email"
+                  variant="solo"
+                  required
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-select v-model="Role" label="Role" variant="solo" required :items="roleOptions"></v-select>
+                <v-select
+                  v-model="role"
+                  label="Role"
+                  variant="solo"
+                  required
+                  :items="roleOptions"
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  v-model="selectedCompany"
+                  label="Company"
+                  variant="solo"
+                  required
+                  :items="companies"
+                  item-title="legalName"
+                  return-object
+                ></v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -43,9 +65,28 @@ export default {
   data: () => ({
     dialog: false,
     id: '',
-    Email: '',
-    Role: '',
+    email: '',
+    role: '',
+    companies: [] as any,
+    selectedCompany: {
+      id: '',
+      legalName: ''
+    } as any
   }),
+
+  async created() {
+    try {
+      const { data } = await this.$axios.get('/companies')
+
+      console.log(data.data)
+
+      this.companies = data.data
+    } catch (e: any) {
+      const error: IErrorResponse = e.response.data.error
+
+      this.$toast.error(error.description)
+    }
+  },
 
   computed: {
     roleOptions() {
@@ -56,31 +97,35 @@ export default {
       } else {
         return ['default', 'admin']
       }
-    },
+    }
   },
-  
+
   methods: {
     openDialog(user: any) {
       this.dialog = true
 
       if (user) {
         this.id = user.id
-        this.Email = user.Email
-        this.Role = user.Role
+        this.email = user.Email
+        this.role = user.Role
       }
     },
+
     closeDialog() {
       this.dialog = false
 
       this.id = ''
-      this.Email = ''
-      this.Role = ''
+      this.email = ''
+      this.role = ''
+      this.companies = []
+      this.selectedCompany = {
+        id: '',
+        legalName: ''
+      }
     },
+
     verifyFields() {
-      if (
-        !this.Email ||
-        !this.Role
-      ) {
+      if (!this.email || !this.role) {
         this.$toast.error('Please fill all the fields')
 
         return false
@@ -88,12 +133,14 @@ export default {
 
       return true
     },
+
     async saveUser() {
       if (!this.verifyFields()) return
 
       const user: any = {
-        email: this.Email,
-        role: this.Role
+        email: this.email,
+        role: this.role,
+        companyID: this.selectedCompany.id
       }
 
       try {
