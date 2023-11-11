@@ -272,4 +272,7 @@ export default {
   background-color: #4caf50 !important;
   color: #fff !important;
 }
+.editUserDialog {
+  overflow-y: scroll;
+}
 </style>

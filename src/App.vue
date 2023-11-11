@@ -62,13 +62,13 @@ body {
   flex-direction: column;
   justify-content: center;
   background-color: var(--background);
+  margin-left: 100px !important;
 }
 
 .v-card,
 .v-card-text,
 .v-card-title,
 .v-card-actions,
-.v-dialog,
 .v-col,
 .v-row,
 .v-tab {
@@ -87,7 +87,7 @@ ul {
   color: var(--text) !important;
 }
 
-.v-field {
+.v-field:not(.input-container .v-field) {
   background-color: var(--inputs) !important;
   color: var(--text) !important;
 }
