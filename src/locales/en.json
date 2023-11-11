@@ -58,5 +58,11 @@
   "SURE_DELETION": "Are you sure you want to delete?",
   "DELETE": "Delete",
   "PORTUGUESE": "Portuguese",
-  "ENGLISH": "English"
+  "ENGLISH": "English",
+  "MBTI_TYPE": "MBTI Type",
+  "SELECT_MBTI_TYPE": "Select MBTI Type",
+  "MBTI_TYPE_DESCRIPTION": "Your MBTI type",
+  "MBTI_TEST": "Not sure about your MBTI type? Take the test",
+  "PERSONAL_INFORMATION": "Personal Information",
+  "COMPANY_INFORMATION": "Company Information"
 }

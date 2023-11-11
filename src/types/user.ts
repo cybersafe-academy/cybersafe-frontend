@@ -6,6 +6,7 @@ interface IUserData {
   profilePictureURL: string
   age: number
   role: string
+  mbtiType: string
   company: ICompanyData
 }
 

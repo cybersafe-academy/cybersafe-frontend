@@ -22,7 +22,7 @@
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="8">
                 <v-file-input
                   clearable
                   class="default-input"
@@ -35,6 +35,17 @@
                   @change="handleProfilePicture"
                   :rules="[required]"
                 ></v-file-input>
+              </v-col>
+              <v-col cols="4">
+                <v-img
+                  v-if="courseForm.thumbnailURL"
+                  class="mb-6"
+                  width="35%"
+                  cover
+                  :src="courseForm.thumbnailURL"
+                />
+              </v-col>
+              <v-col cols="12">
                 <v-dialog>
                   <v-img
                     class="mb-6"
@@ -156,23 +167,23 @@ export default {
   data: () => {
     const languages = ['portuguese', 'english']
     return {
-      course: {},
+      course: {} as any,
       courseForm: {
         id: '',
-        category: {},
-        thumbnailPicture: undefined,
+        category: {} as any,
+        thumbnailPicture: null,
         thumbnailURL: '',
         contentURL: '',
         level: '',
         englishInfo: {
           ...info
-        },
+        } as any,
         portugueseInfo: { ...info }
       } as any,
       dialog: false,
       categoryDialog: false,
       categoryName: '',
-      languages,
+      languages: ['portuguese', 'english'],
       selectedLanguage: languages[0],
       isLoading: false,
       categories: [] as any
@@ -245,7 +256,7 @@ export default {
           !info.title ||
           !info.description ||
           !this.courseForm.category.id ||
-          !this.courseForm.thumbnailPicture ||
+          !this.courseForm.thumbnailURL ||
           !this.courseForm.contentURL ||
           !this.courseForm.level
         ) {
@@ -342,7 +353,7 @@ export default {
     },
 
     async handleProfilePicture(e: any) {
-      const imageFile = e.target.files[0]
+      this.courseForm.thumbnailPicture = e.target.files[0]
     },
 
     async convertToBase64(file: any): Promise<string> {
