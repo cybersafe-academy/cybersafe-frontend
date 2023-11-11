@@ -137,7 +137,7 @@ export default {
         ESFJ: [],
         ENFJ: [],
         ENTJ: []
-      },
+      } as any,
       companyID: '',
       userRole: '',
       selectedCompany: {
@@ -145,6 +145,12 @@ export default {
         tradeName: ''
       },
       companies: []
+    }
+  },
+
+  watch: {
+    selectedPersonality: function (value: string) {
+      if (value) this.loadCategories()
     }
   },
 
@@ -176,14 +182,19 @@ export default {
     personalities: function () {
       return Object.keys(this.personalitiesCategories)
     },
+
     personalityCategories: function () {
       return (
         (this.personalitiesCategories as any)[this.selectedPersonality] ?? []
       )
     },
+
     availableCategories: function () {
       return this.allCategories.filter(
-        (category) => !this.personalityCategories.includes(category)
+        (category) =>
+          !this.personalityCategories.find(
+            (personalityCategory) => personalityCategory.id === category.id
+          )
       )
     }
   },
@@ -197,6 +208,25 @@ export default {
 
     removeCategory(index: number) {
       this.personalityCategories.splice(index, 1)
+    },
+
+    async loadCategories() {
+      try {
+        if (this.userRole === 'master') {
+          this.companyID = this.selectedCompany.id
+        }
+
+        const { data } = await this.$axios.get(
+          `/companies/${this.companyID}/content-recommendations/${this.selectedPersonality}`
+        )
+
+        const categories = data?.categories ?? []
+
+        this.personalitiesCategories[this.selectedPersonality] = categories
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+        this.$toast.error(error.description)
+      }
     },
 
     async saveCategories() {
@@ -226,11 +256,6 @@ export default {
         this.$toast.success('Categories saved successfully')
 
         this.selectedPersonality = ''
-        this.personalityCategories = []
-        this.selectedCompany = {
-          id: '',
-          tradeName: ''
-        }
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
         this.$toast.error(error.description)
