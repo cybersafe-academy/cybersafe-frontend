@@ -157,6 +157,8 @@ export default {
     async editUser(data: any) {
       const userIndex = this.users.findIndex((user) => user.id === data.id)
 
+      console.log(data)
+
       this.users[userIndex] = data
     },
     async deleteUser(id: string) {

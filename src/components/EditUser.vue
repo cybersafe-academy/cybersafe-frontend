@@ -16,7 +16,7 @@
                   required
                 ></v-text-field>
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" md="8">
                 <v-file-input
                   clearable
                   label="Profile picture"
@@ -28,6 +28,9 @@
                   @change="handleProfilePicture"
                   required
                 ></v-file-input>
+              </v-col>
+              <v-col cols="12" md="4" v-if="profilePicture">
+                <v-img :src="profilePicture" width="35%" />
               </v-col>
               <v-col cols="12">
                 <v-text-field
@@ -45,6 +48,15 @@
                   variant="solo"
                   required
                   :items="['default', 'admin', 'master']"
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-select
+                  v-model="mbtiType"
+                  label="MBTI"
+                  variant="solo"
+                  required
+                  :items="mbtiOptions"
                 ></v-select>
               </v-col>
               <v-col cols="12">
@@ -108,6 +120,7 @@ export default {
     name: '',
     email: '',
     role: '',
+    mbtiType: '',
     companies: [] as any,
     selectedCompany: {
       id: '',
@@ -116,7 +129,26 @@ export default {
     cpf: '',
     birthDate: '',
     profilePicture: null as any,
-    isLoading: false
+    profilePictureFile: null as any,
+    isLoading: false,
+    mbtiOptions: [
+      'ISTJ',
+      'ISFJ',
+      'INFJ',
+      'INTJ',
+      'ISTP',
+      'ISFP',
+      'INFP',
+      'INTP',
+      'ESTP',
+      'ESFP',
+      'ENFP',
+      'ENTP',
+      'ESTJ',
+      'ESFJ',
+      'ENFJ',
+      'ENTJ'
+    ]
   }),
 
   methods: {
@@ -130,9 +162,10 @@ export default {
         this.name = user.name
         this.email = user.email
         this.role = user.role
+        this.mbtiType = user.mbtiType
         this.cpf = formatCPF(user.cpf)
         this.birthDate = user.birthDate
-        this.profilePicture = user.profilePicture
+        this.profilePicture = user.profilePictureURL
         this.selectedCompany = user.company
       }
     },
@@ -144,14 +177,16 @@ export default {
       this.name = ''
       this.email = ''
       this.role = ''
+      this.mbtiType = ''
       this.cpf = ''
       this.birthDate = ''
       this.selectedCompany.id = ''
       this.companies = []
       this.profilePicture = null
+      this.profilePictureFile = null
     },
     handleProfilePicture(e: any): void {
-      this.profilePicture = e.target.files[0]
+      this.profilePictureFile = e.target.files[0]
     },
     async convertToBase64(file: any): Promise<string> {
       if (!file) return ''
@@ -198,8 +233,9 @@ export default {
         role: this.role,
         cpf: this.cpf.replace(/\D/g, ''),
         birthdate: this.birthDate,
-        profilePictureURL: await this.convertToBase64(this.profilePicture),
-        companyID: this.selectedCompany.id
+        profilePictureURL: await this.convertToBase64(this.profilePictureFile),
+        companyID: this.selectedCompany.id,
+        mbtiType: this.mbtiType
       }
 
       try {

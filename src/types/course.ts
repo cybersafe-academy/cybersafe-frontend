@@ -12,6 +12,8 @@ interface ICourseInfo {
   contentURL: string
   titlePtBr: string
   title: string
+  level: string
+  categoryId: string
 }
 
 interface ICourse {

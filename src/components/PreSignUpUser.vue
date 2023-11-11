@@ -78,8 +78,6 @@ export default {
     try {
       const { data } = await this.$axios.get('/companies')
 
-      console.log(data.data)
-
       this.companies = data.data
     } catch (e: any) {
       const error: IErrorResponse = e.response.data.error
