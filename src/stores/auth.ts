@@ -14,7 +14,8 @@ export const useAuthStore = defineStore('auth', {
     age: 0,
     role: useLocalStorage('role', ''),
     accessToken: useLocalStorage('accessToken', ''),
-    tokenExpiration: useLocalStorage('tokenExpiration', '')
+    tokenExpiration: useLocalStorage('tokenExpiration', ''),
+    companyID: useLocalStorage('companyID', '')
   }),
 
   getters: {
@@ -34,6 +35,7 @@ export const useAuthStore = defineStore('auth', {
       this.profilePictureURL = data.profilePictureURL
       this.age = data.age
       this.role = data.role
+      this.companyID = data.company.id
     },
     async logout() {
       this.accessToken = ''
@@ -44,6 +46,7 @@ export const useAuthStore = defineStore('auth', {
       this.profilePictureURL = ''
       this.age = 0
       this.role = ''
+      this.companyID = ''
     }
   }
 })
