@@ -1,19 +1,19 @@
 <template>
   <div v-if="course" class="tableContent" ref="course">
-    <v-row>
-      <iframe
+    <v-row v-if="currentTab === '1'">
+      <!-- <iframe
         class="course-video"
         :src="course.contentURL"
         title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      ></iframe>
+      ></iframe> -->
     </v-row>
-    <v-row>
+    <v-row style="max-height: 50px">
       <v-tabs v-model="currentTab">
         <v-tab value="1">
-          {{ $t('COURSE_DESCRIPTION') }}
+          {{ $t('COURSE') }}
         </v-tab>
         <v-tab value="2">
           {{ $t('REVIEWS') }}
@@ -23,16 +23,16 @@
         </v-tab>
       </v-tabs>
     </v-row>
-    <v-row class="mt-9">
-      <v-window class="w-100 mb-6" v-model="currentTab">
+    <v-row>
+      <v-window class="w-100 pa-4" v-model="currentTab">
         <v-window-item value="1" :eager="true">
-          <a-row>
+          <v-row>
             <p class="text-h4">{{ course.title }}</p>
-          </a-row>
-          <a-row>
+          </v-row>
+          <v-row>
             <p class="mt-4 text-h7">{{ course.description }}</p>
-          </a-row>
-          <a-row>
+          </v-row>
+          <v-row>
             <p class="mt-4 text-h6">{{ $t('COURSE_EVALUATION') }}</p>
             <span class="mt-2 d-flex">
               <b class="mr-1" style="color: #b4761a">{{
@@ -48,14 +48,15 @@
                 size="small"
               />
             </span>
-          </a-row>
+            <v-btn @click="enroll" :disabled="enrolled">
+              <template v-if="enrolled">Inscrito</template>
+              <template v-else>Se inscrever no curso</template>
+            </v-btn>
+          </v-row>
         </v-window-item>
         <v-window-item value="2" :eager="true">
-          <div class="d-flex flex-column">
-            <div
-              class="w-100 mb-6"
-              v-if="course.reviews && !course.reviews.UserReviewedCourse"
-            >
+          <div class="d-flex flex-column justify-start">
+            <div class="w-100 mb-6" v-if="!course.reviewed">
               <textarea
                 v-model="newRatingComment"
                 class="w-100 mb-6 pa-2"
@@ -66,7 +67,6 @@
                   class="rating d-flex align-center mt-2 mr-6"
                   style="margin-left: -6px"
                   color="orange-lighten-1"
-                  half-increments
                   v-model="newRating"
                   density="compact"
                 />
@@ -80,9 +80,8 @@
               <v-divider class="mb-4" />
             </div>
             <div v-if="course.reviews">
-              <div v-for="review in course.reviews.Reviews">
+              <div v-for="review in course.reviews">
                 <UserReview :review="review" />
-                <v-divider class="mt-3" />
               </div>
             </div>
             <div v-else>
@@ -90,8 +89,8 @@
             </div>
           </div>
         </v-window-item>
-        <v-window-item value="3" :eager="true">
-          <template v-if="testResults">
+        <v-window-item value="3" :eager="true" class="pa-4">
+          <template v-if="testResults && testResults.status !== ''">
             <div
               :class="{
                 'test-results': true,
@@ -108,12 +107,20 @@
                   color="#558b2f"
                   ><p>{{ testResults.hitsPercentage }}%</p></v-progress-circular
                 >
-                <p class="test-info text-h5">Teste concluído com sucesso</p>
+                <p
+                  v-if="testResults.status !== 'failed'"
+                  class="test-info text-h5"
+                >
+                  Teste concluído com sucesso
+                </p>
+                <p v-else class="test-info text-h5">
+                  Pontuação não suficiente!
+                </p>
               </div>
             </div>
           </template>
           <template v-else-if="course.questions">
-            <div class="mb-1" v-for="(question, i) in course.questions">
+            <div v-for="(question, i) in course.questions">
               <div class="question">
                 <p class="text-h6">{{ i }}. {{ question.wording }}</p>
               </div>
@@ -170,7 +177,8 @@ export default {
       newRatingComment: '',
       newRating: 0,
       course: undefined,
-      testResults: undefined
+      testResults: undefined,
+      enrolled: false
     }
   },
   watch: {
@@ -190,8 +198,7 @@ export default {
   },
   methods: {
     async loadCourse() {
-      this.course = (await this.$axios.get(`courses/${this.courseId}`)).data
-
+      this.course = (await this.$axios.get(`/courses/${this.courseId}`)).data
       const isPortuguese = localStorage.getItem('language') === 'pt'
 
       if (isPortuguese) {
@@ -208,6 +215,8 @@ export default {
       this.course.questions = (
         await this.$axios.get(`courses/${this.courseId}/questions`)
       ).data
+      this.testResults = this.course.enrollment
+      this.enrolled = !!this.course.enrollment
     },
     setAlternative(alternatives: any[], selectedAlternative: any) {
       alternatives.forEach((alternative) => (alternative.selected = false))
@@ -234,9 +243,9 @@ export default {
         })
       ).data
 
-      this.course.reviews.Reviews = this.course.reviews.Reviews ?? []
-      this.course.reviews.Reviews.push(review)
-      this.course.reviews.UserReviewedCourse = true
+      this.course.reviews = this.course.reviews ?? []
+      this.course.reviews.push(review)
+      this.course.reviewed = true
     },
     async sendAnswers() {
       const parsedAnswers = this.course.questions.map((question) => ({
@@ -250,6 +259,10 @@ export default {
         })
       ).data
       this.testResults = result
+    },
+    async enroll() {
+      await this.$axios.post(`/courses/${this.courseId}/enroll`)
+      this.enrolled = true
     },
     scroll() {
       setTimeout(() => {
@@ -266,11 +279,10 @@ export default {
   width: 100%;
   height: 100%;
   padding: 20px;
-  overflow-y: scroll;
 }
 .course-video {
   width: 100%;
-  height: 700px;
+  height: 500px;
 }
 
 ::v-deep .v-rating__item label {
@@ -278,23 +290,28 @@ export default {
   align-items: center;
 }
 .question {
-  background-color: #d500f9;
-  border-end-start-radius: 10px;
-  border-end-end-radius: 10px;
+  background-color: white;
+  border-start-start-radius: 3px;
+  border-start-end-radius: 3px;
   padding: 5px;
+}
+
+.question > p {
+  color: black;
 }
 
 .alternative {
   cursor: pointer;
   padding: 10px;
+  border-radius: 3px;
 }
 
 .alternative:hover {
-  background-color: #d8d8d8;
+  background-color: rgb(73, 73, 73);
 }
 
 .selected {
-  background-color: #bebebe;
+  background-color: rgb(65, 65, 65);
 }
 
 .test-results {
@@ -307,10 +324,6 @@ export default {
 
 .test-success {
   background-color: #689f38;
-}
-
-.test-fail {
-  background-color: #b71c1c;
 }
 
 .test-info {

@@ -33,7 +33,8 @@ export default {
   z-index: 9999 !important;
 }
 
-html {
+html,
+body {
   overflow-y: hidden !important;
 }
 
@@ -42,7 +43,7 @@ html {
   --divider: #1e2124;
   --background: #282b30;
   --inputs: #424549;
-  --general: #36393e;
+  --general: #35393f;
 }
 
 :root {
@@ -67,17 +68,22 @@ html {
 .v-card-text,
 .v-card-title,
 .v-card-actions,
-.v-table,
 .v-dialog,
 .v-col,
 .v-row,
+.v-tab {
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+}
+
+.v-table,
 table,
 tr,
 td,
 th,
 thead,
 ul {
-  background-color: var(--background) !important;
+  background-color: var(--general) !important;
   color: var(--text) !important;
 }
 

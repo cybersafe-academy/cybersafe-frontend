@@ -33,7 +33,7 @@
                   bg-color="#f5f7f9"
                   accept="image/png, image/jpeg"
                   @change="handleProfilePicture"
-                  required
+                  :rules="[required]"
                 ></v-file-input>
                 <v-dialog>
                   <v-img
@@ -152,6 +152,7 @@ export default {
   components: {
     CourseForm
   },
+  emits: ['savedCourse', 'editedCourse'],
   data: () => {
     const languages = ['portuguese', 'english']
     return {
@@ -188,6 +189,10 @@ export default {
     }
   },
   methods: {
+    required(v: any) {
+      return !!v || 'Field is required'
+    },
+
     getInfo(language: string) {
       return this.courseForm[language + 'Info']
     },
@@ -200,22 +205,22 @@ export default {
       this.isLoading = false
     },
     openDialog(course: any) {
-      this.course = course
+      this.course = course ?? {}
       this.dialog = true
 
-      this.courseForm.englishInfo.title = course.title
-      this.courseForm.portugueseInfo.title = course.titlePtBr
-      this.courseForm.englishInfo.description = course.description
-      this.courseForm.portugueseInfo.description = course.descriptionPtBr
+      this.courseForm.englishInfo.title = this.course.title
+      this.courseForm.portugueseInfo.title = this.course.titlePtBr
+      this.courseForm.englishInfo.description = this.course.description
+      this.courseForm.portugueseInfo.description = this.course.descriptionPtBr
 
-      this.courseForm.englishInfo.questions = course.questions ?? []
-      this.courseForm.portugueseInfo.questions = course.questions ?? []
+      this.courseForm.englishInfo.questions = this.course.questions ?? []
+      this.courseForm.portugueseInfo.questions = this.course.questions ?? []
 
-      this.courseForm.id = course.id
-      this.courseForm.category = course.category
-      this.courseForm.thumbnailURL = course.thumbnailURL
-      this.courseForm.contentURL = course.contentURL
-      this.courseForm.level = course.level
+      this.courseForm.id = this.course.id
+      this.courseForm.category = this.course.category ?? {}
+      this.courseForm.thumbnailURL = this.course.thumbnailURL
+      this.courseForm.contentURL = this.course.contentURL
+      this.courseForm.level = this.course.level
     },
     closeDialog() {
       for (const language of this.languages) {

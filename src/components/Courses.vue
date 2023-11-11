@@ -12,6 +12,7 @@
           append-inner-icon="mdi-magnify"
           single-line
           hide-details
+          @keydown="handleEnter"
           @click:append-inner="filterResults"
         />
       </v-col>
@@ -81,6 +82,7 @@ export default {
     loadedCourses: false,
     loadingCourses: false,
     categories: {} as any,
+    categoriesBackup: {} as any,
     filterInput: ''
   }),
   created: function () {
@@ -118,6 +120,7 @@ export default {
       }
 
       this.categories = categories
+      this.categoriesBackup = JSON.stringify(categories)
 
       this.loadingCourses = false
       this.loadedCourses = true
@@ -125,7 +128,26 @@ export default {
     openCourseView(courseId: string) {
       this.$emit('course-view-opened', courseId)
     },
-    filterResults() {}
+    handleEnter(e) {
+      if (e.key === 'Enter') {
+        this.filterResults()
+      }
+    },
+    filterResults() {
+      this.categories = JSON.parse(this.categoriesBackup)
+
+      Object.keys(this.categories).forEach((category) => {
+        const coursesPage = this.categories[category]
+        coursesPage.forEach((coursePage) => {
+          coursePage.courses = coursePage.courses.filter((course) => {
+            return course.title.indexOf(this.filterInput) !== -1
+          })
+          if (coursePage.courses.length === 0) {
+            delete this.categories[category]
+          }
+        })
+      })
+    }
   }
 }
 </script>

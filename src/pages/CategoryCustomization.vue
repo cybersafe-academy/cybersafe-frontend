@@ -72,7 +72,6 @@
                   <v-card>
                     <v-card-text class="pa-4">
                       <v-select
-                        v-key="i"
                         multiple
                         v-model="selectedCategories"
                         class="dropdown mb-6"
