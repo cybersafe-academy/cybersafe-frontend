@@ -26,15 +26,14 @@
                 <v-file-input
                   clearable
                   class="default-input"
-                  :label="$t('PROFILE_PICTURE')"
+                  :label="$t('COURSE_THUMBNAIL')"
                   prepend-inner-icon="mdi-image"
                   prepend-icon=""
                   variant="solo"
                   bg-color="#f5f7f9"
                   accept="image/png, image/jpeg"
                   @change="handleProfilePicture"
-                  @keyup.enter="signup"
-                  :rules="[required]"
+                  required
                 ></v-file-input>
                 <v-dialog>
                   <v-img
@@ -174,13 +173,19 @@ export default {
       categoryName: '',
       languages,
       selectedLanguage: languages[0],
-      categories: [],
-      isLoading: false
+      isLoading: false,
+      categories: [] as any
     }
   },
   created: async function () {
-    const response = await this.$axios.get('/courses/categories')
-    this.categories = response.data.data
+    try {
+      const response = await this.$axios.get('/courses/categories')
+      this.categories = response.data.data ?? []
+    } catch (e: any) {
+      const error: IErrorResponse = e.response.data.error
+
+      this.$toast.error(error.description)
+    }
   },
   methods: {
     getInfo(language: string) {
@@ -257,7 +262,9 @@ export default {
         description: this.courseForm.englishInfo.description,
         descriptionPtBr: this.courseForm.portugueseInfo.description,
         questions: this.courseForm.englishInfo.questions,
-        thumbnailURL: this.courseForm.thumbnailPicture,
+        thumbnailURL: await this.convertToBase64(
+          this.courseForm.thumbnailPicture
+        ),
         contentURL: this.courseForm.contentURL,
         level: this.courseForm.level,
         categoryId: this.courseForm.category.id
@@ -314,15 +321,13 @@ export default {
         const { data } = await this.$axios.post('/courses/categories', category)
 
         this.isLoading = false
-
-        this.categories.push(data.name)
-
-        this.categoryName = ''
-
+        this.categories.push(data)
         this.closeCategoryDialog()
 
         this.$toast.success('Category created successfully')
       } catch (e: any) {
+        alert(e)
+
         const error: IErrorResponse = e.response.data.error
 
         this.isLoading = false
@@ -331,15 +336,13 @@ export default {
       }
     },
 
-    async handleProfilePicture(e: any): void {
+    async handleProfilePicture(e: any) {
       const imageFile = e.target.files[0]
-      this.course.thumbnailURL = window.URL.createObjectURL(imageFile)
-
-      const base64Picture = await this.convertToBase64(imageFile)
-      this.courseForm.thumbnailPicture = base64Picture
     },
 
     async convertToBase64(file: any): Promise<string> {
+      if (!file) return ''
+
       return new Promise((resolve, reject) => {
         const reader = new FileReader()
 
