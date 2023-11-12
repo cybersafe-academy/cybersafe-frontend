@@ -15,6 +15,7 @@
     />
 
     <v-select
+      v-if="selectedCompany.id"
       class="input"
       :label="$t('PERSONALITY')"
       v-model="selectedPersonality"
@@ -33,6 +34,21 @@
               :class="{ 'd-flex': !personalityCategories.length }"
               style="padding: 3px"
             >
+              <div class="d-flex flex-end mb-6">
+                <v-icon
+                  v-if="availableCategories.length"
+                  style="
+                    background-color: green;
+                    color: white;
+                    width: 30px;
+                    height: 30px;
+                    margin-left: auto;
+                    border-radius: 50%;
+                  "
+                  @click="dialog = true"
+                  >mdi-plus</v-icon
+                >
+              </div>
               <template
                 v-for="(category, i) in personalitiesCategories[
                   selectedPersonality
@@ -54,49 +70,34 @@
                 </div>
               </template>
 
-              <div class="d-flex flex-end">
-                <v-icon
-                  v-if="availableCategories.length"
-                  style="
-                    background-color: green;
-                    color: white;
-                    width: 30px;
-                    height: 30px;
-                    margin-left: auto;
-                    border-radius: 50%;
-                  "
-                  @click="dialog = true"
-                  >mdi-plus</v-icon
-                >
-                <v-dialog v-model="dialog" width="auto">
-                  <v-card>
-                    <v-card-text class="pa-4">
-                      <v-select
-                        multiple
-                        v-model="selectedCategories"
-                        class="dropdown mb-6"
-                        :label="$t('CATEGORIES')"
-                        :items="availableCategories"
-                        item-title="name"
-                        return-object
-                        hide-details
-                      />
-                      <div class="w-100 d-flex justify-end">
-                        <v-btn
-                          :disabled="!selectedCategories.length"
-                          color="success"
-                          @click="addCategory"
-                          >{{ $t('ADD') }}</v-btn
-                        >
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-dialog>
-              </div>
-              <p v-if="!personalityCategories.length" class="text-h6 mt-6">
-                {{ $t('NO_CATEGORIES_SELECTED') }}
-              </p>
+              <v-dialog v-model="dialog" width="auto">
+                <v-card>
+                  <v-card-text class="pa-4">
+                    <v-select
+                      multiple
+                      v-model="selectedCategories"
+                      class="dropdown mb-6"
+                      :label="$t('CATEGORIES')"
+                      :items="availableCategories"
+                      item-title="name"
+                      return-object
+                      hide-details
+                    />
+                    <div class="w-100 d-flex justify-end">
+                      <v-btn
+                        :disabled="!selectedCategories.length"
+                        color="success"
+                        @click="addCategory"
+                        >{{ $t('ADD') }}</v-btn
+                      >
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
             </div>
+            <p v-if="!personalityCategories.length" class="text-h6 mt-6">
+              {{ $t('NO_CATEGORIES_SELECTED') }}
+            </p>
           </div>
         </v-card-text>
       </v-card>
@@ -266,6 +267,10 @@ export default {
 </script>
 
 <style scoped>
+.tableContent {
+  overflow-y: scroll;
+  display: block;
+}
 .center-column {
   width: 800px;
 }

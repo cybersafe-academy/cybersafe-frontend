@@ -189,6 +189,12 @@ export default {
       categories: [] as any
     }
   },
+  computed: {
+    selectedLanguageHasAtLeastFourQuestions() {
+      const info = this.getInfo(this.selectedLanguage)
+      return info.questions.length >= 4
+    }
+  },
   created: async function () {
     try {
       const response = await this.$axios.get('/courses/categories')
@@ -262,6 +268,11 @@ export default {
         ) {
           this.$toast.error('Please fill all the fields')
 
+          return false
+        }
+
+        if (info.questions.length < 4) {
+          this.$toast.error('O questionário precisa ter no mínimo 4 perguntas')
           return false
         }
       }

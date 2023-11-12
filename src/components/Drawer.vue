@@ -1,10 +1,19 @@
 <template>
+  <div v-if="showBlurry" class="blurry-filter"></div>
+  <v-icon class="hamburguer" size="large" @click="openDrawer">mdi-menu</v-icon>
   <v-layout>
     <v-navigation-drawer
+      :key="key"
       rail
       expand-on-hover
-      width="400"
+      permanent
+      width="320"
       class="navigation-drawer"
+      :class="{
+        'show-drawer': showDrawer
+      }"
+      @update:rail="teste"
+      disable-resize-watcher
     >
       <v-list>
         <v-list-item
@@ -80,9 +89,14 @@ export default {
     return {
       userName: '',
       userEmail: '',
-      userProfilePicture: ''
+      userProfilePicture: '',
+      showDrawer: false,
+      key: 0,
+      showBlurry: false
     }
   },
+
+  emits: ['changePage'],
 
   computed: {
     role() {
@@ -105,7 +119,19 @@ export default {
     this.userProfilePicture = authStore.profilePictureURL || ''
   },
 
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize)
+    })
+  },
+
   methods: {
+    onResize() {
+      if (window.innerWidth > 600) {
+        this.key++
+        this.showDrawer = false
+      }
+    },
     emitPage(page: string) {
       this.$emit('changePage', page)
     },
@@ -124,18 +150,73 @@ export default {
       }
 
       this.$router.push('/login')
+    },
+
+    openDrawer() {
+      this.showDrawer = true
+    },
+    teste(e) {
+      this.showDrawer = !e
+      this.showBlurry = !e
     }
   }
 }
 </script>
 
 <style>
+.blurry-filter {
+  position: absolute;
+  width: 100vw;
+  height: 100vw;
+  z-index: 100;
+  background-color: var(--background);
+  opacity: 70%;
+}
+
+.hamburguer {
+  display: none;
+  color: white;
+  cursor: pointer;
+}
+
 .navigation-drawer {
+  display: block;
   position: relative !important;
   border-radius: 0 16px 16px 0;
   border: none;
   padding-bottom: 15px;
   background-color: var(--divider);
   color: var(--text);
+  position: absolute;
+  min-height: 100vh;
+}
+
+.v-layout {
+  position: absolute;
+}
+
+@media only screen and (max-width: 600px) {
+  .tableContent {
+    padding: 2rem !important;
+    margin-left: 0 !important;
+  }
+
+  body {
+    position: relative;
+  }
+
+  .navigation-drawer {
+    display: none;
+  }
+
+  .show-drawer {
+    display: block;
+  }
+
+  .hamburguer {
+    display: block;
+    position: absolute;
+    padding: 10px;
+  }
 }
 </style>

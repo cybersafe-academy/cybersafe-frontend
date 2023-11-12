@@ -4,21 +4,23 @@
       <v-card-text>
         <p class="text-h5 text-center mb-12">{{ $t('USER_PREFERENCES') }}</p>
         <div>
-          <div>
-            <v-avatar size="100">
-              <img :src="userData.profilePictureURL" alt="Profile picture" />
-            </v-avatar>
-            <p class="text-h6 mb-2">{{ $t('PERSONAL_INFORMATION') }}</p>
+          <div class="mb-6">
+            <img
+              class="profile-picture mb-3"
+              :src="userData.profilePictureURL"
+              alt="Profile picture"
+            />
+            <p class="text-h5 mb-2">{{ $t('PERSONAL_INFORMATION') }}</p>
             <p class="text-h6 mt-4">{{ userData?.name }}</p>
             <p class="text-h6 mt-4">{{ userData?.email }}</p>
 
-            <p class="text-h6 mb-2">{{ $t('COMPANY_INFORMATION') }}</p>
+            <p class="text-h5 mt-6 mb-2">{{ $t('COMPANY_INFORMATION') }}</p>
             <p class="text-h6 mt-4">{{ userData.company?.legalName }}</p>
             <p class="text-h6 mt-4">{{ userData.company?.email }}</p>
           </div>
 
           <div class="mb-6">
-            <p class="text-h6 mb-2">{{ $t('DARK_MODE') }}</p>
+            <p class="text-h6 mb-1">{{ $t('DARK_MODE') }}</p>
             <v-switch
               color="primary"
               v-model="lightMode"
@@ -170,4 +172,16 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-attachment: local;
+}
+
+.tableContent {
+  overflow-y: scroll;
+  display: block;
+}
+</style>

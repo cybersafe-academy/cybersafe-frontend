@@ -1,6 +1,6 @@
 <template>
   <div class="tableContent">
-    <v-toolbar v-if="role === 'master'" class="tableToolbar">
+    <div v-if="role === 'master'" class="tableToolbar">
       <v-btn
         class="addCourseBtn text-white"
         rounded="lg"
@@ -15,7 +15,7 @@
       >
         {{ $t('ADD_CATEGORY') }}
       </v-btn>
-    </v-toolbar>
+    </div>
     <v-table ref="itemTable" fixed-header hover class="courseTable">
       <template v-if="courses.length > 0">
         <thead>
@@ -27,8 +27,16 @@
         </thead>
         <tbody>
           <tr v-for="item in pageCourses[currentPage]" :key="item.id">
-            <td>{{ item.title }}</td>
-            <td>{{ item.level }}</td>
+            <td>
+              <p style="text-align: center; flex-grow: 1">
+                {{ item.title }}
+              </p>
+            </td>
+            <td>
+              <p style="text-align: center; flex-grow: 1">
+                {{ item.level }}
+              </p>
+            </td>
             <td class="actionsButtons">
               <v-btn
                 :disabled="role != 'master'"
@@ -224,7 +232,6 @@ export default {
 .tableContent {
   width: 100%;
   height: 100%;
-  padding: 2rem;
 }
 
 .courseTable {
@@ -234,13 +241,12 @@ export default {
 
 td,
 th {
-  min-width: 300px;
+  min-width: 200px;
   text-align: center !important;
 }
 
 .tableToolbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
   background-color: transparent;
@@ -270,5 +276,84 @@ th {
 .deleteBtn {
   color: lightgray;
   background-color: red;
+}
+
+@media only screen and (max-width: 900px) {
+  .tableContent {
+    overflow-y: scroll;
+    display: block;
+  }
+
+  .tableToolbar {
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+
+  .addCourseBtn {
+    margin: 0 !important;
+  }
+
+  .addCourseBtn:nth-child(1) {
+    margin-right: 10px !important;
+  }
+
+  .v-table {
+    overflow-y: hidden;
+    height: auto;
+  }
+
+  .actionsButtons {
+    display: flex;
+    justify-content: start;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  td {
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    padding: 30px 20px 30px 20px !important;
+    overflow-y: hidden;
+  }
+
+  tr:nth-of-type(odd) td {
+    background-color: #1e2124 !important;
+  }
+
+  td:before {
+    margin-right: 80px;
+    text-align: start;
+    width: 100px;
+  }
+
+  td:nth-of-type(1):before {
+    content: 'Course Title';
+  }
+
+  td:nth-of-type(2):before {
+    content: 'Level';
+  }
+
+  td:nth-of-type(3):before {
+    content: 'Actions';
+  }
 }
 </style>

@@ -55,20 +55,20 @@ body {
 }
 
 .tableContent {
-  width: 900px;
+  width: 100vw;
   height: 100vh;
-  padding: 20px;
+  padding: 30px 70px 30px 70px !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: var(--background);
+  margin-left: 56px !important;
 }
 
 .v-card,
 .v-card-text,
 .v-card-title,
 .v-card-actions,
-.v-dialog,
 .v-col,
 .v-row,
 .v-tab {
@@ -87,7 +87,7 @@ ul {
   color: var(--text) !important;
 }
 
-.v-field {
+.v-field:not(.input-container .v-field) {
   background-color: var(--inputs) !important;
   color: var(--text) !important;
 }

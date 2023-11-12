@@ -2,17 +2,17 @@
   <div class="tableContent">
     <v-toolbar class="tableToolbar">
       <v-btn class="addBtn text-white" rounded="lg" @click="openCreateDialog">
-        {{$t("ADD_COMPANY")}}
+        {{ $t('ADD_COMPANY') }}
       </v-btn>
     </v-toolbar>
     <v-table ref="itemTable" fixed-header hover class="companyTable">
       <template v-if="companies.length > 0">
         <thead>
           <tr>
-            <th class="text-left">{{$t('TRADE_NAME')}}</th>
-            <th class="text-left">{{$t('CNPJ')}}</th>
-            <th class="text-left">{{$t('EMAIL')}}</th>
-            <th class="text-center">{{$t('ACTIONS')}}</th>
+            <th class="text-left">{{ $t('TRADE_NAME') }}</th>
+            <th class="text-left">{{ $t('CNPJ') }}</th>
+            <th class="text-left">{{ $t('EMAIL') }}</th>
+            <th class="text-center">{{ $t('ACTIONS') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -34,14 +34,14 @@
       <template v-else>
         <tbody>
           <tr>
-            <th class="text-left">{{$t('TRADE_NAME')}}</th>
-            <th class="text-left">{{$t('CNPJ')}}</th>
-            <th class="text-left">{{$t('EMAIL')}}</th>
-            <th class="text-center">{{$t('ACTIONS')}}</th>
+            <th class="text-left">{{ $t('TRADE_NAME') }}</th>
+            <th class="text-left">{{ $t('CNPJ') }}</th>
+            <th class="text-left">{{ $t('EMAIL') }}</th>
+            <th class="text-center">{{ $t('ACTIONS') }}</th>
           </tr>
           <tr>
             <td :colspan="4" style="text-align: center; padding: 20px">
-              <h2>{{$t('NO_COMPANIES_REGISTERED_YET')}}</h2>
+              <h2>{{ $t('NO_COMPANIES_REGISTERED_YET') }}</h2>
             </td>
           </tr>
         </tbody>
@@ -234,5 +234,84 @@ export default {
 .deleteBtn {
   color: lightgray;
   background-color: red;
+}
+
+@media only screen and (max-width: 900px) {
+  .tableContent {
+    overflow-y: scroll;
+    display: block;
+  }
+
+  .tableToolbar {
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+
+  .addCourseBtn {
+    margin: 0 !important;
+  }
+
+  .addCourseBtn:nth-child(1) {
+    margin-right: 10px !important;
+  }
+
+  .v-table {
+    overflow-y: hidden;
+    height: auto;
+  }
+
+  .actionsButtons {
+    display: flex;
+    justify-content: start;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  td {
+    border: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    padding: 30px 20px 30px 20px !important;
+    overflow-y: hidden;
+  }
+
+  tr:nth-of-type(odd) td {
+    background-color: #1e2124 !important;
+  }
+
+  td:before {
+    margin-right: 20px;
+    text-align: start;
+    width: 100px;
+  }
+
+  td:nth-of-type(1):before {
+    content: 'Course Title';
+  }
+
+  td:nth-of-type(2):before {
+    content: 'Level';
+  }
+
+  td:nth-of-type(3):before {
+    content: 'Actions';
+  }
 }
 </style>
