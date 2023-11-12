@@ -1,14 +1,14 @@
 <template>
   <div v-if="course" class="tableContent" ref="course">
     <v-row v-if="currentTab === '1'">
-      <!-- <iframe
+      <iframe
         class="course-video"
         :src="course.contentURL"
         title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
-      ></iframe> -->
+      ></iframe>
     </v-row>
     <v-row style="max-height: 50px">
       <v-tabs v-model="currentTab">
@@ -277,8 +277,6 @@ export default {
 <style scoped>
 .tableContent {
   width: 100%;
-  height: 100%;
-  padding: 20px;
 }
 .course-video {
   width: 100%;
