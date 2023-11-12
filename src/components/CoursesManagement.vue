@@ -137,10 +137,11 @@ export default {
       const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
       if (this.courses.length > 0) {
         courses[this.currentPage] = this.courses.slice(
-          Math.min(this.courses.length - this.numberOfnewElements, offset),
+          offset,
           offset + this.numberOfItemsToFetch
         )
       }
+
       return courses
     },
     role() {
@@ -181,13 +182,15 @@ export default {
     async deleteCourse(id: string) {
       try {
         await this.$axios.delete(`/courses/${id}`)
-        this.courses = this.courses.filter((course) => course.id !== id)
-        if (this.courses.length < this.totalPages * this.numberOfItemsToFetch) {
-          if (this.totalPages === this.currentPage) {
-            this.currentPage--
-          }
+
+        const numberOfCoursesInCurrentPage =
+          this.courses.length % this.numberOfItemsToFetch
+        if (numberOfCoursesInCurrentPage === 1) {
+          this.currentPage--
           this.totalPages--
         }
+
+        this.courses = this.courses.filter((course) => course.id !== id)
 
         this.$toast.success('Course deleted successfully')
       } catch (e: any) {

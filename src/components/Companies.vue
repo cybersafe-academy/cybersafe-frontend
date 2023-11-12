@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in companies" :key="item.id">
+          <tr v-for="item in pageCompanies[currentPage]" :key="item.id">
             <td>{{ item.tradeName }}</td>
             <td>{{ item.cnpj }}</td>
             <td class="text-left">{{ item.email }}</td>
@@ -104,15 +104,16 @@ export default {
 
   computed: {
     pageCompanies() {
-      const users: any = this.pageCompanies ?? {}
+      const companies: any = this.pageCompanies ?? {}
       const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
       if (this.companies.length > 0) {
-        users[this.currentPage] = this.companies.slice(
-          Math.min(this.companies.length - this.numberOfnewElements, offset),
+        companies[this.currentPage] = this.companies.slice(
+          offset,
           offset + this.numberOfItemsToFetch
         )
       }
-      return users
+
+      return companies
     }
   },
 
@@ -148,16 +149,15 @@ export default {
     async deleteCompany(id: string) {
       try {
         await this.$axios.delete(`/companies/${id}`)
-        this.companies = this.companies.filter((company) => company.id !== id)
-        if (
-          this.companies.length <
-          this.totalPages * this.numberOfItemsToFetch
-        ) {
-          if (this.totalPages === this.currentPage) {
-            this.currentPage--
-          }
+
+        const numberOfCompaniesInCurrentPage =
+          this.companies.length % this.numberOfItemsToFetch
+
+        if (numberOfCompaniesInCurrentPage === 1) {
+          this.currentPage--
           this.totalPages--
         }
+        this.companies = this.companies.filter((company) => company.id !== id)
 
         this.$toast.success('Company deleted successfully')
       } catch (e: any) {
@@ -168,7 +168,12 @@ export default {
     },
     async fetchCompanies(page: number) {
       try {
-        const { data: companies } = await this.$axios.get('/companies')
+        const { data: companies } = await this.$axios.get('/companies', {
+          params: {
+            page,
+            limit: this.numberOfItemsToFetch
+          }
+        })
         if (companies.data) {
           this.totalPages = companies.totalPages
           this.numberOfnewElements = companies.data.length

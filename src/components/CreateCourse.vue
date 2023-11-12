@@ -262,7 +262,7 @@ export default {
           !info.title ||
           !info.description ||
           !this.courseForm.category.id ||
-          !this.courseForm.thumbnailURL ||
+          !(this.courseForm.thumbnailURL || this.courseForm.thumbnailPicture) ||
           !this.courseForm.contentURL ||
           !this.courseForm.level
         ) {

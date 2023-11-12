@@ -22,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in users" :key="item.id">
+          <tr v-for="item in pageUsers[currentPage]" :key="item.id">
             <td>{{ item.name }}</td>
             <td>{{ item.role }}</td>
             <td>{{ item.email }}</td>
@@ -125,10 +125,11 @@ export default {
       const offset = (this.currentPage - 1) * this.numberOfItemsToFetch
       if (this.users.length > 0) {
         users[this.currentPage] = this.users.slice(
-          Math.min(this.users.length - this.numberOfnewElements, offset),
+          offset,
           offset + this.numberOfItemsToFetch
         )
       }
+
       return users
     }
   },
@@ -157,20 +158,19 @@ export default {
     async editUser(data: any) {
       const userIndex = this.users.findIndex((user) => user.id === data.id)
 
-      console.log(data)
-
       this.users[userIndex] = data
     },
     async deleteUser(id: string) {
       try {
         await this.$axios.delete(`/users/${id}`)
-        this.users = this.users.filter((user) => user.id !== id)
-        if (this.users.length < this.totalPages * this.numberOfItemsToFetch) {
-          if (this.totalPages === this.currentPage) {
-            this.currentPage--
-          }
+
+        const numberOfUsersInCurrentPage =
+          this.users.length % this.numberOfItemsToFetch
+        if (numberOfUsersInCurrentPage === 1) {
+          this.currentPage--
           this.totalPages--
         }
+        this.users = this.users.filter((user) => user.id !== id)
 
         this.$toast.success('User deleted successfully')
       } catch (e: any) {
@@ -180,17 +180,24 @@ export default {
       }
     },
     async fetchUsers(page: number) {
-      try {
-        const { data: users } = await this.$axios.get('/users')
-        if (users.data) {
-          this.totalPages = users.totalPages
-          this.numberOfnewElements = users.data.length
-          this.users.push(...users.data)
-        }
-      } catch (e: any) {
-        const error: IErrorResponse = e.response.data.error
+      if (!this.pageUsers[page]) {
+        try {
+          const { data: users } = await this.$axios.get('/users', {
+            params: {
+              page,
+              limit: this.numberOfItemsToFetch
+            }
+          })
+          if (users.data) {
+            this.totalPages = users.totalPages
+            this.numberOfnewElements = users.data.length
+            this.users.push(...users.data)
+          }
+        } catch (e: any) {
+          const error: IErrorResponse = e.response.data.error
 
-        this.$toast.error(error.description)
+          this.$toast.error(error.description)
+        }
       }
       this.currentPage = page
     },
