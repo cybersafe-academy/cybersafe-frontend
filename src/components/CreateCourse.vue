@@ -189,12 +189,7 @@ export default {
       categories: [] as any
     }
   },
-  computed: {
-    selectedLanguageHasAtLeastFourQuestions() {
-      const info = this.getInfo(this.selectedLanguage)
-      return info.questions.length >= 4
-    }
-  },
+
   created: async function () {
     try {
       const response = await this.$axios.get('/courses/categories')

@@ -277,6 +277,7 @@ export default {
 <style scoped>
 .tableContent {
   width: 100%;
+  overflow-y: scroll;
 }
 .course-video {
   width: 100%;
