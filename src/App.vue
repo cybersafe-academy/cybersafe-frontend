@@ -55,14 +55,14 @@ body {
 }
 
 .tableContent {
-  width: 900px;
+  width: 100vw;
   height: 100vh;
-  padding: 20px;
+  padding: 30px 70px 30px 70px !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: var(--background);
-  margin-left: 100px !important;
+  margin-left: 56px !important;
 }
 
 .v-card,

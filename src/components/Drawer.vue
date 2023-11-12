@@ -96,6 +96,8 @@ export default {
     }
   },
 
+  emits: ['changePage'],
+
   computed: {
     role() {
       const authStore = useAuthStore()
@@ -194,6 +196,11 @@ export default {
 }
 
 @media only screen and (max-width: 600px) {
+  .tableContent {
+    padding: 2rem !important;
+    margin-left: 0 !important;
+  }
+
   body {
     position: relative;
   }

@@ -29,11 +29,13 @@
           <tr v-for="item in pageCourses[currentPage]" :key="item.id">
             <td>
               <p style="text-align: center; flex-grow: 1">
-                Curso de segurança da informação
+                {{ item.title }}
               </p>
             </td>
             <td>
-              <p style="text-align: center; flex-grow: 1">facil</p>
+              <p style="text-align: center; flex-grow: 1">
+                {{ item.level }}
+              </p>
             </td>
             <td class="actionsButtons">
               <v-btn
@@ -230,7 +232,6 @@ export default {
 .tableContent {
   width: 100%;
   height: 100%;
-  padding: 2rem;
 }
 
 .courseTable {
@@ -279,7 +280,6 @@ th {
 
 @media only screen and (max-width: 900px) {
   .tableContent {
-    padding: 30px;
     overflow-y: scroll;
     display: block;
   }
@@ -308,7 +308,6 @@ th {
     justify-content: start;
   }
 
-  /* Force table to not be like tables anymore */
   table,
   thead,
   tbody,
@@ -318,7 +317,6 @@ th {
     display: block;
   }
 
-  /* Hide table headers (but not display: none;, for accessibility) */
   thead tr {
     position: absolute;
     top: -9999px;
