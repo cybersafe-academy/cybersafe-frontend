@@ -78,7 +78,7 @@ export default {
     try {
       const { data } = await this.$axios.get('/companies')
 
-      this.companies = data.data
+      this.companies = data.data ?? []
     } catch (e: any) {
       const error: IErrorResponse = e.response.data.error
 

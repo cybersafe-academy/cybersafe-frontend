@@ -58,9 +58,7 @@ body {
   width: 100vw;
   height: 100vh;
   padding: 30px 70px 30px 70px !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+
   background-color: var(--background);
   margin-left: 56px !important;
 }
@@ -90,6 +88,10 @@ ul {
 .v-field:not(.input-container .v-field) {
   background-color: var(--inputs) !important;
   color: var(--text) !important;
+}
+
+textarea {
+  color: white;
 }
 
 p {

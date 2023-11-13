@@ -1,11 +1,13 @@
 <template>
   <div class="tableContent">
     <v-row>
-      <p class="text-h2">Exati Tecnologia</p>
+      <v-col>
+        <p class="text-h3">Exati Tecnologia</p>
+      </v-col>
     </v-row>
     <v-row>
-      <v-col class="pa-12 d-flex justify-center">
-        <div class="d-flex flex-column justify-center align-center">
+      <v-col class="pa-12 d-flex justify-start align-center flex-wrap">
+        <div class="d-flex flex-column justify-center align-center mr-12">
           <p class="text-h6">Número de Usuários:</p>
           <p clas="text-center">{{ analyticsData.numberOfUsers }}</p>
         </div>
@@ -117,11 +119,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+#my-chart {
+  position: relative;
+  margin: auto; /* Center the chart horizontally */
+}
 .tableContent {
-  width: 100%;
-  height: 100%;
-  padding: 2rem;
+  height: auto !important;
   overflow-y: scroll !important;
 }
 </style>
