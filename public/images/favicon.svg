@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg data-v-70b83f88="" version="1.0" width="100%" height="100%" viewBox="0 0 340.000000 250.000000" preserveAspectRatio="xMidYMid meet" color-interpolation-filters="sRGB" style="margin: auto;" xmlns="http://www.w3.org/2000/svg">
+  <rect data-v-70b83f88="" x="0" y="0" width="100%" height="100%" fill="#ffffff" fill-opacity="0" class="background"/>
+  <rect data-v-70b83f88="" x="0" y="0" width="100%" height="100%" fill="url(#watermark)" fill-opacity="1" class="watermarklayer"/>
+  <g data-v-70b83f88="" fill="#4a93fa" class="icon-text-wrapper icon-svg-group iconsvg" transform="translate(47.144996643066406,96.81510734558105)">
+    <g class="iconsvg-imagesvg" transform="matrix(1, 0, 0, 1, -40.322578, -92.473114)" opacity="1">
+      <g>
+        <rect fill="#4a93fa" fill-opacity="0" stroke-width="2" x="0" y="0" width="60" height="56.36978579481398" class="image-rect"/>
+        <svg filter="url(#colors3601592190)" x="0" y="0" width="60" height="56.36978579481398" filtersec="colorsf3735290088" class="image-svg-svg primary" style="overflow: visible;">
+          <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="-2 -1.032 36 34.064" enable-background="new 0 0 32 32">
+            <g display="none">
+              <g display="inline">
+                <polygon fill="#000000" stroke="#000000" stroke-miterlimit="10" points="14.568,15.699 0.5,29.489 0.5,16.278 14.568,2.511   "/>
+                <polygon fill="#000000" stroke="#000000" stroke-miterlimit="10" points="31.5,16.301 17.432,2.511 17.432,15.722 31.5,29.489   "/>
+              </g>
+            </g>
+            <g>
+              <path d="M0,31.032L15.339,16.14V0.97L0,15.838V31.032z M2,16.685l11.339-10.99v9.6L2,26.303V16.685z"/>
+              <path d="M16.661,16.163L32,31.03V15.86L16.661,0.968V16.163z M18.661,5.697L30,16.706v9.6l-11.339-10.99V5.697z"/>
+            </g>
+            <g display="none">
+              <path display="inline" d="M1.522,29.348c4.553-4.461,9.106-8.921,13.659-13.382c0.103-0.061,0.174-0.141,0.203-0.236   c0.04-0.071,0.053-0.135,0.025-0.185c0-4.269,0-8.537,0-12.806c0-0.536-0.831-0.313-1.061-0.087   c-1.942,1.899-3.883,3.798-5.825,5.697C6.221,10.6,2.92,12.907,1.13,15.58c-2.097,3.133-0.67,9.846-0.67,13.681   C0.46,29.797,1.291,29.574,1.522,29.348z M2.609,15.351C5.975,11.233,10.335,7.649,14.24,3.95c0,3.906,0,7.812,0,11.718   c-4.214,4.128-8.428,8.257-12.641,12.385C1.415,23.968,0.437,18.008,2.609,15.351z"/>
+              <path display="inline" d="M18.165,2.556c-0.239-0.234-1.118-0.128-1.118,0.299c0,3.096,0,6.193,0,9.289   c0,1.764-0.272,3.012,0.611,4.373c1.733,2.669,5.116,5.004,7.392,7.23c1.942,1.899,3.883,3.798,5.825,5.697   c0.239,0.234,1.118,0.128,1.118-0.299c0-4.296,0-8.593,0-12.889c0.022-0.067,0.019-0.135-0.048-0.2   C27.352,11.556,22.759,7.056,18.165,2.556z M19.253,16.553c-2.22-2.695-1.3-8.404-1.083-12.467   c4.219,4.134,8.439,8.268,12.658,12.401c0,3.804,0,7.608,0,11.412C26.937,24.215,22.623,20.644,19.253,16.553z"/>
+            </g>
+            <g display="none">
+              <g display="inline">
+                <polygon fill="#000000" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="14.568,15.699 0.5,29.489 0.5,16.278     14.568,2.511   "/>
+                <polygon fill="#000000" stroke="#000000" stroke-width="0.5" stroke-miterlimit="10" points="31.5,16.301 17.432,2.511     17.432,15.722 31.5,29.489   "/>
+              </g>
+            </g>
+            <desc>Created with Snap</desc>
+          </svg>
+        </svg>
+        <defs>
+          <filter id="colors3601592190">
+            <feColorMatrix type="matrix" values="0 0 0 0 0.2890625  0 0 0 0 0.57421875  0 0 0 0 0.9765625  0 0 0 1 0" class="icon-fecolormatrix"/>
+          </filter>
+        </defs>
+      </g>
+    </g>
+  </g>
+</svg>

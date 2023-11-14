@@ -33,8 +33,8 @@
               </p>
             </td>
             <td>
-              <p>
-                {{ item.level }}
+              <p style="text-align: center; flex-grow: 1">
+                {{ item.level.charAt(0).toUpperCase() + item.level.slice(1) }}
               </p>
             </td>
             <td class="actionsButtons">
@@ -208,6 +208,8 @@ export default {
       }
     },
     async fetchCourses(page: number) {
+      const isPortuguese = localStorage.getItem('language') === 'pt'
+
       if (!this.pageCourses[page]) {
         try {
           const { data: courses } = await this.$axios.get(
@@ -217,6 +219,13 @@ export default {
             }
           )
           if (courses.data) {
+            courses.data.forEach((course: any) => {
+              if (isPortuguese) {
+                course.title = course.titlePtBr
+                course.level = this.translateLevel(course.level)
+              }
+            })
+
             this.totalPages = courses.totalPages
             this.numberOfnewElements = courses.data.length
             this.courses.push(...courses.data)
@@ -227,6 +236,18 @@ export default {
         }
       }
       this.currentPage = page
+    },
+    translateLevel(level: string) {
+      switch (level) {
+        case 'beginner':
+          return 'Iniciante'
+        case 'intermediate':
+          return 'Intermediário'
+        case 'advanced':
+          return 'Avançado'
+        default:
+          return level
+      }
     }
   }
 }
