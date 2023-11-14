@@ -97,4 +97,15 @@ textarea {
 p {
   color: var(--text);
 }
+
+@font-face {
+  font-family: 'Inter';
+  src: url(./assets/fonts/Inter-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Inter' !important;
+}
 </style>

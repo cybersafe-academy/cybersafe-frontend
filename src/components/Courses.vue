@@ -162,7 +162,7 @@ export default {
 }
 .tableContent {
   width: 100%;
-  height: 100%;
+  overflow-y: scroll;
   padding: 2rem;
 }
 .search-bar {
