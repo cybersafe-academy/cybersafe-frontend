@@ -29,7 +29,7 @@
   "CREATE_NEW_COURSE": "Create New Course",
   "CREATE_NEW_CATEGORY": "Create New Category",
   "LANGUAGE": "Language",
-  "COURSE_THUMBNAIL": "Thumbnail",
+  "THUMBNAIL_URL": "Thumbnail URL",
   "VIDEO_URL": "Video URL",
   "CLOSE": "Close",
   "CLEAR_ANSWERS": "Clear Answers",
@@ -64,5 +64,6 @@
   "MBTI_TYPE_DESCRIPTION": "Your MBTI type",
   "MBTI_TEST": "Not sure about your MBTI type? Take the test",
   "PERSONAL_INFORMATION": "Personal Information",
-  "COMPANY_INFORMATION": "Company Information"
+  "COMPANY_INFORMATION": "Company Information",
+  "ANALYTICS": "Company analytics"
 }

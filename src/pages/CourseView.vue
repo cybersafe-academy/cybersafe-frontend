@@ -23,7 +23,7 @@
         </v-tab>
       </v-tabs>
     </v-row>
-    <v-row>
+    <v-row class="mt-6">
       <v-window class="w-100 pa-4" v-model="currentTab">
         <v-window-item value="1" :eager="true">
           <v-row>
@@ -32,14 +32,14 @@
           <v-row>
             <p class="mt-4 text-h7">{{ course.description }}</p>
           </v-row>
-          <v-row>
+          <v-row class="d-flex flex-column">
             <p class="mt-4 text-h6">{{ $t('COURSE_EVALUATION') }}</p>
             <span class="mt-2 d-flex">
               <b class="mr-1" style="color: #b4761a">{{
                 course.avgRating.toFixed(1)
               }}</b>
               <v-rating
-                class="rating d-flex align-center"
+                class="rating d-flex align-center mb-6"
                 color="orange-lighten-1"
                 half-increments
                 v-model="course.avgRating"
@@ -48,7 +48,7 @@
                 size="small"
               />
             </span>
-            <v-btn @click="enroll" :disabled="enrolled">
+            <v-btn @click="enroll" :disabled="enrolled" style="width: 300px">
               <template v-if="enrolled">Inscrito</template>
               <template v-else>Se inscrever no curso</template>
             </v-btn>
@@ -56,6 +56,10 @@
         </v-window-item>
         <v-window-item value="2" :eager="true">
           <div class="d-flex flex-column justify-start">
+            <p v-if="!course.reviewed" class="text-h4 mt-6 mb-6">
+              Course review
+            </p>
+            <p v-else class="text-h4 mt-6 mb-6">All course reviews</p>
             <div class="w-100 mb-6" v-if="!course.reviewed">
               <textarea
                 v-model="newRatingComment"
@@ -77,7 +81,7 @@
                   >{{ $t('SEND') }}</v-btn
                 >
               </div>
-              <v-divider class="mb-4" />
+              <v-divider class="mt-4 mb-2" />
             </div>
             <div v-if="course.reviews">
               <div v-for="review in course.reviews">
@@ -277,6 +281,7 @@ export default {
 <style scoped>
 .tableContent {
   width: 100%;
+  overflow-y: scroll;
 }
 .course-video {
   width: 100%;

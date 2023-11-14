@@ -22,6 +22,9 @@
     <div v-if="selectedPage === 'course-view'" class="right-section">
       <CourseView :course-id="selectedCourseId" />
     </div>
+    <div v-if="selectedPage === 'analytics'" class="right-section">
+      <Analytics />
+    </div>
   </div>
 </template>
 
@@ -35,6 +38,7 @@ import CategoryCustomization from './CategoryCustomization.vue'
 import UserPreferences from './UserPreferences.vue'
 
 import CourseView from './CourseView.vue'
+import Analytics from './Analytics.vue'
 
 export default {
   name: 'HomeComponent',
@@ -47,7 +51,8 @@ export default {
     CoursesComponent,
     CategoryCustomization,
     CourseView,
-    UserPreferences
+    UserPreferences,
+    Analytics
   },
 
   data() {
@@ -83,7 +88,6 @@ export default {
   height: 100vh;
   width: 100vw;
   background-color: var(--background);
-  background-color: red;
 }
 
 .right-section {

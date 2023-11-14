@@ -153,6 +153,7 @@ export default {
 
   methods: {
     async openDialog(user: any) {
+      console.log(user)
       this.dialog = true
 
       await this.loadCompanies()

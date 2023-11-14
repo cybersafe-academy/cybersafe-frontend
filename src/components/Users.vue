@@ -222,7 +222,7 @@ export default {
 
 .userTable {
   border-radius: 4px;
-  height: 90%;
+  height: 20px;
 }
 
 .tableToolbar {

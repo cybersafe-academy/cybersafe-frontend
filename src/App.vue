@@ -58,9 +58,7 @@ body {
   width: 100vw;
   height: 100vh;
   padding: 30px 70px 30px 70px !important;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+
   background-color: var(--background);
   margin-left: 56px !important;
 }
@@ -92,7 +90,22 @@ ul {
   color: var(--text) !important;
 }
 
+textarea {
+  color: white;
+}
+
 p {
   color: var(--text);
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url(../public/fonts/Inter-Regular.ttf) format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Inter' !important;
 }
 </style>

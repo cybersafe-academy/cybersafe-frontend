@@ -8,6 +8,7 @@
       <template v-else v-for="(question, i) in questions" v-key="i">
         <div style="margin-bottom: 20px">
           <course-test-item
+            :showTrashIcon="hasAtLeastFourQuestions"
             :question="question"
             @remove-item="removeCourseContent(i)"
           ></course-test-item>
@@ -44,6 +45,13 @@ export default {
   components: {
     CourseTestItem
   },
+
+  computed: {
+    hasAtLeastFourQuestions() {
+      return this.questions.length >= 4
+    }
+  },
+
   methods: {
     addCourseContent() {
       this.questions.push({
