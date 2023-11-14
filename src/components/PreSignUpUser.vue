@@ -74,18 +74,6 @@ export default {
     } as any
   }),
 
-  async created() {
-    try {
-      const { data } = await this.$axios.get('/companies')
-
-      this.companies = data.data
-    } catch (e: any) {
-      const error: IErrorResponse = e.response.data.error
-
-      this.$toast.error(error.description)
-    }
-  },
-
   computed: {
     roleOptions() {
       const authStore = useAuthStore()
@@ -99,8 +87,21 @@ export default {
   },
 
   methods: {
+    async getCompanies() {
+      try {
+        const { data } = await this.$axios.get('/companies')
+
+        this.companies = data.data ?? []
+      } catch (e: any) {
+        const error: IErrorResponse = e.response.data.error
+
+        this.$toast.error(error.description)
+      }
+    },
     openDialog(user: any) {
       this.dialog = true
+
+      this.getCompanies()
 
       if (user) {
         this.id = user.id
@@ -142,7 +143,8 @@ export default {
       }
 
       try {
-        await this.$axios.post('/users/pre-signup', user)
+        const newUser = (await this.$axios.post('/users/pre-signup', user)).data
+        user.id = newUser.id
 
         this.closeDialog()
 
