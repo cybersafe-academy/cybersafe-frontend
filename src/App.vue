@@ -100,7 +100,7 @@ p {
 
 @font-face {
   font-family: 'Inter';
-  src: url(./assets/fonts/Inter-Regular.ttf) format('truetype');
+  src: url(../public/fonts/Inter-Regular.ttf) format('truetype');
   font-weight: normal;
   font-style: normal;
 }
