@@ -266,15 +266,6 @@ export default {
 </script>
 
 <style scoped>
-.closeDialogBtn {
-  background-color: #f44336 !important;
-  color: #fff !important;
-}
-
-.editUserBtn {
-  background-color: #4caf50 !important;
-  color: #fff !important;
-}
 .editUserDialog {
   overflow-y: scroll;
 }

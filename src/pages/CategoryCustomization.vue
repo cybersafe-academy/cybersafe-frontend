@@ -68,10 +68,13 @@
                     >
                       <div style="margin-bottom: 30px">
                         <div class="d-flex align-center pa-2">
-                          <p class="text-h6" style="min-width: 110px">
+                          <p class="text-h6 mr-5" style="min-width: 110px">
                             {{ category.name }}
                           </p>
-                          <v-icon color="red" @click="removeCategory(i)"
+                          <v-icon
+                            style="margin-left: auto"
+                            color="rgb(254, 0, 0)"
+                            @click="removeCategory(i)"
                             >mdi-trash-can</v-icon
                           >
                         </div>

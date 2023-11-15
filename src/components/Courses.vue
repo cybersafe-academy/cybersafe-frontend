@@ -2,8 +2,8 @@
   <div class="tableContent">
     <v-card>
       <v-card-text>
-        <v-row class="d-flex justify-end">
-          <v-col cols="6">
+        <v-row class="d-flex justify-end input-row">
+          <v-col>
             <v-text-field
               class="search-bar"
               v-model="filterInput"
@@ -198,8 +198,15 @@ export default {
   padding: 20px;
 }
 
-.search-bar {
+.input-row {
+  justify-content: center !important;
+}
+
+.input-row .v-col {
   width: 100%;
+}
+
+.search-bar {
   border-bottom: 1px solid black;
 }
 
@@ -212,7 +219,7 @@ export default {
 
 .course-thumbnail {
   width: 100%;
-  height: 180px;
+  height: 200px;
   border: 1px solid grey;
   border-radius: 8px;
 }

@@ -44,8 +44,8 @@
                 }}
               </p>
             </td>
-            <td>
-              <div class="actionsButtons">
+            <td class="actionsButtons">
+              <div class="d-flex justify-center" style="margin: 0 auto 0 auto">
                 <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
@@ -286,12 +286,13 @@ export default {
 
 td {
   text-align: center;
+  vertical-align: middle;
 }
 
 td > p {
-  width: 200px;
+  width: 150px;
   overflow-wrap: break-word;
-  margin: auto;
+  margin: 0 auto 0 auto;
 }
 
 .text-left {
@@ -321,7 +322,6 @@ td > p {
   .v-table {
     overflow-y: hidden;
     height: auto;
-    min-width: 300px;
   }
 
   .actionsButtons {

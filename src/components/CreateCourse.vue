@@ -21,16 +21,8 @@
                 </v-select>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row style="position: relative">
               <v-col cols="12">
-                <v-dialog>
-                  <v-img
-                    class="mb-6"
-                    :width="300"
-                    cover
-                    :src="course.thumbnailURL"
-                  />
-                </v-dialog>
                 <v-text-field
                   v-model="courseForm.contentURL"
                   :label="$t('VIDEO_URL')"
@@ -56,15 +48,14 @@
               <v-col cols="4">
                 <v-img
                   v-if="courseForm.thumbnailURL"
-                  class="mb-6"
-                  width="35%"
+                  class="thumbnail-preview mb-6"
                   cover
                   :src="courseForm.thumbnailURL"
                 />
               </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="6">
+              <v-col cols="8">
                 <v-select
                   v-model="courseForm.level"
                   :label="$t('LEVEL')"
@@ -383,13 +374,10 @@ export default {
 .createCourseDialog {
   overflow-y: auto;
 }
-.closeDialogBtn {
-  background-color: #801a1a !important;
-  color: #fff !important;
-}
-
-.saveCourseBtn {
-  background-color: #285430 !important;
-  color: #fff !important;
+.thumbnail-preview {
+  width: 30%;
+  position: absolute;
+  border: 1px solid white;
+  border-radius: 3px;
 }
 </style>

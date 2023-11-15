@@ -38,22 +38,24 @@
               </p>
             </td>
             <td class="actionsButtons">
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openEditDialog(item.id)"
-                class="editBtn"
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openDeleteDialog(item.id)"
-                class="deleteBtn"
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+              <div class="d-flex justify-center" style="margin: 0 auto 0 auto">
+                <v-btn
+                  :disabled="role != 'master'"
+                  text
+                  @click="openEditDialog(item.id)"
+                  class="editBtn"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="role != 'master'"
+                  text
+                  @click="openDeleteDialog(item.id)"
+                  class="deleteBtn"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -321,14 +323,27 @@ td {
 td > p {
   width: 150px;
   overflow-wrap: break-word;
-  text-align: center;
+  margin: 0 auto 0 auto;
 }
 
 .text-left {
   text-align: center !important;
 }
 
+.addCourseBtn {
+  margin-right: 10px !important;
+}
+
+@media only screen and (max-width: 300px) {
+  .addCourseBtn {
+    margin: 0 !important;
+  }
+}
+
 @media only screen and (max-width: 900px) {
+  .addCourseBtn {
+    margin-bottom: 10px !important;
+  }
   .tableContent {
     overflow-y: scroll;
     display: block;
@@ -340,11 +355,6 @@ td > p {
     margin-top: 40px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-  }
-
-  .addCourseBtn {
-    margin: 0 !important;
-    margin-bottom: 10px !important;
   }
 
   .v-table {

@@ -13,7 +13,7 @@
                 :src="
                   userData.profilePictureURL
                     ? userData.profilePictureURL
-                    : '@/assets/images/blank-profile.png'
+                    : '../../public/images/blank-profile.png'
                 "
                 alt="Profile picture"
               />
@@ -21,7 +21,7 @@
               <div
                 class="mt-1 mb-12 d-flex align-start justify-center flex-wrap"
               >
-                <div class="mb-12">
+                <div class="preference-section mb-12">
                   <p
                     class="text-h5 mb-2"
                     style="color: grey; font-weight: bold"
@@ -48,7 +48,7 @@
           <v-divider></v-divider>
 
           <div class="d-flex justify-center pt-6 pb-6 flex-wrap">
-            <div class="d-flex flex-column align-center mb-2">
+            <div class="switch-div d-flex flex-column align-center mb-2">
               <p class="text-h6 mb-1">{{ $t('DARK_MODE') }}</p>
               <v-switch
                 color="primary"
@@ -59,7 +59,7 @@
               />
             </div>
 
-            <div>
+            <div class="language-div">
               <p class="text-h6 mb-2">{{ $t('LANGUAGE') }}</p>
               <v-select
                 class="input"
@@ -224,5 +224,29 @@ export default {
 
 p {
   font-family: 'Inter';
+}
+
+.preference-section {
+  margin-right: 60px;
+}
+
+.switch-div {
+  margin-right: 40px;
+}
+
+.language-div {
+  margin-right: 40px;
+}
+
+@media only screen and (max-width: 600px) {
+  .preference-section,
+  .language-div,
+  .switch-div {
+    margin-right: 0 !important;
+  }
+
+  .switch-div {
+    width: 300px;
+  }
 }
 </style>

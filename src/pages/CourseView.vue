@@ -67,14 +67,14 @@
                 >
                   {{ $t('COURSE_REVIEW') }}
                 </p>
-                <p v-else class="text-h4 mt-2 mb-6">
+                <p v-else class="text-h5 mt-2 mb-6 text-center">
                   {{ $t('ALL_COURSE_REVIEWS') }}
                 </p>
                 <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
                   <textarea
                     v-model="newRatingComment"
                     class="w-100 mb-6 pa-2"
-                    style="border: 1px solid grey"
+                    style="border: 1px solid grey; color: white"
                   ></textarea>
                   <div class="d-flex align-center">
                     <v-rating
@@ -87,7 +87,8 @@
                     <v-btn
                       @click="sendReview"
                       :disabled="!finishedRating"
-                      :class="finishedRating ? 'bg-green' : 'bg-grey'"
+                      class="saveCourseBtn"
+                      :class="!finishedRating ? 'bg-grey' : ''"
                       >{{ $t('SEND') }}</v-btn
                     >
                   </div>
@@ -105,8 +106,7 @@
             </v-window-item>
             <v-window-item v-if="enrolled" value="3" :eager="true">
               <div
-                c
-                lass="pa-4 d-flex justify-center"
+                class="pa-4 d-flex justify-center"
                 v-if="
                   testResults &&
                   testResults.status !== '' &&
@@ -163,12 +163,13 @@
                   </div>
                 </div>
                 <div class="mt-4 d-flex justify-end">
-                  <v-btn class="bg-red mr-4" @click="resetAlternatives">{{
+                  <v-btn class="bg-red mr-2" @click="resetAlternatives">{{
                     $t('CLEAR_ANSWERS')
                   }}</v-btn>
                   <v-btn
                     :disabled="!finishedTest"
-                    :class="finishedTest ? 'bg-green' : 'bg-grey'"
+                    class="saveCourseBtn"
+                    :class="!finishedTest ? 'bg-grey' : ''"
                     @click="sendAnswers"
                   >
                     {{ $t('SEND') }}
@@ -246,9 +247,7 @@ export default {
       alternatives.forEach((alternative) => (alternative.selected = false))
       selectedAlternative.selected = true
       this.answeredQuestions++
-      this.finishedTest =
-        this.answeredQuestions >=
-        Object.keys(this.course.questions).values.length
+      this.finishedTest = this.answeredQuestions >= this.course.questions.length
     },
     resetAlternatives() {
       this.answeredQuestions = 0
@@ -266,6 +265,8 @@ export default {
           rating: this.newRating
         })
       ).data
+
+      await this.loadCourse()
 
       this.course.reviews = this.course.reviews ?? []
       this.course.reviews.push(review)
@@ -319,7 +320,7 @@ export default {
   align-items: center;
 }
 .question {
-  background-color: #6d5d6e;
+  background-color: var(--question-background);
   border-start-start-radius: 3px;
   border-start-end-radius: 3px;
   padding: 5px;
@@ -336,11 +337,11 @@ export default {
 }
 
 .alternative:hover {
-  background-color: #363342;
+  background-color: var(--alternative-hover);
 }
 
 .selected {
-  background-color: #4f4557;
+  background-color: var(--alternative-selected);
 }
 
 .test-results {

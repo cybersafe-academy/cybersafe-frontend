@@ -20,7 +20,7 @@
           :prepend-avatar="
             userProfilePicture
               ? userProfilePicture
-              : '@/assets/images/blank-profile.png'
+              : '../../public/images/blank-profile.png'
           "
           :title="userName"
           :subtitle="userEmail"
@@ -56,6 +56,7 @@
         </template>
 
         <v-list-item
+          v-if="role !== 'default'"
           prepend-icon="mdi-pencil-ruler"
           :title="$t('CONTENT_CUSTOMIZATION')"
           value="category-customization"
@@ -72,7 +73,7 @@
         />
 
         <v-list-item
-          v-if="role !== 'master'"
+          v-if="role === 'admin'"
           prepend-icon="mdi-list-box"
           :title="$t('ANALYTICS')"
           value="analytics"

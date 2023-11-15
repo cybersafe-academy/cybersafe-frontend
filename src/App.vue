@@ -49,15 +49,25 @@ body {
   --inputs: #4f4557;
   --general: #35393f;
   --alternate-background: #6d5d6e;
+  --green: #285430;
+  --red: #801a1a;
+  --question-background: #6d5d6e;
+  --alternative-hover: #363342;
+  --alternative-selected: #4f4557;
 }
 
 :root {
   --text: black;
-  --divider: #e8ecd5;
-  --background: #f7fbfc;
+  --divider: #ffefef;
+  --background: rgb(177, 162, 162);
   --inputs: white;
-  --general: rgb(211, 211, 211);
-  --alternate-background: rgb(218, 253, 220);
+  --general: rgb(233, 233, 233);
+  --alternate-background: #ced9e0;
+  --green: #4caf50;
+  --red: #f44336;
+  --question-background: #beb4be;
+  --alternative-hover: #d6d3d3;
+  --alternative-selected: #d6d6d6;
 }
 
 .tableContent {
@@ -87,12 +97,29 @@ ul {
   color: var(--text) !important;
 }
 
+.v-btn__content {
+  font-family: 'Inter';
+}
+
 .v-field:not(.input-container .v-field) {
   background-color: var(--inputs) !important;
   color: var(--text) !important;
 }
 
-textarea {
+.closeDialogBtn {
+  background-color: var(--red) !important;
+  color: white !important;
+}
+
+.saveCourseBtn,
+.saveUserBtn,
+.saveCompanyBtn,
+.editUserBtn {
+  background-color: var(--green) !important;
+  color: white !important;
+}
+
+.save textarea {
   color: white;
 }
 

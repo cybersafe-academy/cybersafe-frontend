@@ -265,9 +265,9 @@ td {
 }
 
 td > p {
-  width: 300px;
+  width: 150px;
   overflow-wrap: break-word;
-  margin: auto;
+  margin: 0 auto 0 auto;
 }
 
 .text-left {
@@ -275,10 +275,6 @@ td > p {
 }
 
 @media only screen and (max-width: 900px) {
-  p {
-    max-width: 60px !important;
-  }
-
   .tableContent {
     overflow-y: scroll;
     display: block;
