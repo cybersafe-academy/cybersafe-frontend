@@ -64,11 +64,16 @@ export default {
   data() {
     return {
       analyticsData: {} as any,
-      company: ''
+      company: '',
+      labelFont: 18
     }
   },
-  props: {},
   methods: {
+    onResize() {
+      if (window.innerWidth < 600) {
+        this.labelFont = 14
+      }
+    },
     getForeColor(progress: number) {
       if (progress < 50) {
         return 'red'
@@ -95,6 +100,10 @@ export default {
     }
   },
   async mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize)
+    })
+
     const authStore = useAuthStore()
     const company = (await this.$axios.get(`/companies/${authStore.companyID}`))
       .data
@@ -155,7 +164,7 @@ export default {
             {
               ticks: {
                 fontColor: 'white',
-                fontSize: 18,
+                fontSize: this.labelFont,
                 stepSize: 1,
                 beginAtZero: true
               }
@@ -165,7 +174,7 @@ export default {
             {
               ticks: {
                 fontColor: 'white',
-                fontSize: 18,
+                fontSize: this.labelFont,
                 stepSize: 1,
                 beginAtZero: true
               }

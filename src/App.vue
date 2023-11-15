@@ -111,6 +111,10 @@ ul {
   color: white !important;
 }
 
+.v-toast__item--warning p {
+  color: black !important;
+}
+
 .saveCourseBtn,
 .saveUserBtn,
 .saveCompanyBtn,
