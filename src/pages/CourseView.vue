@@ -32,7 +32,7 @@
                 <p class="text-h4">{{ course.title }}</p>
               </v-row>
               <v-row>
-                <p class="mt-4 text-h7">{{ course.description }}</p>
+                <p class="mt-2 text-h7">{{ course.description }}</p>
               </v-row>
               <v-row class="d-flex flex-column">
                 <p class="mt-4 text-h6">{{ $t('COURSE_EVALUATION') }}</p>
@@ -50,7 +50,7 @@
                     size="small"
                   />
                 </span>
-                <v-btn @click="enroll" style="width: 300px">
+                <v-btn class="mb-3" @click="enroll" style="width: 300px">
                   <template v-if="enrolled">Desinscrever-se</template>
                   <template v-else>Se inscrever no curso</template>
                 </v-btn>
@@ -64,7 +64,7 @@
                 >
                   Course review
                 </p>
-                <p v-else class="text-h4 mt-6 mb-6">All course reviews</p>
+                <p v-else class="text-h4 mt-2 mb-6">All course reviews</p>
                 <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
                   <textarea
                     v-model="newRatingComment"
@@ -143,7 +143,7 @@
               <template v-else-if="course.questions">
                 <div v-for="(question, i) in course.questions">
                   <div class="question">
-                    <p class="text-h6">{{ i }}. {{ question.wording }}</p>
+                    <p class="text-h6">{{ i + 1 }}. {{ question.wording }}</p>
                   </div>
                   <div class="alternatives d-flex flex-column">
                     <div
@@ -204,11 +204,7 @@ export default {
       enrolled: false
     }
   },
-  watch: {
-    currentTab: function () {
-      this.scroll()
-    }
-  },
+
   computed: {
     finishedRating: function () {
       return this.newRating && this.newRatingComment !== ''
@@ -293,12 +289,6 @@ export default {
         this.testResults = undefined
         this.resetAlternatives()
       }
-    },
-    scroll() {
-      setTimeout(() => {
-        const courseObj = this.$refs.course
-        courseObj.scrollTop = 1000000
-      }, 1)
     }
   }
 }
@@ -312,7 +302,11 @@ export default {
 }
 .course-video {
   width: 100%;
-  height: 700px;
+  height: 690px;
+}
+
+.v-card {
+  padding: 5px;
 }
 
 ::v-deep .v-rating__item label {
@@ -337,7 +331,7 @@ export default {
 }
 
 .alternative:hover {
-  background-color: #483f50;
+  background-color: #363342;
 }
 
 .selected {

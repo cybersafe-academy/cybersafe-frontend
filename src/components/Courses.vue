@@ -1,81 +1,86 @@
 <template>
   <div class="tableContent">
-    <v-row class="d-flex justify-center">
-      <v-col cols="6">
-        <v-text-field
-          class="search-bar"
-          v-model="filterInput"
-          :loading="loadingCourses"
-          density="compact"
-          variant="solo"
-          :label="$t('SEARCH_BY_TITLE')"
-          append-inner-icon="mdi-magnify"
-          single-line
-          hide-details
-          @keydown="handleEnter"
-          @click:append-inner="filterResults"
-        />
-      </v-col>
-    </v-row>
-    <v-row class="mt-12">
-      <v-col>
-        <v-row
-          class="mb-12"
-          v-for="(category, i) in Object.keys(categories)"
-          :key="i"
-        >
-          <p class="text-h5 mb-6">
-            {{ category }}
-          </p>
-          <v-carousel
-            height="auto"
-            hide-delimiter-background
-            show-arrows="hover"
-            hide-delimiters
-          >
-            <v-carousel-item
-              v-for="(coursesPage, j) in (categories[category] as any)"
-              :key="j"
-            >
-              <div class="d-flex">
-                <div
-                  class="course-card"
-                  v-for="(course, k) in coursesPage.courses"
-                  :key="k"
-                  @click="openCourseView(course.id)"
-                >
-                  <img
-                    class="course-thumbnail"
-                    :src="course.thumbnailURL"
-                    alt=""
-                  />
-                  <p
-                    class="text-h6"
-                    style="max-width: 300px; overflow-wrap: break-word"
-                  >
-                    {{ course.title }}
-                  </p>
-                  <span class="d-flex">
-                    <b class="mr-1" style="color: #b4761a">{{
-                      course.avgRating.toFixed(1)
-                    }}</b>
-                    <v-rating
-                      class="rating d-flex align-center"
-                      color="orange-lighten-1"
-                      half-increments
-                      v-model="course.avgRating"
-                      readonly
-                      density="compact"
-                      size="small"
-                    />
-                  </span>
-                </div>
-              </div>
-            </v-carousel-item>
-          </v-carousel>
+    <v-card>
+      <v-card-text>
+        <v-row class="d-flex justify-end">
+          <v-col cols="6">
+            <v-text-field
+              class="search-bar"
+              v-model="filterInput"
+              :loading="loadingCourses"
+              density="compact"
+              variant="solo"
+              :label="$t('SEARCH_BY_TITLE')"
+              append-inner-icon="mdi-magnify"
+              single-line
+              hide-details
+              @keydown="handleEnter"
+              @click:append-inner="filterResults"
+            />
+          </v-col>
         </v-row>
-      </v-col>
-    </v-row>
+        <v-row class="mt-12">
+          <v-col>
+            <v-row
+              class="mb-6"
+              v-for="(category, i) in Object.keys(categories)"
+              :key="i"
+            >
+              <v-divider thickness="2" />
+              <p class="text-h5 mb-8 mt-4">
+                {{ category }}
+              </p>
+              <v-carousel
+                height="auto"
+                hide-delimiter-background
+                show-arrows="hover"
+                hide-delimiters
+              >
+                <v-carousel-item
+                  v-for="(coursesPage, j) in (categories[category] as any)"
+                  :key="j"
+                >
+                  <div class="d-flex">
+                    <div
+                      class="course-card"
+                      v-for="(course, k) in coursesPage.courses"
+                      :key="k"
+                      @click="openCourseView(course.id)"
+                    >
+                      <img
+                        class="course-thumbnail mb-2"
+                        :src="course.thumbnailURL"
+                        alt=""
+                      />
+                      <p
+                        class="text-h6"
+                        style="max-width: 300px; overflow-wrap: break-word"
+                      >
+                        {{ course.title }}
+                      </p>
+                      <span class="d-flex">
+                        <b class="mr-1" style="color: #ff9b50">{{
+                          course.avgRating.toFixed(1)
+                        }}</b>
+                        <v-rating
+                          class="rating d-flex align-center"
+                          color="#FFBB5C"
+                          half-increments
+                          v-model="course.avgRating"
+                          readonly
+                          density="compact"
+                          size="small"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </v-carousel-item>
+              </v-carousel>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -186,8 +191,13 @@ export default {
 .tableContent {
   width: 100%;
   overflow-y: scroll;
-  padding: 2rem;
+  padding: 20px 50px 20px 50px !important;
 }
+
+.v-card {
+  padding: 20px;
+}
+
 .search-bar {
   width: 100%;
   border-bottom: 1px solid black;

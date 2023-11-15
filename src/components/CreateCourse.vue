@@ -22,6 +22,23 @@
               </v-col>
             </v-row>
             <v-row>
+              <v-col cols="12">
+                <v-dialog>
+                  <v-img
+                    class="mb-6"
+                    :width="300"
+                    cover
+                    :src="course.thumbnailURL"
+                  />
+                </v-dialog>
+                <v-text-field
+                  v-model="courseForm.contentURL"
+                  :label="$t('VIDEO_URL')"
+                  type="string"
+                  variant="solo"
+                  required
+                ></v-text-field>
+              </v-col>
               <v-col cols="8">
                 <v-file-input
                   clearable
@@ -44,23 +61,6 @@
                   cover
                   :src="courseForm.thumbnailURL"
                 />
-              </v-col>
-              <v-col cols="12">
-                <v-dialog>
-                  <v-img
-                    class="mb-6"
-                    :width="300"
-                    cover
-                    :src="course.thumbnailURL"
-                  />
-                </v-dialog>
-                <v-text-field
-                  v-model="courseForm.contentURL"
-                  :label="$t('VIDEO_URL')"
-                  type="string"
-                  variant="solo"
-                  required
-                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
@@ -97,7 +97,7 @@
             />
           </template>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="mt-4">
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeDialog">
             {{ $t('CLOSE') }}

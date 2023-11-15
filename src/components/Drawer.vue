@@ -234,6 +234,7 @@ export default {
     display: block;
     position: absolute;
     padding: 10px;
+    z-index: 1000;
   }
 }
 </style>

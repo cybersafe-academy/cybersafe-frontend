@@ -4,6 +4,7 @@
       <v-row>
         <v-col class="pa-0 mb-4" cols="12">
           <v-text-field
+            class="mr-2"
             v-model="question.wording"
             :label="$t('QUESTION', { number: id })"
             type="string"

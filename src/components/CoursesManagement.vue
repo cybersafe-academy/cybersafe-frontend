@@ -295,7 +295,6 @@ p {
   padding: 10px;
   background-color: rgb(62, 120, 252);
   margin: 0 !important;
-  margin-right: 1rem !important;
 }
 
 .actionsButtons {
@@ -315,6 +314,20 @@ p {
   background-color: red;
 }
 
+td {
+  text-align: center;
+}
+
+td > p {
+  width: 150px;
+  overflow-wrap: break-word;
+  text-align: center;
+}
+
+.text-left {
+  text-align: center !important;
+}
+
 @media only screen and (max-width: 900px) {
   .tableContent {
     overflow-y: scroll;
@@ -332,10 +345,6 @@ p {
   .addCourseBtn {
     margin: 0 !important;
     margin-bottom: 10px !important;
-  }
-
-  .addCourseBtn:nth-child(1) {
-    margin-right: 10px !important;
   }
 
   .v-table {
@@ -371,12 +380,6 @@ p {
     align-items: center;
     padding: 30px 10px 30px 10px !important;
     overflow-y: hidden;
-  }
-
-  td > p {
-    width: 150px;
-    overflow-wrap: break-word;
-    text-align: center;
   }
 
   tr:nth-of-type(odd) td {

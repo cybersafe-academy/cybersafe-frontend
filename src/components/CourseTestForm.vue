@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h2 class="mb-6">{{ $t('QUESTIONNAIRE') }}</h2>
-    <div>
+    <p class="text-h5">{{ $t('QUESTIONNAIRE') }}</p>
+    <div class="mt-6">
       <template v-if="questions.length === 0">
-        <h2>{{ $t('NO_QUESTIONS_REGISTERED_YET') }}</h2>
+        <p class="text-h6">{{ $t('NO_QUESTIONS_REGISTERED_YET') }}</p>
       </template>
       <template v-else v-for="(question, i) in questions" v-key="i">
-        <div style="margin-bottom: 20px">
+        <div class="mt-3" style="margin-bottom: 20px">
           <course-test-item
             :showTrashIcon="hasAtLeastFourQuestions"
             :question="question"
@@ -66,3 +66,14 @@ export default {
   }
 }
 </script>
+
+<style>
+p {
+  max-width: none !important;
+}
+
+.text-h5,
+.text-h6 {
+  font-family: 'Inter' !important;
+}
+</style>
