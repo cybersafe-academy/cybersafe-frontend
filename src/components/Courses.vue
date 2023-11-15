@@ -97,7 +97,17 @@ export default {
     async loadCategories() {
       this.loadingCourses = true
 
-      const { data: categories } = await this.$axios.get('/courses')
+      let { data: categories } = await this.$axios.get('/courses')
+
+      categories = {
+        ...(categories['Made for you']
+          ? { 'Made for you': categories['Made for you'] }
+          : {}),
+        ...(categories['Subscribed']
+          ? { Subscribed: categories['Subscribed'] }
+          : {}),
+        ...categories
+      }
 
       const isPortuguese = localStorage.getItem('language') === 'pt'
 
@@ -143,8 +153,8 @@ export default {
 
       Object.keys(this.categories).forEach((category) => {
         const coursesPage = this.categories[category]
-        coursesPage.forEach((coursePage) => {
-          coursePage.courses = coursePage.courses.filter((course) => {
+        coursesPage.forEach((coursePage: any) => {
+          coursePage.courses = coursePage.courses.filter((course: any) => {
             return course.title.indexOf(this.filterInput) !== -1
           })
           if (coursePage.courses.length === 0) {
