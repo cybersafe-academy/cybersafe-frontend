@@ -73,7 +73,7 @@
         />
 
         <v-list-item
-          v-if="role === 'admin'"
+          v-if="role !== 'default'"
           prepend-icon="mdi-list-box"
           :title="$t('ANALYTICS')"
           value="analytics"

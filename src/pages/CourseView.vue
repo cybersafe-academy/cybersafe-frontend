@@ -74,7 +74,7 @@
                   <textarea
                     v-model="newRatingComment"
                     class="w-100 mb-6 pa-2"
-                    style="border: 1px solid grey; color: white"
+                    style="border: 1px solid grey; color: var(--text)"
                   ></textarea>
                   <div class="d-flex align-center">
                     <v-rating
@@ -126,7 +126,7 @@
                       v-model="testResults.hitsPercentage"
                       size="160"
                       width="13"
-                      color="#558b2f"
+                      :color="progressColor"
                       ><p>
                         {{ testResults.hitsPercentage }}%
                       </p></v-progress-circular
@@ -158,7 +158,7 @@
                       v-for="(answer, j) of question.answers"
                       @click="setAlternative(question.answers, answer)"
                     >
-                      <p class="text-h6">{{ j + 1 }}. {{ answer.text }}</p>
+                      <p class="text-h6">{{ letters[j] }}. {{ answer.text }}</p>
                     </div>
                   </div>
                 </div>
@@ -207,13 +207,23 @@ export default {
       newRating: 0,
       course: undefined,
       testResults: undefined,
-      enrolled: false
+      enrolled: false,
+      letters: ['a', 'b', 'c', 'd']
     }
   },
 
   computed: {
     finishedRating: function () {
       return this.newRating && this.newRatingComment !== ''
+    },
+    progressColor: function () {
+      if (this.testResults.hitsPercentage < 70) {
+        return 'red'
+      }
+      if (this.testResults.hitsPercentage <= 100) {
+        return 'green'
+      }
+      return 'grey'
     }
   },
   created: async function () {
@@ -266,10 +276,11 @@ export default {
         })
       ).data
 
+      const reviews = [...this.course.reviews]
       await this.loadCourse()
 
-      this.course.reviews = this.course.reviews ?? []
-      this.course.reviews.push(review)
+      this.course.reviews = reviews ?? []
+      this.course.reviews.unshift(review)
       this.course.reviewed = true
     },
     async sendAnswers() {
@@ -332,7 +343,7 @@ export default {
 
 .alternative {
   cursor: pointer;
-  padding: 10px;
+  padding: 10px 10px 10px 20px;
   border-radius: 3px;
 }
 
@@ -351,13 +362,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.test-success {
-  background-color: #689f38;
-}
-
-.test-info {
-  color: white;
 }
 </style>

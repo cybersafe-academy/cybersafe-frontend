@@ -6,19 +6,19 @@
           <v-col class="d-flex justify-center align-center pl-12">
             <p class="text-h4">{{ company }}</p>
           </v-col>
-          <v-col class="pa-12 d-flex justify-start align-center flex-wrap">
-            <div class="d-flex flex-column justify-center align-center mr-12">
+          <v-col class="pa-12 d-flex justify-center align-center flex-wrap">
+            <div class="card d-flex flex-column justify-center align-center">
               <p class="text-h5 mb-4">Número de Usuários:</p>
-              <p class="text-h6 text-center">
+              <p class="text-h3 text-center">
                 {{ analyticsData.numberOfUsers }}
               </p>
             </div>
-            <div class="d-flex flex-column justify-center align-center mr-12">
+            <div class="card d-flex flex-column justify-center align-center">
               <p class="text-h5 mb-4">Acurácia em quizes:</p>
               <v-progress-circular
                 v-model="analyticsData.accuracyInQuizzes"
                 :size="150"
-                :width="10"
+                :width="15"
                 bg-color="grey"
                 :color="getForeColor(analyticsData.accuracyInQuizzes)"
               >
@@ -26,24 +26,29 @@
               </v-progress-circular>
             </div>
 
-            <div class="d-flex flex-column justify-center align-center mr-12">
+            <div class="card d-flex flex-column justify-center align-center">
               <p class="text-h5 mb-4" style="max-width: none !important">
                 Taxa de compleção de curso:
               </p>
               <v-progress-circular
                 v-model="analyticsData.courseCompletion"
                 :size="150"
-                :width="10"
+                :width="15"
                 bg-color="grey"
                 :color="getForeColor(analyticsData.courseCompletion)"
-                >{{ analyticsData.courseCompletion }}%</v-progress-circular
               >
+                <p class="text-h6">{{ analyticsData.courseCompletion }}%</p>
+              </v-progress-circular>
             </div>
           </v-col>
         </v-row>
         <v-row>
-          <v-col>
-            <canvas id="my-chart" width="500" height="300"></canvas>
+          <v-col class="d-flex justify-center" style="width: auto !important">
+            <canvas
+              id="my-chart"
+              class="card"
+              style="width: 90% !important"
+            ></canvas>
           </v-col>
         </v-row>
       </v-card-text>
@@ -117,9 +122,7 @@ export default {
           'ESFJ',
           'ENFJ',
           'ENTJ'
-        ], //this.analyticsData.mbtiCount.map(
-        //   (mbtiCount: any) => mbtiCount.mbtiType
-        // )
+        ],
         datasets: [
           {
             label: 'MBTI Types',
@@ -132,7 +135,7 @@ export default {
               '#665191',
               '#a05195',
               '#d45087',
-              ' #f95d6a',
+              '#f95d6a',
               '#ff7c43 ',
               '#ffa600'
             ],
@@ -140,7 +143,15 @@ export default {
           }
         ]
       },
+
       options: {
+        plugins: {
+          legend: {
+            labels: {
+              color: 'red'
+            }
+          }
+        },
         scales: {
           y: {
             beginAtZero: true
@@ -154,11 +165,24 @@ export default {
 
 <style scoped>
 #my-chart {
-  position: relative;
-  margin: auto; /* Center the chart horizontally */
+  width: 1000px !important;
+  height: 500px !important;
 }
 .tableContent {
   height: auto !important;
   overflow-y: scroll !important;
+}
+
+.card {
+  min-width: 400px;
+  background-color: var(--background);
+  padding: 20px;
+  border-radius: 5px;
+  margin-right: 10px;
+  min-height: 238px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
 }
 </style>
