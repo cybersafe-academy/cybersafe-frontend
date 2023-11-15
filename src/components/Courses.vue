@@ -204,16 +204,17 @@ export default {
 }
 
 .course-card {
-  min-width: 200px;
+  min-width: 300px;
   margin-right: 30px;
   overflow: hidden;
   cursor: pointer;
 }
 
 .course-thumbnail {
-  width: 300px;
+  width: 100%;
+  height: 180px;
   border: 1px solid grey;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 .rating {
   overflow: hidden;

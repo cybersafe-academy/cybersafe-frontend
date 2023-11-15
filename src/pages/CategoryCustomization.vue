@@ -21,7 +21,7 @@
           />
 
           <v-select
-            v-if="selectedCompany.id || companyID"
+            v-if="selectedCompany.id || (userRole !== 'master' && companyID)"
             class="input"
             :label="$t('PERSONALITY')"
             v-model="selectedPersonality"
@@ -32,7 +32,10 @@
             v-if="selectedPersonality"
             class="d-flex flex-column align-center"
           >
-            <p class="text-h5 mb-4" style="max-width: none !important">
+            <p
+              class="text-h5 mb-6 text-center"
+              style="max-width: none !important"
+            >
               {{ $t('PERSONALITY_CATEGORIES', { mbti: selectedPersonality }) }}
             </p>
             <v-card class="w-100" style="overflow-y: auto; max-height: 300px">
@@ -65,10 +68,7 @@
                     >
                       <div style="margin-bottom: 30px">
                         <div class="d-flex align-center pa-2">
-                          <p
-                            class="text-h6"
-                            style="min-width: 200px; margin-right: 100px"
-                          >
+                          <p class="text-h6" style="min-width: 110px">
                             {{ category.name }}
                           </p>
                           <v-icon color="red" @click="removeCategory(i)"
@@ -79,7 +79,10 @@
                       </div>
                     </template>
                   </div>
-                  <p v-if="!personalityCategories.length" class="text-h6 mt-6">
+                  <p
+                    v-if="!personalityCategories.length"
+                    class="text-h6 mt-2 text-center"
+                  >
                     {{ $t('NO_CATEGORIES_SELECTED') }}
                   </p>
                 </div>
@@ -253,7 +256,7 @@ export default {
       )
 
       if (!categories.length) {
-        this.$toast.error(this.$('SELECT_AT_LEAST_ONE_CATEGORY'))
+        this.$toast.error(this.$t('SELECT_AT_LEAST_ONE_CATEGORY'))
         return
       }
 
@@ -271,7 +274,7 @@ export default {
           }
         )
 
-        this.$toast.success(this.$('CATEGORIES_SAVED_SUCCESSFULLY'))
+        this.$toast.success(this.$t('CATEGORIES_SAVED_SUCCESSFULLY'))
 
         this.selectedPersonality = ''
       } catch (e: any) {
@@ -285,17 +288,19 @@ export default {
 
 <style scoped>
 .tableContent {
-  overflow-y: scroll;
+  overflow-y: auto;
   display: block;
 }
 
 .tableContent > .v-card {
-  width: 600px;
+  max-width: 600px;
   margin: auto;
+  margin-top: 20px;
 }
 
 .input {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   max-height: 20px;
   margin-bottom: 100px;
 }

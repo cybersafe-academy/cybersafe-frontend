@@ -9,13 +9,7 @@
         {{ $t('PRE_SIGNUP_USER') }}
       </v-btn>
     </v-toolbar>
-    <v-table
-      ref="itemTable"
-      fixed-header
-      hover
-      class="userTable"
-      :style="cssVars"
-    >
+    <v-table ref="itemTable" fixed-header hover class="userTable">
       <template v-if="users.length > 0">
         <thead>
           <tr>
