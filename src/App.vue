@@ -60,7 +60,7 @@ body {
   --text: black;
   --divider: #ffefef;
   --background: rgb(177, 162, 162);
-  --inputs: white;
+  --inputs: rgb(216, 206, 206);
   --general: rgb(233, 233, 233);
   --alternate-background: #ced9e0;
   --green: #4caf50;

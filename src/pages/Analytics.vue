@@ -100,6 +100,9 @@ export default {
     }
   },
   async mounted() {
+    const theme = localStorage.getItem('theme') ?? 'light'
+    const color = theme === 'dark' ? 'white' : 'black'
+
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize)
     })
@@ -155,7 +158,7 @@ export default {
       options: {
         legend: {
           labels: {
-            fontColor: 'white',
+            fontColor: color,
             fontSize: 18
           }
         },
@@ -163,7 +166,7 @@ export default {
           yAxes: [
             {
               ticks: {
-                fontColor: 'white',
+                fontColor: color,
                 fontSize: this.labelFont,
                 stepSize: 1,
                 beginAtZero: true
@@ -173,7 +176,7 @@ export default {
           xAxes: [
             {
               ticks: {
-                fontColor: 'white',
+                fontColor: color,
                 fontSize: this.labelFont,
                 stepSize: 1,
                 beginAtZero: true
@@ -199,7 +202,7 @@ export default {
 
 .card {
   min-width: 400px;
-  background-color: var(--background);
+  background-color: var(--inputs);
   padding: 20px;
   border-radius: 5px;
   margin-right: 10px;
