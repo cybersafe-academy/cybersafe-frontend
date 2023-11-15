@@ -188,7 +188,7 @@ export default {
     if (this.userRole === 'master') {
       try {
         const response = await this.$axios.get('/companies')
-        this.companies = response.data.data
+        this.companies = response.data.data ?? []
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
         this.$toast.error(error.description)

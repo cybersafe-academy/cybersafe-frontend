@@ -143,25 +143,34 @@ export default {
     openCourseView(courseId: string) {
       this.$emit('course-view-opened', courseId)
     },
-    handleEnter(e) {
+    handleEnter(e: any) {
       if (e.key === 'Enter') {
         this.filterResults()
       }
     },
     filterResults() {
       this.categories = JSON.parse(this.categoriesBackup)
+      let found = false
 
       Object.keys(this.categories).forEach((category) => {
         const coursesPage = this.categories[category]
-        coursesPage.forEach((coursePage: any) => {
-          coursePage.courses = coursePage.courses.filter((course: any) => {
-            return course.title.indexOf(this.filterInput) !== -1
+        coursesPage.forEach((coursePage) => {
+          coursePage.courses = coursePage.courses.filter((course) => {
+            return course.title
+              .toLowerCase()
+              .includes(this.filterInput.toLowerCase())
           })
-          if (coursePage.courses.length === 0) {
+
+          if (coursePage.courses.length > 0) {
+            found = true
+          } else {
             delete this.categories[category]
           }
         })
       })
+
+      if (!found)
+        this.$toast.warning('Não foram encontrados cursos com esse título.')
     }
   }
 }

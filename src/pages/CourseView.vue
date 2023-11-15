@@ -285,7 +285,7 @@ export default {
 }
 .course-video {
   width: 100%;
-  height: 500px;
+  height: 700px;
 }
 
 ::v-deep .v-rating__item label {
