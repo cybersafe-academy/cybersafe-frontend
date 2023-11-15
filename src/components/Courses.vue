@@ -169,8 +169,7 @@ export default {
         })
       })
 
-      if (!found)
-        this.$toast.warning('Não foram encontrados cursos com esse título.')
+      if (!found) this.$toast.warning(this.$t('NO_COURSES_FOUND_WITH_TITLE'))
     }
   }
 }

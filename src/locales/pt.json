@@ -36,6 +36,7 @@
   "NO_COMPANIES_REGISTERED_YET": "Nenhuma empresa cadastrada",
   "NO_USERS_REGISTERED_YET": "Nenhum usuário cadastrado",
   "NO_COURSES_REGISTERED_YET": "Nenhum curso cadastrado",
+  "NO_COURSES_FOUND_WITH_TITLE": "Nenhum curso encontrado com o título fornecido",
   "USER_PREFERENCES": "Preferências do Usuário",
   "QUESTIONNAIRE": "Questionário",
   "NO_QUESTIONS_REGISTERED_YET": "Nenhuma pergunta foi registrada ainda",
