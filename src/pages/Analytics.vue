@@ -3,8 +3,8 @@
     <v-card>
       <v-card-text>
         <v-row class="d-flex flex-column align-center">
-          <v-col class="d-flex justify-center align-center pl-12">
-            <p class="text-h4">{{ company }}</p>
+          <v-col class="d-flex justify-center align-center">
+            <p class="text-h4 text-center">{{ company }}</p>
           </v-col>
           <v-col class="pa-12 d-flex justify-center align-center flex-wrap">
             <div class="card d-flex flex-column justify-center align-center">
@@ -136,26 +136,41 @@ export default {
               '#a05195',
               '#d45087',
               '#f95d6a',
-              '#ff7c43 ',
+              '#ff7c43',
               '#ffa600'
             ],
             borderWidth: 1 // Optional: You can customize the border width
           }
         ]
       },
-
       options: {
-        plugins: {
-          legend: {
-            labels: {
-              color: 'red'
-            }
+        legend: {
+          labels: {
+            fontColor: 'white',
+            fontSize: 18
           }
         },
         scales: {
-          y: {
-            beginAtZero: true
-          }
+          yAxes: [
+            {
+              ticks: {
+                fontColor: 'white',
+                fontSize: 18,
+                stepSize: 1,
+                beginAtZero: true
+              }
+            }
+          ],
+          xAxes: [
+            {
+              ticks: {
+                fontColor: 'white',
+                fontSize: 18,
+                stepSize: 1,
+                beginAtZero: true
+              }
+            }
+          ]
         }
       }
     })
