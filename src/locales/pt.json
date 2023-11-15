@@ -132,5 +132,6 @@
   "PASSWORDS_DO_NOT_MATCH": "As senhas não coincidem",
   "INVALID_TOKEN": "Token inválido",
   "PASSWORD_UPDATED_SUCCESSFULLY": "Senha atualizada com sucesso",
-  "HERE": "aqui"
+  "HERE": "aqui",
+  "LOGGED_IN_SUCCESSFULLY": "Logado com sucesso"
 }

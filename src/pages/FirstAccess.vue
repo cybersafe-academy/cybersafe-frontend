@@ -36,7 +36,7 @@
       </v-btn>
 
       <div class="signup-container">
-        <span> {{ $t('ALREADY_HAVE_ACCOUNT') }} </span>
+        <span class="mr-2"> {{ $t('ALREADY_HAVE_ACCOUNT') }} </span>
 
         <span @click="switchLogin" class="link">
           {{ $t('LOGIN') }}

@@ -111,7 +111,7 @@
       </v-btn>
 
       <div>
-        <span>
+        <span class="mr-2">
           {{ $t('ALREADY_HAVE_ACCOUNT') }}
         </span>
 

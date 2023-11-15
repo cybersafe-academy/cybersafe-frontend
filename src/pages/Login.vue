@@ -58,10 +58,9 @@
       </v-btn>
 
       <div class="signup-container">
-        <span>
+        <span class="mr-2">
           {{ $t('FIRST_ACCESS') }}
         </span>
-
         <span @click="switchFirstAccess" class="link">
           {{ $t('CLICK_HERE') }}
         </span>

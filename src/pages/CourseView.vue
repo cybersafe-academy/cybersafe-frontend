@@ -276,7 +276,7 @@ export default {
         })
       ).data
 
-      const reviews = [...this.course.reviews]
+      const reviews = [...(this.course.reviews ?? [])]
       await this.loadCourse()
 
       this.course.reviews = reviews ?? []
