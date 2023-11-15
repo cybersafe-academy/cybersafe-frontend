@@ -4,11 +4,12 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Welcome to Cybersafe Academy! </span>
+        <span class="greeting-text">
+          {{ $t('WELCOME_TO_CYBERSAFE_ACADEMY') }}
+        </span>
 
         <span class="greeting-subtext">
-          Protect your company with the power of personalized in digital
-          security
+          {{ $t('PROTECT_COMPANY_DIGITAL_SECURITY') }}
         </span>
       </div>
 
@@ -17,7 +18,7 @@
           v-model="cpf"
           clearable
           class="login-input"
-          label="CPF"
+          :label="$t('CPF')"
           prepend-inner-icon="mdi-account"
           variant="solo"
           bg-color="#f5f7f9"
@@ -31,7 +32,7 @@
           class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          label="Password"
+          :label="$t('PASSWORD')"
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
@@ -42,7 +43,7 @@
       </div>
 
       <span @click="switchForgotPassword" class="link forgot-password-text">
-        Forgot password?
+        {{ $t('FORGOT_PASSWORD') }}
       </span>
 
       <v-btn
@@ -53,13 +54,17 @@
         rounded="lg"
         :loading="isLoading"
       >
-        Login
+        {{ $t('LOGIN') }}
       </v-btn>
 
       <div class="signup-container">
-        <span> First acess? </span>
+        <span>
+          {{ $t('FIRST_ACCESS') }}
+        </span>
 
-        <span @click="switchFirstAccess" class="link"> Click here! </span>
+        <span @click="switchFirstAccess" class="link">
+          {{ $t('CLICK_HERE') }}
+        </span>
       </div>
     </div>
   </div>
@@ -92,12 +97,12 @@ export default {
 
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('FIELD_REQUIRED')
     },
 
     verifyEmptyFields(): boolean {
       if (!this.cpf || !this.password) {
-        this.$toast.error('Please fill all fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return true
       }
@@ -141,7 +146,7 @@ export default {
         authStore.updateUserData(userData)
 
         this.isLoading = false
-        this.$toast.success('Logged in successfully')
+        this.$toast.success(this.$t('LOGGED_IN_SUCCESSFULLY'))
 
         this.switchHome()
       } catch (e: any) {

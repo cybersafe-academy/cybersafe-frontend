@@ -83,7 +83,7 @@
       <template v-slot:append>
         <v-list-item
           prepend-icon="mdi-logout"
-          title="Logout"
+          :title="$t('LOGOUT')"
           link
           @click="logout"
         />

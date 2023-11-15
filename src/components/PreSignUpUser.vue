@@ -3,7 +3,7 @@
     <div class="createUserDialog">
       <v-card>
         <v-card-title class="text-center">
-          <span> Pre Signup a new user </span>
+          <span> {{ $t('PRE_SIGNUP_A_NEW_USER') }} </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -11,7 +11,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="email"
-                  label="User Email"
+                  :label="$t('USER_EMAIL')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -19,7 +19,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="role"
-                  label="Role"
+                  :label="$t('ROLE')"
                   variant="solo"
                   required
                   :items="roleOptions"
@@ -28,7 +28,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="selectedCompany"
-                  label="Company"
+                  :label="$t('COMPANY')"
                   variant="solo"
                   required
                   :items="companies"
@@ -41,8 +41,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
-          <v-btn class="saveUserBtn" @click="saveUser"> Save </v-btn>
+          <v-btn class="closeDialogBtn" @click="closeDialog">
+            {{ $t('CLOSE') }}
+          </v-btn>
+          <v-btn class="saveUserBtn" @click="saveUser">
+            {{ $t('SAVE') }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>

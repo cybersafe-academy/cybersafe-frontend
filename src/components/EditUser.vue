@@ -3,7 +3,7 @@
     <div class="editUserDialog">
       <v-card>
         <v-card-title class="text-center">
-          <span> Edit user </span>
+          <span> {{ $t('EDIT_USER') }} </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -11,7 +11,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="name"
-                  label="User Name"
+                  :label="$t('USER_NAME')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -19,7 +19,7 @@
               <v-col cols="12" md="8">
                 <v-file-input
                   clearable
-                  label="Profile picture"
+                  :label="$t('PROFILE_PICTURE')"
                   prepend-inner-icon="mdi-image"
                   prepend-icon=""
                   variant="solo"
@@ -36,7 +36,7 @@
                 <v-text-field
                   :disabled="true"
                   v-model="email"
-                  label="User Email"
+                  :label="$t('USER_EMAIL')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -44,7 +44,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="role"
-                  label="Role"
+                  :label="$t('ROLE')"
                   variant="solo"
                   required
                   :items="['default', 'admin', 'master']"
@@ -53,7 +53,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="mbtiType"
-                  label="MBTI"
+                  :label="$t('MBTI')"
                   variant="solo"
                   required
                   :items="mbtiOptions"
@@ -62,7 +62,7 @@
               <v-col cols="12">
                 <v-select
                   v-model="selectedCompany"
-                  label="Company"
+                  :label="$t('COMPANY')"
                   variant="solo"
                   required
                   :items="companies"
@@ -73,7 +73,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="cpf"
-                  label="User CPF"
+                  :label="$t('USER_CPF')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -82,7 +82,7 @@
                 <v-text-field
                   type="date"
                   v-model="birthDate"
-                  label="User Birth Date"
+                  :label="$t('USER_BIRTH_DATE')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -92,9 +92,11 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
+          <v-btn class="closeDialogBtn" @click="closeDialog">
+            {{ $t('CLOSE') }}
+          </v-btn>
           <v-btn class="editUserBtn" :loading="isLoading" @click="editUser">
-            Save
+            {{ $t('SAVE') }}
           </v-btn>
         </v-card-actions>
       </v-card>

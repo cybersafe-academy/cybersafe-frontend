@@ -253,7 +253,7 @@ export default {
       )
 
       if (!categories.length) {
-        this.$toast.error('Please select at least one category')
+        this.$toast.error(this.$('SELECT_AT_LEAST_ONE_CATEGORY'))
         return
       }
 
@@ -271,7 +271,7 @@ export default {
           }
         )
 
-        this.$toast.success('Categories saved successfully')
+        this.$toast.success(this.$('CATEGORIES_SAVED_SUCCESSFULLY'))
 
         this.selectedPersonality = ''
       } catch (e: any) {

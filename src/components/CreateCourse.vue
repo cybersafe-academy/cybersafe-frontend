@@ -202,7 +202,7 @@ export default {
   },
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('REQUIRED_FIELD')
     },
 
     getInfo(language: string) {
@@ -261,13 +261,13 @@ export default {
           !this.courseForm.contentURL ||
           !this.courseForm.level
         ) {
-          this.$toast.error('Please fill all the fields')
+          this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
           return false
         }
 
         if (info.questions.length < 4) {
-          this.$toast.error('O questionário precisa ter no mínimo 4 perguntas')
+          this.$toast.error(this.$t('MINIMUM_4_QUESTIONS_REQUIRED'))
           return false
         }
       }
@@ -303,7 +303,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Course updated successfully')
+          this.$toast.success(this.$t('COURSE_UPDATED_SUCCESSFULLY'))
 
           this.$emit('editedCourse', data)
         } else {
@@ -313,7 +313,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Course created successfully')
+          this.$toast.success(this.$t('COURSE_CREATED_SUCCESSFULLY'))
 
           this.$emit('savedCourse', data)
         }
@@ -328,7 +328,7 @@ export default {
 
     async saveCategory() {
       if (!this.categoryName) {
-        this.$toast.error('Please fill all the fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return
       }
@@ -346,7 +346,7 @@ export default {
         this.categories.push(data)
         this.closeCategoryDialog()
 
-        this.$toast.success('Category created successfully')
+        this.$toast.success(this.$t('CATEGORY_CREATED_SUCCESSFULLY'))
       } catch (e: any) {
         alert(e)
 

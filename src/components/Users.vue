@@ -205,7 +205,7 @@ export default {
         }
         this.users = this.users.filter((user) => user.id !== id)
 
-        this.$toast.success('User deleted successfully')
+        this.$toast.success(this.$t('USER_DELETED_SUCCESSFULLY'))
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 

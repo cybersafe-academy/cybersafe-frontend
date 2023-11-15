@@ -4,10 +4,12 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-text"> Join our community! </span>
+        <span class="greeting-text">
+          {{ $t('JOIN_OUR_COMMUNITY') }}
+        </span>
 
         <span class="greeting-subtext">
-          Fill in the form below to finish your sign up
+          {{ $t('FILL_FORM_TO_SIGN_UP') }}
         </span>
       </div>
 
@@ -16,7 +18,7 @@
           v-model="name"
           clearable
           class="default-input"
-          label="Name"
+          :label="$t('NAME')"
           prepend-inner-icon="mdi-text"
           variant="solo"
           bg-color="#f5f7f9"
@@ -28,7 +30,7 @@
           v-model="cpf"
           clearable
           class="default-input"
-          label="CPF"
+          :label="$t('CPF')"
           prepend-inner-icon="mdi-card-account-details"
           variant="solo"
           bg-color="#f5f7f9"
@@ -42,7 +44,7 @@
         <v-file-input
           clearable
           class="default-input"
-          label="Profile picture"
+          :label="$t('PROFILE_PICTURE')"
           prepend-inner-icon="mdi-image"
           prepend-icon=""
           variant="solo"
@@ -56,7 +58,7 @@
         <v-text-field
           v-model="birthdayDate"
           clearable
-          label="Birth Date"
+          :label="$t('BIRTH_DATE')"
           prepend-inner-icon="mdi-calendar"
           placeholder="MM-DD-YYYY"
           variant="solo"
@@ -71,7 +73,7 @@
           clearable
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          label="Password"
+          :label="$t('PASSWORD')"
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
@@ -86,7 +88,7 @@
           clearable
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          label="Confirm password"
+          :label="$t('CONFIRM_PASSWORD')"
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
@@ -105,13 +107,17 @@
         rounded="lg"
         :loading="isLoading"
       >
-        Sign up
+        {{ $t('SIGN_UP') }}
       </v-btn>
 
       <div>
-        <span> Already have an account? </span>
+        <span>
+          {{ $t('ALREADY_HAVE_ACCOUNT') }}
+        </span>
 
-        <span @click="switchLogin" class="link"> Login </span>
+        <span @click="switchLogin" class="link">
+          {{ $t('LOGIN') }}
+        </span>
       </div>
     </div>
   </div>
@@ -156,18 +162,18 @@ export default {
 
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('FIELD_REQUIRED')
     },
 
     passwordMin(v: any) {
-      return v.length >= 8 || 'Min 8 characters'
+      return v.length >= 8 || this.$t('MIN_8_CHARACTERS')
     },
 
     validateCPF(v: any) {
       const cpf = v.replace(/\D/g, '')
 
       if (cpf.length !== 11) {
-        this.cpfErrors.push('Invalid CPF')
+        this.cpfErrors.push(this.$t('INVALID_CPF'))
 
         this.hasError = true
       }
@@ -175,7 +181,7 @@ export default {
 
     verifyPasswords() {
       if (this.password !== this.passwordConfirmation) {
-        this.passwordErrors.push('Passwords do not match')
+        this.passwordErrors.push(this.$t('PASSWORDS_DO_NOT_MATCH'))
 
         this.hasError = true
       }
@@ -185,7 +191,7 @@ export default {
       const date = dayjs(v)
 
       if (date.isAfter(dayjs())) {
-        this.dateErrors.push('Invalid date')
+        this.dateErrors.push(this.$t('INVALID_DATE'))
 
         this.hasError = true
       }
@@ -200,7 +206,7 @@ export default {
         !this.passwordConfirmation ||
         !this.profilePicture
       ) {
-        this.$toast.error('Please fill in all fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return false
       }
@@ -212,7 +218,7 @@ export default {
       const { t } = this.$route.query
 
       if (t === undefined) {
-        this.$toast.error('Invalid token', {
+        this.$toast.error(this.$t('INVALID_TOKEN'), {
           duration: 5000
         })
 
@@ -283,7 +289,7 @@ export default {
 
         this.isLoading = false
 
-        this.$toast.success('Account created successfully!')
+        this.$toast.success(this.$t('ACCOUNT_CREATED_SUCCESSFULLY'))
 
         this.switchLogin()
       } catch (e: any) {
