@@ -9,7 +9,7 @@
         <div style="margin-bottom: 20px">
           <course-test-item
             :showTrashIcon="hasAtLeastFourQuestions"
-            :question="question"
+            :question="{ ...question, id: i }"
             @remove-item="removeCourseContent(i)"
           ></course-test-item>
         </div>

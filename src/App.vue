@@ -44,6 +44,7 @@ body {
   --background: #282b30;
   --inputs: #424549;
   --general: #35393f;
+  --alternate-background: #111111;
 }
 
 :root {
@@ -51,14 +52,14 @@ body {
   --divider: white;
   --background: #ecf0f1;
   --inputs: white;
-  --general: white;
+  --general: rgb(211, 211, 211);
+  --alternate-background: rgb(148, 146, 146);
 }
 
 .tableContent {
   width: 100vw;
   height: 100vh;
   padding: 30px 70px 30px 70px !important;
-
   background-color: var(--background);
   margin-left: 56px !important;
 }
@@ -70,7 +71,7 @@ body {
 .v-col,
 .v-row,
 .v-tab {
-  background-color: var(--background) !important;
+  background-color: var(--alternate-background) !important;
   color: var(--text) !important;
 }
 
@@ -96,6 +97,8 @@ textarea {
 
 p {
   color: var(--text);
+  overflow-wrap: break-word !important;
+  max-width: 300px !important;
 }
 
 @font-face {
@@ -103,9 +106,5 @@ p {
   src: url(./assets/fonts/Inter-Regular.ttf) format('truetype');
   font-weight: normal;
   font-style: normal;
-}
-
-* {
-  font-family: 'Inter' !important;
 }
 </style>

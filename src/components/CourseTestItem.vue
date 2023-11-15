@@ -1,14 +1,11 @@
 <template>
   <div style="background-color: rgb(219, 219, 219); border-radius: 3px">
-    <p class="text-h6" style="background-color: transparent; color: black">
-      Question 1
-    </p>
     <div style="padding: 10px">
       <v-row>
         <v-col cols="12">
           <v-text-field
             v-model="question.wording"
-            :label="$t('QUESTION')"
+            :label="$t('QUESTION', { number: question.id + 1 })"
             type="string"
             required
             variant="solo"

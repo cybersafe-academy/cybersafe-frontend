@@ -50,7 +50,7 @@
   "ADD": "Add",
   "CATEGORIES": "Categories",
   "CATEGORY": "Category",
-  "QUESTION": "Question",
+  "QUESTION": "Question {number}",
   "ALTERNATIVE": "Alternative {number}",
   "CORRECT_ANSWER": "Correct Answer",
   "NO_CATEGORIES_SELECTED": "No Categories Selected",

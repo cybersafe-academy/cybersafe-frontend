@@ -17,9 +17,15 @@
         </thead>
         <tbody>
           <tr v-for="item in pageCompanies[currentPage]" :key="item.id">
-            <td>{{ item.tradeName }}</td>
-            <td>{{ item.cnpj }}</td>
-            <td class="text-left">{{ item.email }}</td>
+            <td>
+              <p>{{ item.tradeName }}</p>
+            </td>
+            <td>
+              <p>{{ item.cnpj }}</p>
+            </td>
+            <td class="text-left">
+              <p>{{ item.email }}</p>
+            </td>
             <td class="actionsButtons">
               <v-btn text @click="openEditDialog(item.id)" class="editBtn">
                 <v-icon>mdi-pencil</v-icon>
@@ -79,6 +85,11 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
+      this.root.style.setProperty('--name-string', `'${this.$t('TRADE_NAME')}'`)
+      this.root.style.setProperty('--cnpj-string', `'${this.$t('CNPJ')}'`)
+      this.root.style.setProperty('--email-string', `'${this.$t('EMAIL')}'`)
+      this.root.style.setProperty('--actions-string', `'${this.$t('ACTIONS')}'`)
+
       if (this.$refs.itemTable) {
         this.numberOfItemsToFetch = Math.floor(
           (this.$refs.itemTable as any).$el.offsetHeight / 60
@@ -98,7 +109,8 @@ export default {
       totalPages: 1,
       currentPage: 1,
       numberOfnewElements: 0,
-      numberOfItemsToFetch: 0
+      numberOfItemsToFetch: 0,
+      root: document.documentElement
     }
   },
 
@@ -241,6 +253,19 @@ export default {
   background-color: red;
 }
 
+td {
+  text-align: center;
+}
+
+td > p {
+  width: 200px;
+  overflow-wrap: break-word;
+}
+
+.text-left {
+  text-align: center !important;
+}
+
 @media only screen and (max-width: 900px) {
   .tableContent {
     overflow-y: scroll;
@@ -298,7 +323,7 @@ export default {
   }
 
   tr:nth-of-type(odd) td {
-    background-color: #1e2124 !important;
+    background-color: var(--alternate-background) !important;
   }
 
   td:before {
@@ -306,17 +331,20 @@ export default {
     text-align: start;
     width: 100px;
   }
-
   td:nth-of-type(1):before {
-    content: 'Course Title';
+    content: var(--name-string);
   }
 
   td:nth-of-type(2):before {
-    content: 'Level';
+    content: var(--cnpj-string);
   }
 
   td:nth-of-type(3):before {
-    content: 'Actions';
+    content: var(--email-string);
+  }
+
+  td:nth-of-type(4):before {
+    content: var(--actions-string);
   }
 }
 </style>

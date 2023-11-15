@@ -49,7 +49,12 @@
                     :src="course.thumbnailURL"
                     alt=""
                   />
-                  <p class="text-h6">{{ course.title }}</p>
+                  <p
+                    class="text-h6"
+                    style="max-width: 300px; overflow-wrap: break-word"
+                  >
+                    {{ course.title }}
+                  </p>
                   <span class="d-flex">
                     <b class="mr-1" style="color: #b4761a">{{
                       course.avgRating.toFixed(1)

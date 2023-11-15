@@ -18,7 +18,7 @@
         <v-tab value="2">
           {{ $t('REVIEWS') }}
         </v-tab>
-        <v-tab value="3">
+        <v-tab v-if="enrolled" value="3">
           {{ $t('PRACTICAL_TEST') }}
         </v-tab>
       </v-tabs>
@@ -56,11 +56,11 @@
         </v-window-item>
         <v-window-item value="2" :eager="true">
           <div class="d-flex flex-column justify-start">
-            <p v-if="!course.reviewed" class="text-h4 mt-6 mb-6">
+            <p v-if="enrolled && !course.reviewed" class="text-h4 mt-6 mb-6">
               Course review
             </p>
             <p v-else class="text-h4 mt-6 mb-6">All course reviews</p>
-            <div class="w-100 mb-6" v-if="!course.reviewed">
+            <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
               <textarea
                 v-model="newRatingComment"
                 class="w-100 mb-6 pa-2"
@@ -93,7 +93,7 @@
             </div>
           </div>
         </v-window-item>
-        <v-window-item value="3" :eager="true" class="pa-4">
+        <v-window-item v-if="enrolled" value="3" :eager="true" class="pa-4">
           <template v-if="testResults && testResults.status !== ''">
             <div
               :class="{

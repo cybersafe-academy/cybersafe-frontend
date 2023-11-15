@@ -2,67 +2,94 @@
   <div class="tableContent">
     <v-card>
       <v-card-text>
-        <p class="text-h5 text-center mb-12">{{ $t('USER_PREFERENCES') }}</p>
+        <p class="text-h5 text-center mb-12" style="max-width: none !important">
+          {{ $t('USER_PREFERENCES') }}
+        </p>
         <div>
-          <div class="mb-6">
-            <img
-              class="profile-picture mb-3"
-              :src="userData.profilePictureURL"
-              alt="Profile picture"
-            />
-            <p class="text-h5 mb-2">{{ $t('PERSONAL_INFORMATION') }}</p>
-            <p class="text-h6 mt-4">{{ userData?.name }}</p>
-            <p class="text-h6 mt-4">{{ userData?.email }}</p>
+          <div class="d-flex justify-center align-center">
+            <div class="d-flex flex-column align-center">
+              <img
+                class="profile-picture mb-12"
+                :src="userData.profilePictureURL"
+                alt="Profile picture"
+              />
 
-            <p class="text-h5 mt-6 mb-2">{{ $t('COMPANY_INFORMATION') }}</p>
-            <p class="text-h6 mt-4">{{ userData.company?.legalName }}</p>
-            <p class="text-h6 mt-4">{{ userData.company?.email }}</p>
-          </div>
+              <div class="mt-1 mb-12 d-flex align-start">
+                <div style="margin-right: 100px">
+                  <p
+                    class="text-h5 mb-2"
+                    style="color: grey; font-weight: bold"
+                  >
+                    {{ $t('PERSONAL_INFORMATION') }}
+                  </p>
+                  <p class="text-h6 mt-4">
+                    {{ userData?.name }}
+                  </p>
+                  <p class="text-h6 mt-4">{{ userData?.email }}</p>
+                </div>
 
-          <div class="mb-6">
-            <p class="text-h6 mb-1">{{ $t('DARK_MODE') }}</p>
-            <v-switch
-              color="primary"
-              v-model="lightMode"
-              hide-details
-              inset
-              @click="toggleDarkMode"
-            />
-          </div>
-
-          <div>
-            <p class="text-h6 mb-2">{{ $t('LANGUAGE') }}</p>
-            <v-select
-              v-model="selectedLanguage"
-              :items="[
-                { text: 'Português', value: 'pt' },
-                { text: 'English', value: 'en' }
-              ]"
-              item-title="text"
-              item-value="value"
-            />
-          </div>
-
-          <div>
-            <p class="text-h6 mb-2">{{ $t('MBTI_TYPE') }}</p>
-            <v-select
-              v-model="selectedMbti"
-              :items="mbtiTypes"
-              :label="$t('SELECT_MBTI_TYPE')"
-            ></v-select>
-            <div v-if="userData.mbtiType">
-              {{ $t('MBTI_TYPE_DESCRIPTION') }}: {{ userData.mbtiType }}
+                <div>
+                  <p class="text-h5" style="color: grey; font-weight: bold">
+                    {{ $t('COMPANY_INFORMATION') }}
+                  </p>
+                  <p class="text-h6 mt-4">{{ userData.company?.legalName }}</p>
+                  <p class="text-h6 mt-4">{{ userData.company?.email }}</p>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <v-divider></v-divider>
+
+          <div class="d-flex justify-center pt-12 pb-6">
+            <div style="margin-right: 100px">
+              <p class="text-h6 mb-1">{{ $t('DARK_MODE') }}</p>
+              <v-switch
+                color="primary"
+                v-model="lightMode"
+                hide-details
+                inset
+                @click="toggleDarkMode"
+              />
+            </div>
+
+            <div style="margin-right: 100px">
+              <p class="text-h6 mb-2">{{ $t('LANGUAGE') }}</p>
+              <v-select
+                class="input"
+                v-model="selectedLanguage"
+                :items="[
+                  { text: 'Português', value: 'pt' },
+                  { text: 'English', value: 'en' }
+                ]"
+                item-title="text"
+                item-value="value"
+              />
+            </div>
+
             <div>
-              {{ $t('MBTI_TEST') }}
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLScsi7ruAeJkqIAa40WPx0XlzWDRccPhSSX8MnboYIt7LajxFg/viewform"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                here
-              </a>
+              <p class="text-h6 mb-2">{{ $t('MBTI_TYPE') }}</p>
+              <v-select
+                class="mb-3 input"
+                v-model="selectedMbti"
+                :items="mbtiTypes"
+                :label="$t('SELECT_MBTI_TYPE')"
+              ></v-select>
             </div>
+          </div>
+
+          <div v-if="userData.mbtiType">
+            {{ $t('MBTI_TYPE_DESCRIPTION') }}: {{ userData.mbtiType }}
+          </div>
+          <div>
+            {{ $t('MBTI_TEST') }}
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLScsi7ruAeJkqIAa40WPx0XlzWDRccPhSSX8MnboYIt7LajxFg/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ $t('HERE') }}
+            </a>
           </div>
         </div>
       </v-card-text>
@@ -177,10 +204,19 @@ export default {
   height: 150px;
   border-radius: 50%;
   background-attachment: local;
+  border: 3px solid var(--text);
 }
 
 .tableContent {
   overflow-y: scroll;
   display: block;
+}
+
+.input {
+  width: 200px;
+}
+
+p {
+  font-family: 'Inter';
 }
 </style>
