@@ -6,7 +6,6 @@
           <iframe
             class="course-video"
             :src="course.contentURL"
-            title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
@@ -51,8 +50,12 @@
                   />
                 </span>
                 <v-btn class="mb-3" @click="enroll" style="width: 300px">
-                  <template v-if="enrolled">Desinscrever-se</template>
-                  <template v-else>Se inscrever no curso</template>
+                  <template v-if="enrolled">
+                    {{ $t('WITHDRAW_FROM_COURSE') }}
+                  </template>
+                  <template v-else>
+                    {{ $t('SE_INSCREVER_NO_CURSO') }}
+                  </template>
                 </v-btn>
               </v-row>
             </v-window-item>
@@ -62,9 +65,11 @@
                   v-if="enrolled && !course.reviewed"
                   class="text-h4 mt-6 mb-6"
                 >
-                  Course review
+                  {{ $t('COURSE_REVIEW') }}
                 </p>
-                <p v-else class="text-h4 mt-2 mb-6">All course reviews</p>
+                <p v-else class="text-h4 mt-2 mb-6">
+                  {{ $t('ALL_COURSE_REVIEWS') }}
+                </p>
                 <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
                   <textarea
                     v-model="newRatingComment"
@@ -94,7 +99,7 @@
                   </div>
                 </div>
                 <div v-else>
-                  <p>No Reviews yet</p>
+                  <p>{{ $t('NO_REVIEWS_YET') }}</p>
                 </div>
               </div>
             </v-window-item>
@@ -131,10 +136,10 @@
                       v-if="testResults.status !== 'failed'"
                       class="test-info text-h5"
                     >
-                      Teste concluído com sucesso
+                      {{ $t('TEST_COMPLETED_SUCCESSFULLY') }}
                     </p>
                     <p v-else class="test-info text-h5">
-                      Pontuação não suficiente!
+                      {{ $t('NOT_ENOUGH_SCORE') }}
                     </p>
                   </div>
                 </div>
