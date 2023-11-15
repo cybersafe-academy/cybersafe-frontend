@@ -20,6 +20,10 @@ export default {
 </script>
 
 <style>
+* {
+  scrollbar-color: var(--alternate-background) var(--divider);
+}
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
@@ -40,20 +44,20 @@ body {
 
 [data-theme='dark'] {
   --text: white;
-  --divider: #1e2124;
-  --background: #282b30;
-  --inputs: #424549;
+  --divider: #393646;
+  --background: #4f4557;
+  --inputs: #4f4557;
   --general: #35393f;
-  --alternate-background: #111111;
+  --alternate-background: #6d5d6e;
 }
 
 :root {
   --text: black;
-  --divider: white;
-  --background: #ecf0f1;
+  --divider: #e8ecd5;
+  --background: #f7fbfc;
   --inputs: white;
   --general: rgb(211, 211, 211);
-  --alternate-background: rgb(148, 146, 146);
+  --alternate-background: rgb(218, 253, 220);
 }
 
 .tableContent {
@@ -68,13 +72,6 @@ body {
 .v-card-text,
 .v-card-title,
 .v-card-actions,
-.v-col,
-.v-row,
-.v-tab {
-  background-color: var(--alternate-background) !important;
-  color: var(--text) !important;
-}
-
 .v-table,
 table,
 tr,
@@ -82,7 +79,11 @@ td,
 th,
 thead,
 ul {
-  background-color: var(--general) !important;
+  background-color: var(--divider) !important;
+  color: var(--text) !important;
+}
+
+.v-tab {
   color: var(--text) !important;
 }
 

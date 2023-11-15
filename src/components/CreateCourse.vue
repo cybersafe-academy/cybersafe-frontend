@@ -384,12 +384,12 @@ export default {
   overflow-y: auto;
 }
 .closeDialogBtn {
-  background-color: #f44336 !important;
+  background-color: #801a1a !important;
   color: #fff !important;
 }
 
 .saveCourseBtn {
-  background-color: #4caf50 !important;
+  background-color: #285430 !important;
   color: #fff !important;
 }
 </style>

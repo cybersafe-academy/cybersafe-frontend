@@ -27,12 +27,18 @@
               <p>{{ item.email }}</p>
             </td>
             <td class="actionsButtons">
-              <v-btn text @click="openEditDialog(item.id)" class="editBtn">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn text @click="openDeleteDialog(item.id)" class="deleteBtn">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+              <div class="d-flex justify-center" style="margin: 0 auto 0 auto">
+                <v-btn text @click="openEditDialog(item.id)" class="editBtn">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  text
+                  @click="openDeleteDialog(item.id)"
+                  class="deleteBtn"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -255,11 +261,13 @@ export default {
 
 td {
   text-align: center;
+  vertical-align: middle;
 }
 
 td > p {
-  width: 200px;
+  width: 300px;
   overflow-wrap: break-word;
+  margin: auto;
 }
 
 .text-left {
@@ -267,6 +275,10 @@ td > p {
 }
 
 @media only screen and (max-width: 900px) {
+  p {
+    max-width: 60px !important;
+  }
+
   .tableContent {
     overflow-y: scroll;
     display: block;

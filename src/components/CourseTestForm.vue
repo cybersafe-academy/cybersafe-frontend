@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="mb-6">{{ $t('QUESTIONNAIRE') }}</h2>
-    <div style="padding: 3px">
+    <div>
       <template v-if="questions.length === 0">
         <h2>{{ $t('NO_QUESTIONS_REGISTERED_YET') }}</h2>
       </template>
@@ -12,12 +12,13 @@
             :question="{ ...question, id: i }"
             @remove-item="removeCourseContent(i)"
           ></course-test-item>
+          <v-divider class="mt-4" thickness="2px"></v-divider>
         </div>
       </template>
       <div class="d-flex flex-end">
         <v-icon
           style="
-            background-color: green;
+            background-color: #285430;
             color: white;
             width: 30px;
             height: 30px;

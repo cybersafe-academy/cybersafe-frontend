@@ -256,6 +256,11 @@ th {
   text-align: center !important;
 }
 
+p {
+  width: 200px;
+  margin: auto;
+}
+
 .tableToolbar {
   display: flex;
   align-items: center;
@@ -342,9 +347,8 @@ th {
     position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: start;
     align-items: center;
-    padding: 30px 20px 30px 20px !important;
+    padding: 30px 10px 30px 10px !important;
     overflow-y: hidden;
   }
 

@@ -295,8 +295,9 @@ td {
 }
 
 td > p {
-  width: 100px;
+  width: 200px;
   overflow-wrap: break-word;
+  margin: auto;
 }
 
 .text-left {
