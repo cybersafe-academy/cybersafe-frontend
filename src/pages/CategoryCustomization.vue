@@ -21,7 +21,7 @@
           />
 
           <v-select
-            v-if="selectedCompany.id"
+            v-if="selectedCompany.id || companyID"
             class="input"
             :label="$t('PERSONALITY')"
             v-model="selectedPersonality"

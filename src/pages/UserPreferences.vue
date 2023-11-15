@@ -10,7 +10,11 @@
             <div class="d-flex flex-column align-center">
               <img
                 class="profile-picture mb-12"
-                :src="userData.profilePictureURL"
+                :src="
+                  userData.profilePictureURL
+                    ? userData.profilePictureURL
+                    : '@/assets/images/blank-profile.png'
+                "
                 alt="Profile picture"
               />
 

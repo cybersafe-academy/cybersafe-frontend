@@ -5,7 +5,7 @@
         <v-col class="pa-0 mb-4" cols="12">
           <v-text-field
             v-model="question.wording"
-            :label="$t('QUESTION', { number: question.id + 1 })"
+            :label="$t('QUESTION', { number: id })"
             type="string"
             required
             variant="solo"
@@ -74,6 +74,10 @@ export default {
   props: {
     question: {
       type: Object,
+      required: true
+    },
+    id: {
+      type: Number,
       required: true
     },
     showTrashIcon: {

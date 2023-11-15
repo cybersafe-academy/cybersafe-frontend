@@ -1,161 +1,180 @@
 <template>
   <div v-if="course" class="tableContent" ref="course">
-    <v-row v-if="currentTab === '1'">
-      <iframe
-        class="course-video"
-        :src="course.contentURL"
-        title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    </v-row>
-    <v-row style="max-height: 50px">
-      <v-tabs v-model="currentTab">
-        <v-tab value="1">
-          {{ $t('COURSE') }}
-        </v-tab>
-        <v-tab value="2">
-          {{ $t('REVIEWS') }}
-        </v-tab>
-        <v-tab v-if="enrolled" value="3">
-          {{ $t('PRACTICAL_TEST') }}
-        </v-tab>
-      </v-tabs>
-    </v-row>
-    <v-row class="mt-6">
-      <v-window class="w-100 pa-4" v-model="currentTab">
-        <v-window-item value="1" :eager="true">
-          <v-row>
-            <p class="text-h4">{{ course.title }}</p>
-          </v-row>
-          <v-row>
-            <p class="mt-4 text-h7">{{ course.description }}</p>
-          </v-row>
-          <v-row class="d-flex flex-column">
-            <p class="mt-4 text-h6">{{ $t('COURSE_EVALUATION') }}</p>
-            <span class="mt-2 d-flex">
-              <b class="mr-1" style="color: #b4761a">{{
-                course.avgRating.toFixed(1)
-              }}</b>
-              <v-rating
-                class="rating d-flex align-center mb-6"
-                color="orange-lighten-1"
-                half-increments
-                v-model="course.avgRating"
-                readonly
-                density="compact"
-                size="small"
-              />
-            </span>
-            <v-btn @click="enroll" :disabled="enrolled" style="width: 300px">
-              <template v-if="enrolled">Inscrito</template>
-              <template v-else>Se inscrever no curso</template>
-            </v-btn>
-          </v-row>
-        </v-window-item>
-        <v-window-item value="2" :eager="true">
-          <div class="d-flex flex-column justify-start">
-            <p v-if="enrolled && !course.reviewed" class="text-h4 mt-6 mb-6">
-              Course review
-            </p>
-            <p v-else class="text-h4 mt-6 mb-6">All course reviews</p>
-            <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
-              <textarea
-                v-model="newRatingComment"
-                class="w-100 mb-6 pa-2"
-                style="border: 1px solid grey"
-              ></textarea>
-              <div class="d-flex align-center">
-                <v-rating
-                  class="rating d-flex align-center mt-2 mr-6"
-                  style="margin-left: -6px"
-                  color="orange-lighten-1"
-                  v-model="newRating"
-                  density="compact"
-                />
-                <v-btn
-                  @click="sendReview"
-                  :disabled="!finishedRating"
-                  :class="finishedRating ? 'bg-green' : 'bg-grey'"
-                  >{{ $t('SEND') }}</v-btn
-                >
-              </div>
-              <v-divider class="mt-4 mb-2" />
-            </div>
-            <div v-if="course.reviews">
-              <div v-for="review in course.reviews">
-                <UserReview :review="review" />
-              </div>
-            </div>
-            <div v-else>
-              <p>No Reviews yet</p>
-            </div>
-          </div>
-        </v-window-item>
-        <v-window-item v-if="enrolled" value="3" :eager="true" class="pa-4">
-          <template v-if="testResults && testResults.status !== ''">
-            <div
-              :class="{
-                'test-results': true,
-                'test-success': testResults.status === 'approved',
-                'test-fail': testResults.status !== 'approved'
-              }"
-            >
-              <div class="d-flex flex-column align-center">
-                <v-progress-circular
-                  class="mt-6 mb-6"
-                  v-model="testResults.hitsPercentage"
-                  size="160"
-                  width="10"
-                  color="#558b2f"
-                  ><p>{{ testResults.hitsPercentage }}%</p></v-progress-circular
-                >
+    <v-card>
+      <v-card-text>
+        <v-row v-if="currentTab === '1'">
+          <iframe
+            class="course-video"
+            :src="course.contentURL"
+            title="BNT 418 Wspinaczka na Montparnasse w Paryżu 2"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </v-row>
+        <v-row style="max-height: 50px">
+          <v-tabs v-model="currentTab">
+            <v-tab value="1">
+              {{ $t('COURSE') }}
+            </v-tab>
+            <v-tab value="2">
+              {{ $t('REVIEWS') }}
+            </v-tab>
+            <v-tab v-if="enrolled" value="3">
+              {{ $t('PRACTICAL_TEST') }}
+            </v-tab>
+          </v-tabs>
+        </v-row>
+        <v-row class="mt-6">
+          <v-window class="w-100 pa-4" v-model="currentTab">
+            <v-window-item value="1" :eager="true">
+              <v-row>
+                <p class="text-h4">{{ course.title }}</p>
+              </v-row>
+              <v-row>
+                <p class="mt-4 text-h7">{{ course.description }}</p>
+              </v-row>
+              <v-row class="d-flex flex-column">
+                <p class="mt-4 text-h6">{{ $t('COURSE_EVALUATION') }}</p>
+                <span class="mt-2 d-flex">
+                  <b class="mr-1" style="color: #b4761a">{{
+                    course.avgRating.toFixed(1)
+                  }}</b>
+                  <v-rating
+                    class="rating d-flex align-center mb-6"
+                    color="orange-lighten-1"
+                    half-increments
+                    v-model="course.avgRating"
+                    readonly
+                    density="compact"
+                    size="small"
+                  />
+                </span>
+                <v-btn @click="enroll" style="width: 300px">
+                  <template v-if="enrolled">Desinscrever-se</template>
+                  <template v-else>Se inscrever no curso</template>
+                </v-btn>
+              </v-row>
+            </v-window-item>
+            <v-window-item value="2" :eager="true">
+              <div class="d-flex flex-column justify-start">
                 <p
-                  v-if="testResults.status !== 'failed'"
-                  class="test-info text-h5"
+                  v-if="enrolled && !course.reviewed"
+                  class="text-h4 mt-6 mb-6"
                 >
-                  Teste concluído com sucesso
+                  Course review
                 </p>
-                <p v-else class="test-info text-h5">
-                  Pontuação não suficiente!
-                </p>
-              </div>
-            </div>
-          </template>
-          <template v-else-if="course.questions">
-            <div v-for="(question, i) in course.questions">
-              <div class="question">
-                <p class="text-h6">{{ i }}. {{ question.wording }}</p>
-              </div>
-              <div class="alternatives d-flex flex-column">
-                <div
-                  :class="
-                    answer.selected ? 'alternative selected' : 'alternative'
-                  "
-                  v-for="(answer, j) of question.answers"
-                  @click="setAlternative(question.answers, answer)"
-                >
-                  <p class="text-h6">{{ j + 1 }}. {{ answer.text }}</p>
+                <p v-else class="text-h4 mt-6 mb-6">All course reviews</p>
+                <div v-if="enrolled && !course.reviewed" class="w-100 mb-6">
+                  <textarea
+                    v-model="newRatingComment"
+                    class="w-100 mb-6 pa-2"
+                    style="border: 1px solid grey"
+                  ></textarea>
+                  <div class="d-flex align-center">
+                    <v-rating
+                      class="rating d-flex align-center mt-2 mr-6"
+                      style="margin-left: -6px"
+                      color="orange-lighten-1"
+                      v-model="newRating"
+                      density="compact"
+                    />
+                    <v-btn
+                      @click="sendReview"
+                      :disabled="!finishedRating"
+                      :class="finishedRating ? 'bg-green' : 'bg-grey'"
+                      >{{ $t('SEND') }}</v-btn
+                    >
+                  </div>
+                  <v-divider class="mt-4 mb-2" />
+                </div>
+                <div v-if="course.reviews">
+                  <div v-for="review in course.reviews">
+                    <UserReview :review="review" />
+                  </div>
+                </div>
+                <div v-else>
+                  <p>No Reviews yet</p>
                 </div>
               </div>
-            </div>
-            <div class="mt-4 d-flex justify-end">
-              <v-btn class="bg-red mr-4" @click="resetAlternatives">{{
-                $t('CLEAR_ANSWERS')
-              }}</v-btn>
-              <v-btn
-                :disabled="!finishedTest"
-                :class="finishedTest ? 'bg-green' : 'bg-grey'"
-                @click="sendAnswers"
+            </v-window-item>
+            <v-window-item v-if="enrolled" value="3" :eager="true">
+              <div
+                c
+                lass="pa-4 d-flex justify-center"
+                v-if="
+                  testResults &&
+                  testResults.status !== '' &&
+                  testResults.status !== 'in_progress'
+                "
               >
-                {{ $t('SEND') }}
-              </v-btn>
-            </div>
-          </template>
-        </v-window-item>
-      </v-window>
-    </v-row>
+                <div
+                  :class="{
+                    'test-results': true,
+                    'test-success': testResults.status === 'approved',
+                    'test-fail': testResults.status !== 'approved'
+                  }"
+                >
+                  <div class="d-flex flex-column align-center">
+                    <v-progress-circular
+                      class="mt-6 mb-6"
+                      v-model="testResults.hitsPercentage"
+                      size="160"
+                      width="13"
+                      color="#558b2f"
+                      ><p>
+                        {{ testResults.hitsPercentage }}%
+                      </p></v-progress-circular
+                    >
+                    <p
+                      style="max-width: none !important"
+                      v-if="testResults.status !== 'failed'"
+                      class="test-info text-h5"
+                    >
+                      Teste concluído com sucesso
+                    </p>
+                    <p v-else class="test-info text-h5">
+                      Pontuação não suficiente!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <template v-else-if="course.questions">
+                <div v-for="(question, i) in course.questions">
+                  <div class="question">
+                    <p class="text-h6">{{ i }}. {{ question.wording }}</p>
+                  </div>
+                  <div class="alternatives d-flex flex-column">
+                    <div
+                      :class="
+                        answer.selected ? 'alternative selected' : 'alternative'
+                      "
+                      v-for="(answer, j) of question.answers"
+                      @click="setAlternative(question.answers, answer)"
+                    >
+                      <p class="text-h6">{{ j + 1 }}. {{ answer.text }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 d-flex justify-end">
+                  <v-btn class="bg-red mr-4" @click="resetAlternatives">{{
+                    $t('CLEAR_ANSWERS')
+                  }}</v-btn>
+                  <v-btn
+                    :disabled="!finishedTest"
+                    :class="finishedTest ? 'bg-green' : 'bg-grey'"
+                    @click="sendAnswers"
+                  >
+                    {{ $t('SEND') }}
+                  </v-btn>
+                </div>
+              </template>
+            </v-window-item>
+          </v-window>
+        </v-row>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -265,8 +284,15 @@ export default {
       this.testResults = result
     },
     async enroll() {
-      await this.$axios.post(`/courses/${this.courseId}/enroll`)
-      this.enrolled = true
+      if (!this.enrolled) {
+        await this.$axios.post(`/courses/${this.courseId}/enroll`)
+        this.enrolled = true
+      } else {
+        await this.$axios.post(`/courses/${this.courseId}/withdraw`)
+        this.enrolled = false
+        this.testResults = undefined
+        this.resetAlternatives()
+      }
     },
     scroll() {
       setTimeout(() => {
@@ -282,6 +308,7 @@ export default {
 .tableContent {
   width: 100%;
   overflow-y: scroll;
+  padding: 20px 60px 20px 60px !important;
 }
 .course-video {
   width: 100%;
@@ -293,14 +320,14 @@ export default {
   align-items: center;
 }
 .question {
-  background-color: white;
+  background-color: #6d5d6e;
   border-start-start-radius: 3px;
   border-start-end-radius: 3px;
   padding: 5px;
 }
 
 .question > p {
-  color: black;
+  color: #f4eee0;
 }
 
 .alternative {
@@ -310,19 +337,20 @@ export default {
 }
 
 .alternative:hover {
-  background-color: rgb(73, 73, 73);
+  background-color: #483f50;
 }
 
 .selected {
-  background-color: rgb(65, 65, 65);
+  background-color: #4f4557;
 }
 
 .test-results {
-  width: 100%;
+  width: 600px;
   height: 300px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .test-success {

@@ -9,7 +9,8 @@
         <div style="margin-bottom: 20px">
           <course-test-item
             :showTrashIcon="hasAtLeastFourQuestions"
-            :question="{ ...question, id: i }"
+            :question="question"
+            :id="i + 1"
             @remove-item="removeCourseContent(i)"
           ></course-test-item>
           <v-divider class="mt-4" thickness="2px"></v-divider>

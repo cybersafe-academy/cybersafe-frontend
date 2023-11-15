@@ -15,12 +15,16 @@
       @update:rail="teste"
       disable-resize-watcher
     >
-      <v-list>
+      <v-list class="pa-0">
         <v-list-item
-          :prepend-avatar="userProfilePicture"
+          :prepend-avatar="
+            userProfilePicture
+              ? userProfilePicture
+              : '@/assets/images/blank-profile.png'
+          "
           :title="userName"
           :subtitle="userEmail"
-          class="pointer"
+          class="pointer py-3"
           @click="openPreferences"
         />
         <v-divider />
@@ -68,6 +72,7 @@
         />
 
         <v-list-item
+          v-if="role !== 'master'"
           prepend-icon="mdi-list-box"
           :title="$t('ANALYTICS')"
           value="analytics"
@@ -179,6 +184,10 @@ export default {
   z-index: 100;
   background-color: var(--background);
   opacity: 70%;
+}
+
+.v-list-item-subtitle {
+  padding: 3px 0 3px 0;
 }
 
 .hamburguer {
