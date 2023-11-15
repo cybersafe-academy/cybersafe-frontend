@@ -5,7 +5,7 @@
     <div class="section right-section">
       <div class="greeting-container">
         <span class="greeting-subtext">
-          Fill your email to receive an recovery link
+          {{ $t('FILL_EMAIL_FOR_RECOVERY_LINK') }}
         </span>
       </div>
 
@@ -14,7 +14,7 @@
           v-model="email"
           clearable
           class="login-input"
-          label="Email"
+          :label="$t('EMAIL')"
           prepend-inner-icon="mdi-email"
           variant="solo"
           bg-color="#f5f7f9"
@@ -32,13 +32,15 @@
         rounded="lg"
         :loading="isLoading"
       >
-        Send email
+        {{ $t('SEND_EMAIL') }}
       </v-btn>
 
       <div class="signup-container">
-        <span> Already have an account? </span>
+        <span class="mr-2"> {{ $t('ALREADY_HAVE_ACCOUNT') }} </span>
 
-        <span @click="switchLogin" class="link"> Login </span>
+        <span @click="switchLogin" class="link">
+          {{ $t('LOGIN') }}
+        </span>
       </div>
     </div>
   </div>
@@ -66,14 +68,14 @@ export default {
 
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('FIELD_REQUIRED')
     },
 
     validateEmail(v: any) {
       const emailRegex = /\S+@\S+\.\S+/
 
       if (!emailRegex.test(v)) {
-        this.emailErrors = 'Invalid email'
+        this.emailErrors = this.$t('INVALID_EMAIL')
 
         return false
       }
@@ -83,7 +85,7 @@ export default {
 
     verifyEmptyFields(): boolean {
       if (!this.email) {
-        this.$toast.error('Please fill in the email field')
+        this.$toast.error(this.$t('FILL_EMAIL_FIELD'))
 
         return false
       }
@@ -117,12 +119,9 @@ export default {
 
         this.isLoading = false
 
-        this.$toast.success(
-          'If the email is valid, you will receive a link to recover your password',
-          {
-            duration: 5000
-          }
-        )
+        this.$toast.success(this.$t('VALID_EMAIL_RECEIVE_RECOVERY_LINK'), {
+          duration: 5000
+        })
 
         this.$router.push('/login')
       } catch (e: any) {
@@ -130,7 +129,7 @@ export default {
 
         this.isLoading = false
 
-        this.$toast.error('Unexpected error, please try again later')
+        this.$toast.error(this.$t('UNEXPECTED_ERROR_TRY_AGAIN'))
       }
     }
   }

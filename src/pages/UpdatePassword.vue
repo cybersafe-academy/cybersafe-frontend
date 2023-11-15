@@ -4,7 +4,9 @@
 
     <div class="section right-section">
       <div class="greeting-container">
-        <span class="greeting-subtext"> Fill your password to update it </span>
+        <span class="greeting-subtext">
+          {{ $t('FILL_PASSWORD_TO_UPDATE') }}
+        </span>
       </div>
 
       <v-form class="input-container" ref="form">
@@ -14,7 +16,7 @@
           class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          label="Password"
+          :label="$t('PASSWORD')"
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
@@ -30,7 +32,7 @@
           class="password-input"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
-          label="Password confirmation"
+          :label="$t('PASSWORD_CONFIRMATION')"
           prepend-inner-icon="mdi-lock"
           @click:append="showPassword = !showPassword"
           variant="solo"
@@ -49,7 +51,7 @@
         rounded="lg"
         :loading="isLoading"
       >
-        Update password
+        {{ $t('UPDATE_PASSWORD') }}
       </v-btn>
     </div>
   </div>
@@ -85,22 +87,22 @@ export default {
 
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('FIELD_REQUIRED')
     },
 
     passwordMin(v: any) {
-      return v.length >= 8 || 'Min 8 characters'
+      return v.length >= 8 || this.$t('MIN_8_CHARACTERS')
     },
 
     verifyPasswords() {
       if (this.password !== this.passwordConfirmation) {
-        this.passwordErrors.push('Passwords do not match')
+        this.passwordErrors.push(this.$t('PASSWORDS_DO_NOT_MATCH'))
 
         this.hasError = true
       }
 
       if (this.password.length < 8 || this.passwordConfirmation.length < 8) {
-        this.passwordErrors.push('Min 8 characters')
+        this.passwordErrors.push(this.$t('MIN_8_CHARACTERS'))
 
         this.hasError = true
       }
@@ -110,7 +112,7 @@ export default {
       const { t } = this.$route.query
 
       if (!t) {
-        this.$toast.error('Invalid token')
+        this.$toast.error(this.$t('INVALID_TOKEN'))
 
         this.$router.push('/login')
       }
@@ -120,7 +122,7 @@ export default {
 
     verifyEmptyFields(): boolean {
       if (!this.password || !this.passwordConfirmation) {
-        this.$toast.error('Fill all fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return false
       }
@@ -165,7 +167,7 @@ export default {
 
         this.isLoading = false
 
-        this.$toast.success('Password updated successfully')
+        this.$toast.success(this.$t('PASSWORD_UPDATED_SUCCESSFULLY'))
 
         this.$router.push('/login')
       } catch (e: any) {

@@ -1,14 +1,12 @@
 <template>
-  <div style="background-color: rgb(219, 219, 219); border-radius: 3px">
-    <p class="text-h6" style="background-color: transparent; color: black">
-      Question 1
-    </p>
+  <div style="border-radius: 3px">
     <div style="padding: 10px">
       <v-row>
-        <v-col cols="12">
+        <v-col class="pa-0 mb-4" cols="12">
           <v-text-field
+            class="mr-2"
             v-model="question.wording"
-            :label="$t('QUESTION')"
+            :label="$t('QUESTION', { number: id })"
             type="string"
             required
             variant="solo"
@@ -16,7 +14,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12">
+        <v-col class="pa-0 mb-6" cols="12">
           <v-text-field
             class="mb-2 mr-2"
             v-model="question.answers[0].text"
@@ -29,7 +27,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12">
+        <v-col class="pa-0" cols="12">
           <v-text-field
             class="mb-2 mr-2"
             v-model="question.answers[1].text"
@@ -60,15 +58,10 @@
         </v-col>
       </v-row>
     </div>
-    <div class="d-flex flex-end" style="background-color: var(--background)">
+    <div class="d-flex flex-end">
       <v-icon
         v-if="showTrashIcon"
-        style="
-          color: rgb(255, 0, 0);
-          width: 30px;
-          height: 30px;
-          margin-left: auto;
-        "
+        style="color: #fe0000; width: 30px; height: 30px; margin-left: auto"
         @click="removeCourseContent"
         >mdi-trash-can</v-icon
       >
@@ -82,6 +75,10 @@ export default {
   props: {
     question: {
       type: Object,
+      required: true
+    },
+    id: {
+      type: Number,
       required: true
     },
     showTrashIcon: {

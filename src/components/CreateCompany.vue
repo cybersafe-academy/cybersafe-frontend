@@ -3,7 +3,9 @@
     <div class="createCourseDialog">
       <v-card>
         <v-card-title class="text-center">
-          <span> Create a new company </span>
+          <span>
+            {{ $t('CREATE_NEW_COMPANY') }}
+          </span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -11,7 +13,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="cnpj"
-                  label="CNPJ"
+                  :label="$t('CNPJ')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -19,7 +21,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="email"
-                  label="Email"
+                  :label="$t('EMAIL')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -27,7 +29,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="legalName"
-                  label="Legal Name"
+                  :label="$t('LEGAL_NAME')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -35,7 +37,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="phone"
-                  label="Phone"
+                  :label="$t('PHONE')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -43,7 +45,7 @@
               <v-col cols="12" md="6">
                 <v-text-field
                   v-model="tradeName"
-                  label="Trade Name"
+                  :label="$t('TRADE_NAME')"
                   variant="solo"
                   required
                 ></v-text-field>
@@ -53,8 +55,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="closeDialogBtn" @click="closeDialog"> Close </v-btn>
-          <v-btn class="saveCompanyBtn" @click="saveCompany"> Save </v-btn>
+          <v-btn class="closeDialogBtn" @click="closeDialog">
+            {{ $t('CLOSE') }}
+          </v-btn>
+          <v-btn class="saveCompanyBtn" @click="saveCompany">
+            {{ $t('SAVE') }}
+          </v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -116,7 +122,7 @@ export default {
         !this.phone ||
         !this.tradeName
       ) {
-        this.$toast.error('Please fill all the fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return false
       }
@@ -143,7 +149,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Company updated successfully')
+          this.$toast.success(this.$t('COMPANY_UPDATED_SUCCESSFULLY'))
 
           this.$emit('editedCompany', data)
         } else {
@@ -151,7 +157,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Company created successfully')
+          this.$toast.success(this.$t('COMPANY_CREATED_SUCCESSFULLY'))
 
           this.$emit('savedCompany', data)
         }
@@ -164,15 +170,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.closeDialogBtn {
-  background-color: #f44336 !important;
-  color: #fff !important;
-}
-
-.saveCompanyBtn {
-  background-color: #4caf50 !important;
-  color: #fff !important;
-}
-</style>

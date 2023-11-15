@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row class="mb-3">
+    <v-row>
       <v-col cols="12">
         <v-text-field
           v-model="info.title"
@@ -18,6 +18,7 @@
         ></v-textarea>
       </v-col>
     </v-row>
+    <v-divider class="mb-6" />
     <CourseTestForm :questions="info.questions" />
   </v-container>
 </template>

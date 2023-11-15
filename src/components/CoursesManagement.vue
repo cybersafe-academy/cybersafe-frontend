@@ -28,7 +28,7 @@
         <tbody>
           <tr v-for="item in pageCourses[currentPage]" :key="item.id">
             <td>
-              <p style="text-align: center; flex-grow: 1">
+              <p>
                 {{ item.title }}
               </p>
             </td>
@@ -38,22 +38,24 @@
               </p>
             </td>
             <td class="actionsButtons">
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openEditDialog(item.id)"
-                class="editBtn"
-              >
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn
-                :disabled="role != 'master'"
-                text
-                @click="openDeleteDialog(item.id)"
-                class="deleteBtn"
-              >
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+              <div class="d-flex justify-center" style="margin: 0 auto 0 auto">
+                <v-btn
+                  :disabled="role != 'master'"
+                  text
+                  @click="openEditDialog(item.id)"
+                  class="editBtn"
+                >
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  :disabled="role != 'master'"
+                  text
+                  @click="openDeleteDialog(item.id)"
+                  class="deleteBtn"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -108,6 +110,13 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
+      this.root.style.setProperty(
+        '--title-string',
+        `'${this.$t('COURSE_TITLE')}'`
+      )
+      this.root.style.setProperty('--level-string', `'${this.$t('LEVEL')}'`)
+      this.root.style.setProperty('--actions-string', `'${this.$t('ACTIONS')}'`)
+
       if (this.$refs.itemTable) {
         this.numberOfItemsToFetch = Math.floor(
           (this.$refs.itemTable as any).$el.offsetHeight / 60
@@ -127,7 +136,8 @@ export default {
       totalPages: 1,
       currentPage: 1,
       numberOfnewElements: 0,
-      numberOfItemsToFetch: 0
+      numberOfItemsToFetch: 0,
+      root: document.documentElement
     }
   },
 
@@ -269,6 +279,11 @@ th {
   text-align: center !important;
 }
 
+p {
+  width: 200px;
+  margin: auto;
+}
+
 .tableToolbar {
   display: flex;
   align-items: center;
@@ -282,7 +297,6 @@ th {
   padding: 10px;
   background-color: rgb(62, 120, 252);
   margin: 0 !important;
-  margin-right: 1rem !important;
 }
 
 .actionsButtons {
@@ -302,7 +316,34 @@ th {
   background-color: red;
 }
 
+td {
+  text-align: center;
+}
+
+td > p {
+  width: 150px;
+  overflow-wrap: break-word;
+  margin: 0 auto 0 auto;
+}
+
+.text-left {
+  text-align: center !important;
+}
+
+.addCourseBtn {
+  margin-right: 10px !important;
+}
+
+@media only screen and (max-width: 300px) {
+  .addCourseBtn {
+    margin: 0 !important;
+  }
+}
+
 @media only screen and (max-width: 900px) {
+  .addCourseBtn {
+    margin-bottom: 10px !important;
+  }
   .tableContent {
     overflow-y: scroll;
     display: block;
@@ -310,16 +351,10 @@ th {
 
   .tableToolbar {
     justify-content: center;
+    align-items: center;
     margin-top: 40px;
-    margin-bottom: 30px;
-  }
-
-  .addCourseBtn {
-    margin: 0 !important;
-  }
-
-  .addCourseBtn:nth-child(1) {
-    margin-right: 10px !important;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
   }
 
   .v-table {
@@ -352,14 +387,13 @@ th {
     position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: start;
     align-items: center;
-    padding: 30px 20px 30px 20px !important;
+    padding: 30px 10px 30px 10px !important;
     overflow-y: hidden;
   }
 
   tr:nth-of-type(odd) td {
-    background-color: #1e2124 !important;
+    background-color: var(--alternate-background) !important;
   }
 
   td:before {
@@ -369,15 +403,15 @@ th {
   }
 
   td:nth-of-type(1):before {
-    content: 'Course Title';
+    content: var(--title-string);
   }
 
   td:nth-of-type(2):before {
-    content: 'Level';
+    content: var(--level-string);
   }
 
   td:nth-of-type(3):before {
-    content: 'Actions';
+    content: var(--actions-string);
   }
 }
 </style>

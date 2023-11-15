@@ -23,24 +23,40 @@
         </thead>
         <tbody>
           <tr v-for="item in pageUsers[currentPage]" :key="item.id">
-            <td>{{ item.name }}</td>
-            <td>{{ item.role }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ formatCPF(item.cpf) }}</td>
             <td>
-              {{
-                dayjs(item.birthDate).isValid()
-                  ? dayjs(item.birthDate).format('DD/MM/YYYY')
-                  : ''
-              }}
+              <p>{{ item.name }}</p>
+            </td>
+            <td>
+              <p>{{ item.role }}</p>
+            </td>
+            <td>
+              <p>{{ item.email }}</p>
+            </td>
+            <td>
+              <p>{{ formatCPF(item.cpf) }}</p>
+            </td>
+            <td>
+              <p>
+                {{
+                  item.birthDate !== '0000-12-31'
+                    ? dayjs(item.birthDate).format('DD/MM/YYYY')
+                    : ''
+                }}
+              </p>
             </td>
             <td class="actionsButtons">
-              <v-btn text @click="openEditDialog(item.id)" class="editBtn">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn text @click="openDeleteDialog(item.id)" class="deleteBtn">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
+              <div class="d-flex justify-center" style="margin: 0 auto 0 auto">
+                <v-btn text @click="openEditDialog(item.id)" class="editBtn">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn
+                  text
+                  @click="openDeleteDialog(item.id)"
+                  class="deleteBtn"
+                >
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -96,6 +112,16 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
+      this.root.style.setProperty('--name-string', `'${this.$t('NAME')}'`)
+      this.root.style.setProperty('--role-string', `'${this.$t('ROLE')}'`)
+      this.root.style.setProperty('--email-string', `'${this.$t('EMAIL')}'`)
+      this.root.style.setProperty('--cpf-string', `'${this.$t('CPF')}'`)
+      this.root.style.setProperty(
+        '--birth-string',
+        `'${this.$t('BIRTH_DATE')}'`
+      )
+      this.root.style.setProperty('--actions-string', `'${this.$t('ACTIONS')}'`)
+
       if (this.$refs.itemTable) {
         this.numberOfItemsToFetch = Math.floor(
           (this.$refs.itemTable as any).$el.offsetHeight / 60
@@ -115,7 +141,8 @@ export default {
       totalPages: 1,
       currentPage: 1,
       numberOfnewElements: 0,
-      numberOfItemsToFetch: 0
+      numberOfItemsToFetch: 0,
+      root: document.documentElement
     }
   },
 
@@ -172,7 +199,7 @@ export default {
         }
         this.users = this.users.filter((user) => user.id !== id)
 
-        this.$toast.success('User deleted successfully')
+        this.$toast.success(this.$t('USER_DELETED_SUCCESSFULLY'))
       } catch (e: any) {
         const error: IErrorResponse = e.response.data.error
 
@@ -222,7 +249,7 @@ export default {
 
 .userTable {
   border-radius: 4px;
-  height: 20px;
+  height: 80%;
 }
 
 .tableToolbar {
@@ -257,7 +284,22 @@ export default {
   background-color: red;
 }
 
-@media only screen and (max-width: 900px) {
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+td > p {
+  width: 150px;
+  overflow-wrap: break-word;
+  margin: 0 auto 0 auto;
+}
+
+.text-left {
+  text-align: center !important;
+}
+
+@media only screen and (max-width: 1100px) {
   .tableContent {
     overflow-y: scroll;
     display: block;
@@ -314,7 +356,7 @@ export default {
   }
 
   tr:nth-of-type(odd) td {
-    background-color: #1e2124 !important;
+    background-color: var(--alternate-background) !important;
   }
 
   td:before {
@@ -324,15 +366,27 @@ export default {
   }
 
   td:nth-of-type(1):before {
-    content: 'Course Title';
+    content: var(--name-string);
   }
 
   td:nth-of-type(2):before {
-    content: 'Level';
+    content: var(--role-string);
   }
 
   td:nth-of-type(3):before {
-    content: 'Actions';
+    content: var(--email-string);
+  }
+
+  td:nth-of-type(4):before {
+    content: var(--cpf-string);
+  }
+
+  td:nth-of-type(5):before {
+    content: var(--birth-string);
+  }
+
+  td:nth-of-type(6):before {
+    content: var(--actions-string);
   }
 }
 </style>

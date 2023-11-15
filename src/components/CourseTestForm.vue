@@ -1,23 +1,25 @@
 <template>
   <div>
-    <h2 class="mb-6">{{ $t('QUESTIONNAIRE') }}</h2>
-    <div style="padding: 3px">
+    <p class="text-h5">{{ $t('QUESTIONNAIRE') }}</p>
+    <div class="mt-6">
       <template v-if="questions.length === 0">
-        <h2>{{ $t('NO_QUESTIONS_REGISTERED_YET') }}</h2>
+        <p class="text-h6">{{ $t('NO_QUESTIONS_REGISTERED_YET') }}</p>
       </template>
       <template v-else v-for="(question, i) in questions" v-key="i">
-        <div style="margin-bottom: 20px">
+        <div class="mt-3" style="margin-bottom: 20px">
           <course-test-item
             :showTrashIcon="hasAtLeastFourQuestions"
             :question="question"
+            :id="i + 1"
             @remove-item="removeCourseContent(i)"
           ></course-test-item>
+          <v-divider class="mt-4" thickness="2px"></v-divider>
         </div>
       </template>
       <div class="d-flex flex-end">
         <v-icon
           style="
-            background-color: green;
+            background-color: #285430;
             color: white;
             width: 30px;
             height: 30px;
@@ -64,3 +66,14 @@ export default {
   }
 }
 </script>
+
+<style>
+p {
+  max-width: none !important;
+}
+
+.text-h5,
+.text-h6 {
+  font-family: 'Inter' !important;
+}
+</style>

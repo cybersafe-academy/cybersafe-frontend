@@ -15,12 +15,16 @@
       @update:rail="teste"
       disable-resize-watcher
     >
-      <v-list>
+      <v-list class="pa-0">
         <v-list-item
-          :prepend-avatar="userProfilePicture"
+          :prepend-avatar="
+            userProfilePicture
+              ? userProfilePicture
+              : '../../public/images/blank-profile.png'
+          "
           :title="userName"
           :subtitle="userEmail"
-          class="pointer"
+          class="pointer py-3"
           @click="openPreferences"
         />
         <v-divider />
@@ -52,6 +56,7 @@
         </template>
 
         <v-list-item
+          v-if="role !== 'default'"
           prepend-icon="mdi-pencil-ruler"
           :title="$t('CONTENT_CUSTOMIZATION')"
           value="category-customization"
@@ -68,6 +73,7 @@
         />
 
         <v-list-item
+          v-if="role !== 'default'"
           prepend-icon="mdi-list-box"
           :title="$t('ANALYTICS')"
           value="analytics"
@@ -78,7 +84,7 @@
       <template v-slot:append>
         <v-list-item
           prepend-icon="mdi-logout"
-          title="Logout"
+          :title="$t('LOGOUT')"
           link
           @click="logout"
         />
@@ -181,6 +187,10 @@ export default {
   opacity: 70%;
 }
 
+.v-list-item-subtitle {
+  padding: 3px 0 3px 0;
+}
+
 .hamburguer {
   display: none;
   color: white;
@@ -225,6 +235,7 @@ export default {
     display: block;
     position: absolute;
     padding: 10px;
+    z-index: 1000;
   }
 }
 </style>

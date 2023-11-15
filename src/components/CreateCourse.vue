@@ -21,7 +21,16 @@
                 </v-select>
               </v-col>
             </v-row>
-            <v-row>
+            <v-row style="position: relative">
+              <v-col cols="12">
+                <v-text-field
+                  v-model="courseForm.contentURL"
+                  :label="$t('VIDEO_URL')"
+                  type="string"
+                  variant="solo"
+                  required
+                ></v-text-field>
+              </v-col>
               <v-col cols="8">
                 <v-file-input
                   clearable
@@ -39,32 +48,14 @@
               <v-col cols="4">
                 <v-img
                   v-if="courseForm.thumbnailURL"
-                  class="mb-6"
-                  width="35%"
+                  class="thumbnail-preview mb-6"
                   cover
                   :src="courseForm.thumbnailURL"
                 />
               </v-col>
-              <v-col cols="12">
-                <v-dialog>
-                  <v-img
-                    class="mb-6"
-                    :width="300"
-                    cover
-                    :src="course.thumbnailURL"
-                  />
-                </v-dialog>
-                <v-text-field
-                  v-model="courseForm.contentURL"
-                  :label="$t('VIDEO_URL')"
-                  type="string"
-                  variant="solo"
-                  required
-                ></v-text-field>
-              </v-col>
             </v-row>
             <v-row>
-              <v-col cols="12" sm="6">
+              <v-col cols="8">
                 <v-select
                   v-model="courseForm.level"
                   :label="$t('LEVEL')"
@@ -97,7 +88,7 @@
             />
           </template>
         </v-card-text>
-        <v-card-actions>
+        <v-card-actions class="mt-4">
           <v-spacer></v-spacer>
           <v-btn class="closeDialogBtn" @click="closeDialog">
             {{ $t('CLOSE') }}
@@ -202,7 +193,7 @@ export default {
   },
   methods: {
     required(v: any) {
-      return !!v || 'Field is required'
+      return !!v || this.$t('REQUIRED_FIELD')
     },
 
     getInfo(language: string) {
@@ -261,13 +252,13 @@ export default {
           !this.courseForm.contentURL ||
           !this.courseForm.level
         ) {
-          this.$toast.error('Please fill all the fields')
+          this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
           return false
         }
 
         if (info.questions.length < 4) {
-          this.$toast.error('O questionário precisa ter no mínimo 4 perguntas')
+          this.$toast.error(this.$t('MINIMUM_4_QUESTIONS_REQUIRED'))
           return false
         }
       }
@@ -303,7 +294,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Course updated successfully')
+          this.$toast.success(this.$t('COURSE_UPDATED_SUCCESSFULLY'))
 
           this.$emit('editedCourse', data)
         } else {
@@ -313,7 +304,7 @@ export default {
 
           this.closeDialog()
 
-          this.$toast.success('Course created successfully')
+          this.$toast.success(this.$t('COURSE_CREATED_SUCCESSFULLY'))
 
           this.$emit('savedCourse', data)
         }
@@ -328,7 +319,7 @@ export default {
 
     async saveCategory() {
       if (!this.categoryName) {
-        this.$toast.error('Please fill all the fields')
+        this.$toast.error(this.$t('FILL_ALL_FIELDS'))
 
         return
       }
@@ -346,7 +337,7 @@ export default {
         this.categories.push(data)
         this.closeCategoryDialog()
 
-        this.$toast.success('Category created successfully')
+        this.$toast.success(this.$t('CATEGORY_CREATED_SUCCESSFULLY'))
       } catch (e: any) {
         alert(e)
 
@@ -383,13 +374,10 @@ export default {
 .createCourseDialog {
   overflow-y: auto;
 }
-.closeDialogBtn {
-  background-color: #f44336 !important;
-  color: #fff !important;
-}
-
-.saveCourseBtn {
-  background-color: #4caf50 !important;
-  color: #fff !important;
+.thumbnail-preview {
+  width: 30%;
+  position: absolute;
+  border: 1px solid white;
+  border-radius: 3px;
 }
 </style>
