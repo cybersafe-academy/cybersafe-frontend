@@ -30,7 +30,7 @@
               <p>{{ item.role }}</p>
             </td>
             <td>
-              <p>{{ item.email }}</p>
+              <p class="email-p">{{ item.email }}</p>
             </td>
             <td>
               <p>{{ formatCPF(item.cpf) }}</p>
@@ -267,12 +267,6 @@ export default {
   background-color: rgb(62, 120, 252);
 }
 
-.actionsButtons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .editBtn {
   color: lightgray;
   background-color: orange;
@@ -290,9 +284,13 @@ td {
 }
 
 td > p {
-  width: 150px;
+  width: 200px;
   overflow-wrap: break-word;
   margin: 0 auto 0 auto;
+}
+
+.email-p {
+  width: 300px !important;
 }
 
 .text-left {
@@ -325,8 +323,8 @@ td > p {
   }
 
   .actionsButtons {
+    margin: 0 !important;
     display: flex;
-    justify-content: start;
   }
 
   table,
@@ -353,6 +351,7 @@ td > p {
     align-items: center;
     padding: 30px 20px 30px 20px !important;
     overflow-y: hidden;
+    width: 100% !important;
   }
 
   tr:nth-of-type(odd) td {
@@ -360,7 +359,6 @@ td > p {
   }
 
   td:before {
-    margin-right: 80px;
     text-align: start;
     width: 100px;
   }

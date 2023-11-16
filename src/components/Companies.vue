@@ -23,7 +23,7 @@
             <td>
               <p>{{ item.cnpj }}</p>
             </td>
-            <td class="text-left">
+            <td class="email-p">
               <p>{{ item.email }}</p>
             </td>
             <td class="actionsButtons">
@@ -265,16 +265,20 @@ td {
 }
 
 td > p {
-  width: 150px;
+  width: 200px;
   overflow-wrap: break-word;
   margin: 0 auto 0 auto;
+}
+
+.email-p {
+  width: 300px;
 }
 
 .text-left {
   text-align: center !important;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 1200px) {
   .tableContent {
     overflow-y: scroll;
     display: block;
@@ -328,6 +332,7 @@ td > p {
     align-items: center;
     padding: 30px 20px 30px 20px !important;
     overflow-y: hidden;
+    width: 100% !important;
   }
 
   tr:nth-of-type(odd) td {
@@ -335,7 +340,6 @@ td > p {
   }
 
   td:before {
-    margin-right: 20px;
     text-align: start;
     width: 100px;
   }
