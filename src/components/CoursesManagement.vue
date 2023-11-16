@@ -27,7 +27,7 @@
         </thead>
         <tbody>
           <tr v-for="item in pageCourses[currentPage]" :key="item.id">
-            <td>
+            <td class="title-td">
               <p>
                 {{ item.title }}
               </p>
@@ -321,7 +321,7 @@ td {
 }
 
 td > p {
-  width: 150px;
+  width: 400px;
   overflow-wrap: break-word;
   margin: 0 auto 0 auto;
 }
@@ -341,6 +341,22 @@ td > p {
 }
 
 @media only screen and (max-width: 900px) {
+  .title-td {
+    padding: 40px 20px 40px 20px !important;
+  }
+
+  .title-td::before {
+    margin-right: 30px;
+  }
+
+  .title-td p {
+    font-size: 12px;
+  }
+
+  td > p {
+    width: 100%;
+  }
+
   .addCourseBtn {
     margin-bottom: 10px !important;
   }
@@ -388,8 +404,9 @@ td > p {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 30px 10px 30px 10px !important;
+    padding: 30px 20px 30px 20px !important;
     overflow-y: hidden;
+    width: 100% !important;
   }
 
   tr:nth-of-type(odd) td {
@@ -397,7 +414,6 @@ td > p {
   }
 
   td:before {
-    margin-right: 80px;
     text-align: start;
     width: 100px;
   }

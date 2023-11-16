@@ -53,7 +53,7 @@
                         alt=""
                       />
                       <p
-                        class="text-h6"
+                        class="text-h6 mb-2"
                         style="max-width: 300px; overflow-wrap: break-word"
                       >
                         {{ course.title }}
@@ -212,6 +212,7 @@ export default {
 
 .course-card {
   min-width: 300px;
+  max-width: 300px;
   margin-right: 30px;
   overflow: hidden;
   cursor: pointer;
